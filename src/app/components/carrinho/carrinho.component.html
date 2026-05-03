@@ -1,0 +1,20 @@
+<h2>🛒 Carrinho</h2>
+
+<div *ngIf="carrinho.length === 0">
+  <p>Seu carrinho está vazio</p>
+</div>
+
+<div *ngFor="let item of carrinho; let i = index">
+
+  <p>
+    {{ item.name }} - R$ {{ item.price }}
+    <button (click)="remover(i)">❌</button>
+  </p>
+
+</div>
+
+<h3>Total: R$ {{ total }}</h3>
+
+<button (click)="enviarWhatsApp()" *ngIf="carrinho.length > 0">
+  📲 Finalizar pedido
+</button>

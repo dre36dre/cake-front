@@ -1,0 +1,24 @@
+<h2>🍰 Cardápio</h2>
+
+<div *ngIf="produtos$ | async as produtos">
+
+  <p>Total: {{ produtos.length }}</p>
+
+  <div *ngFor="let p of produtos" style="border:1px solid #ccc; padding:10px; margin:10px">
+
+  <img 
+  [src]="p.imageUrl || 'https://via.placeholder.com/150'"
+  width="150"
+/>
+
+    <h3>{{ p.name }}</h3>
+
+    <p>{{ p.description }}</p>
+
+    <p><strong>R$ {{ p.price }}</strong></p>
+
+    <button (click)="adicionar(p)">Adicionar</button>
+
+  </div>
+
+</div>
