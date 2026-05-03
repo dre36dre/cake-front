@@ -1,20 +1,21 @@
-<h2>🛒 Carrinho</h2>
 
-<div *ngIf="carrinho.length === 0">
-  <p>Seu carrinho está vazio</p>
+
+<!-- 👇 dados do cliente -->
+<input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
+<input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
+<input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
+<hr>
+
+<!-- produtos -->
+<div *ngFor="let p of carrinho; let i = index">
+  <p>{{ p.name }} - R$ {{ p.price }}</p>
+  <button (click)="remover(i)">Remover</button>
 </div>
 
-<div *ngFor="let item of carrinho; let i = index">
+<hr>
 
-  <p>
-    {{ item.name }} - R$ {{ item.price }}
-    <button (click)="remover(i)">❌</button>
-  </p>
+<p>Total: R$ {{ total }}</p>
 
-</div>
-
-<h3>Total: R$ {{ total }}</h3>
-
-<button (click)="enviarWhatsApp()" *ngIf="carrinho.length > 0">
-  📲 Finalizar pedido
+<button (click)="enviarWhatsApp()">
+  Finalizar pedido
 </button>

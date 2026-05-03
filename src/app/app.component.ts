@@ -8,7 +8,6 @@ import { CarrinhoComponent } from './components/carrinho/carrinho.component';
   imports: [MenuComponent, CarrinhoComponent],
   template: `
     <app-menu></app-menu>
-    <hr>
     <app-carrinho></app-carrinho>
   `
 })

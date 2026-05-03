@@ -1,62 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { ProdutoService } from '../../services/produto.service';
-import { Produto } from '../../models/produto.model';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { ProdutoService } from '../../services/produto.service';
 import { CarrinhoService } from '../../services/carrinho.service';
-import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { Produto } from '../../models/produto.model';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule],
   templateUrl: './menu.component.html'
 })
 export class MenuComponent implements OnInit {
 
-  produtos$!: Observable<Produto[]>;
+  produtos: Produto[] = [];
 
-  constructor(private auth: AuthService,private produtoService: ProdutoService,  private carrinhoService: CarrinhoService) {}
+  constructor(
+    private produtoService: ProdutoService,
+    private carrinhoService: CarrinhoService
+  ) {}
 
   ngOnInit() {
-    this.produtos$ = this.produtoService.listar();
-  }
-
-  adicionar(p: Produto) {
-     this.carrinhoService.adicionar(p);
-  }
-
-
-mostrarLogin = false;
-  email = '';
-  password = '';
-
-
-  abrirLogin() {
-    this.mostrarLogin = true;
-  }
-
-  fecharLogin() {
-    this.mostrarLogin = false;
-  }
-
-  login() {
-    this.auth.login(this.email, this.password).subscribe({
-      next: (res: any) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('role', res.role);
-
-        alert('Login OK');
-
-        this.fecharLogin();
-
-        if (res.role === 'admin') {
-          window.location.href = '/admin';
-        }
-      },
-      error: () => alert('Erro no login')
+    this.produtoService.listar().subscribe(res => {
+      this.produtos = res;
     });
   }
 
+  adicionar(p: Produto) {
+    this.carrinhoService.adicionar(p);
+  }
 }

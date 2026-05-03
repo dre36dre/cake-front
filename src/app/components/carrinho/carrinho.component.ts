@@ -1,18 +1,23 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
 
 @Component({
   selector: 'app-carrinho',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './carrinho.component.html'
 })
 export class CarrinhoComponent {
 
   carrinho: Produto[] = [];
   total = 0;
+
+  nomeCliente = '';
+  telefoneCliente = '';
+  enderecoCliente='';
 
   constructor(private carrinhoService: CarrinhoService) {
     this.carrinhoService.carrinho$.subscribe(itens => {
@@ -21,20 +26,29 @@ export class CarrinhoComponent {
     });
   }
 
-  remover(index: number) {
-    this.carrinhoService.remover(index);
+  remover(i: number) {
+    this.carrinhoService.remover(i);
   }
 
   enviarWhatsApp() {
 
-    const mensagem = this.carrinho
+    const itens = this.carrinho
       .map(p => `• ${p.name} - R$${p.price}`)
       .join('\n');
 
-    const texto = `Pedido:\n${mensagem}\n\nTotal: R$${this.total}`;
+    const texto = `
+🧾 Pedido
 
-    const url = `https://wa.me/5511973309997?text=${encodeURIComponent(texto)}`;
+👤 ${this.nomeCliente}
+📞 ${this.telefoneCliente}
+    ${this.enderecoCliente}
+${itens}
 
-    window.open(url, '_blank');
+💰 Total: R$${this.total}
+`;
+
+    const url = `https://wa.me/5511NUMERO_DA_DONA?text=${encodeURIComponent(texto)}`;
+
+    window.location.href = url;
   }
 }
