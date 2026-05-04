@@ -1,21 +1,33 @@
-
-
-<!-- 👇 dados do cliente -->
-<input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
-<input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
-<input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
-<hr>
-
-<!-- produtos -->
-<div *ngFor="let p of carrinho; let i = index">
-  <p>{{ p.name }} - R$ {{ p.price }}</p>
-  <button (click)="remover(i)">Remover</button>
+<!-- Dados do cliente -->
+<div class="cliente-form">
+  <input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
+  <input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
+  <input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
 </div>
 
 <hr>
 
-<p>Total: R$ {{ total }}</p>
+<!-- Lista de produtos no carrinho -->
+<div *ngFor="let p of carrinho; let i = index" class="item">
 
-<button (click)="enviarWhatsApp()">
+  <!-- AQUI entra a imagem -->
+  <img class="foto-produto" [src]="'assets/' + p.image_url" alt="{{ p.name }}" />
+
+  <div class="info">
+    <p>{{ p.name }}</p>
+    <p>R$ {{ p.price }}</p>
+  </div>
+
+  <button (click)="remover(i)">Remover</button>
+</div>
+
+
+<hr>
+
+<!-- Total -->
+<p class="total">Total: R$ {{ total }}</p>
+
+<!-- Botão finalizar -->
+<button class="finalizar" (click)="enviarWhatsApp()">
   Finalizar pedido
 </button>
