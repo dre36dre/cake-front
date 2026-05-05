@@ -11,7 +11,11 @@
 <div *ngFor="let p of carrinho; let i = index" class="item">
 
   <!-- AQUI entra a imagem -->
-  <img class="foto-produto" [src]="'assets/' + p.image_url" alt="{{ p.name }}" />
+<img 
+  class="foto-produto"
+  [src]="p.imageUrl?.startsWith('http') ? p.imageUrl : 'assets/' + p.imageUrl"
+  alt="{{ p.name }}"
+/>
 
   <div class="info">
     <p>{{ p.name }}</p>
