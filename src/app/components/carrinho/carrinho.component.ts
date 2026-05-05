@@ -32,7 +32,7 @@ export class CarrinhoComponent {
   }
 
 enviarWhatsApp() {
-  const numeroConfeitaria = "5511973309997"; // coloque o número da dona aqui
+  const numeroConfeitaria = "5511954203620"; // coloque o número da dona aqui
 
   // Monta a lista de produtos
   const itens = this.carrinho
