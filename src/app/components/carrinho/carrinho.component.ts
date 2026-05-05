@@ -31,23 +31,26 @@ export class CarrinhoComponent {
     this.carrinhoService.remover(i);
   }
 
-  enviarWhatsApp() {
-  const pedido = {
-    nome: this.nomeCliente,
-    telefone: this.telefoneCliente,
-    endereco: this.enderecoCliente,
-    total: this.total,
-    itens: this.carrinho.map(p => ({
-      produtoId: p.id,
-      nome: p.name,
-      preco: p.price
-    }))
-  };
+enviarWhatsApp() {
+  const numeroConfeitaria = "5511973309997"; // coloque o número da dona aqui
 
-  this.http.post('http://localhost:8080/api/pedidos/novo', pedido)
-    .subscribe(() => {
-      alert('Pedido enviado com sucesso!');
-    });
+  // Monta a lista de produtos
+  const itens = this.carrinho
+    .map((p: any) => `• ${p.name} - R$ ${p.price}`)
+    .join("%0A");
+
+  // Monta a mensagem completa
+  const mensagem = 
+    `Novo pedido:%0A%0A` +
+    `Cliente: ${this.nomeCliente}%0A` +
+    ` Telefone: ${this.telefoneCliente}%0A` +
+    ` Endereço: ${this.enderecoCliente}%0A%0A` +
+    ` Itens:%0A${itens}%0A%0A` +
+    ` Total: R$ ${this.total}`;
+
+  // Abre o WhatsApp Web ou App
+  window.open(`https://wa.me/${numeroConfeitaria}?text=${mensagem}`, "_blank");
 }
+
 
 } 
