@@ -28,4 +28,9 @@ export class MenuComponent implements OnInit {
   adicionar(p: Produto) {
     this.carrinhoService.adicionar(p);
   }
+
+  usarImagemLocal(event: Event, imageUrl: string) {
+    const img = event.target as HTMLImageElement;
+    img.src = `assets/produto/${imageUrl}`;
+  }
 }

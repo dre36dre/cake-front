@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class ProdutoService {
 
-  private api = 'http://localhost:8080/produtos';
+private api = 'https://cake-api-production.up.railway.app/produtos';
+
 
   constructor(private http: HttpClient) {}
 

@@ -1,0 +1,24 @@
+<h2>Pedidos Recebidos</h2>
+
+<p *ngIf="carregando">Carregando pedidos...</p>
+<p *ngIf="erro">{{ erro }}</p>
+<p *ngIf="!carregando && !erro && pedidos.length === 0">Nenhum pedido recebido ainda.</p>
+
+<div *ngFor="let p of pedidos" class="pedido">
+
+  <p><strong>Cliente:</strong> {{ p.nomeCliente }}</p>
+  <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
+  <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
+  <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm') : 'Sem data' }}</p>
+
+  <h4>Itens:</h4>
+  <ul>
+    <li *ngFor="let item of p.itens">
+      {{ item.nomeProduto }} — R$ {{ item.preco }} (x{{ item.quantidade }})
+    </li>
+  </ul>
+
+  <p><strong>Total:</strong> R$ {{ p.total }}</p>
+
+  <hr>
+</div>

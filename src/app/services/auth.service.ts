@@ -8,8 +8,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string) {
-    return this.http.post<any>(`${this.api}/login`, { email, password });
+  login(username: string, password: string) {
+    return this.http.post<any>(`${this.api}/login`, { username, password });
   }
 
   salvarToken(token: string) {

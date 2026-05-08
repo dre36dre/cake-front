@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarrinhoService } from '../../services/carrinho.service';
+import { PedidoService } from '../../services/pedido.service';
 import { Produto } from '../../models/produto.model';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-carrinho',
@@ -12,45 +12,85 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './carrinho.component.html'
 })
 export class CarrinhoComponent {
-
   carrinho: Produto[] = [];
-  total = 0;
+  total: number = 0;
 
-  nomeCliente = '';
-  telefoneCliente = '';
-  enderecoCliente='';
+  nomeCliente: string = '';
+  telefoneCliente: string = '';
+  enderecoCliente: string = '';
 
-  constructor(private carrinhoService: CarrinhoService, private http: HttpClient) {
-    this.carrinhoService.carrinho$.subscribe(itens => {
-      this.carrinho = itens;
-      this.total = this.carrinhoService.getTotal();
-    });
-  }
+  constructor(
+    private carrinhoService: CarrinhoService,
+    private pedidoService: PedidoService
+  ) {}
+
+ngOnInit() {
+  this.carrinhoService.carrinho$.subscribe(lista => {
+    this.carrinho = lista;
+    this.total = lista.reduce((t, p) => t + p.price, 0);
+  });
+}
 
   remover(i: number) {
     this.carrinhoService.remover(i);
   }
 
+<<<<<<< HEAD
 enviarWhatsApp() {
   const numeroConfeitaria = "5511954203620"; // coloque o número da dona aqui
+=======
+  usarImagemLocal(event: Event, imageUrl: string) {
+    const img = event.target as HTMLImageElement;
+    img.src = `assets/produto/${imageUrl}`;
+  }
+>>>>>>> aaf0b90 (Chamando endpoint /produtos do backend)
 
-  // Monta a lista de produtos
-  const itens = this.carrinho
-    .map((p: any) => `• ${p.name} - R$ ${p.price}`)
-    .join("%0A");
+  enviarWhatsApp() {
+    if (!this.nomeCliente || !this.telefoneCliente || !this.enderecoCliente || this.carrinho.length === 0) {
+      alert('Preencha os dados do cliente e adicione pelo menos um produto.');
+      return;
+    }
 
-  // Monta a mensagem completa
-  const mensagem = 
-    `Novo pedido:%0A%0A` +
-    `Cliente: ${this.nomeCliente}%0A` +
-    ` Telefone: ${this.telefoneCliente}%0A` +
-    ` Endereço: ${this.enderecoCliente}%0A%0A` +
-    ` Itens:%0A${itens}%0A%0A` +
-    ` Total: R$ ${this.total}`;
+    const pedido = {
+      nomeCliente: this.nomeCliente,
+      telefoneCliente: this.telefoneCliente,
+      enderecoCliente: this.enderecoCliente,
+      total: this.total,
+      dataHora: new Date().toISOString(),
+      itens: this.carrinho.map((p: Produto) => ({
+        nomeProduto: p.name,
+        preco: p.price,
+        quantidade: 1,
+        subTotal: p.price
+      }))
+    };
 
-  // Abre o WhatsApp Web ou App
-  window.open(`https://wa.me/${numeroConfeitaria}?text=${mensagem}`, "_blank");
+    this.pedidoService.enviarPedido(pedido).subscribe({
+      next: () => {
+        this.abrirWhatsApp();
+        this.carrinhoService.limpar();
+      },
+      error: () => {
+        alert('Nao foi possivel salvar o pedido na API. Verifique se o backend cake foi reiniciado e se /pedidos esta liberado.');
+      }
+    });
+  }
+
+  private abrirWhatsApp() {
+    const numeroConfeitaria = "5511954203620";
+
+    const itens = this.carrinho
+      .map((p: Produto) => `• ${p.name} - R$ ${p.price}`)
+      .join("%0A");
+
+    const mensagem =
+      `Novo pedido:%0A%0A` +
+      `Cliente: ${this.nomeCliente}%0A` +
+      `Telefone: ${this.telefoneCliente}%0A` +
+      `Endereço: ${this.enderecoCliente}%0A%0A` +
+      `Itens:%0A${itens}%0A%0A` +
+      `Total: R$ ${this.total}`;
+
+    window.open(`https://wa.me/${numeroConfeitaria}?text=${mensagem}`, "_blank");
+  }
 }
-
-
-} 

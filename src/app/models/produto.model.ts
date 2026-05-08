@@ -5,4 +5,6 @@ export interface Produto {
   price: number;
   available: boolean;
   imageUrl: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -20,6 +20,11 @@ export class CarrinhoService {
     this.subject.next(this.itens);
   }
 
+  limpar() {
+    this.itens = [];
+    this.subject.next(this.itens);
+  }
+
   getTotal() {
     return this.itens.reduce((t, p) => t + p.price, 0);
   }

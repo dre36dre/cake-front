@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
-import { MenuComponent } from './components/menu/menu.component';
-import { CarrinhoComponent } from './components/carrinho/carrinho.component';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MenuComponent, CarrinhoComponent],
-  template: `
-    <app-menu></app-menu>
-    <app-carrinho></app-carrinho>
-  `
+  imports: [RouterLink, RouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {}
