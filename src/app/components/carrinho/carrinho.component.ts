@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarrinhoService } from '../../services/carrinho.service';
@@ -11,7 +11,8 @@ import { Produto } from '../../models/produto.model';
   imports: [CommonModule, FormsModule],
   templateUrl: './carrinho.component.html'
 })
-export class CarrinhoComponent {
+export class CarrinhoComponent implements OnInit {
+
   carrinho: Produto[] = [];
   total: number = 0;
 
@@ -24,26 +25,21 @@ export class CarrinhoComponent {
     private pedidoService: PedidoService
   ) {}
 
-ngOnInit() {
-  this.carrinhoService.carrinho$.subscribe(lista => {
-    this.carrinho = lista;
-    this.total = lista.reduce((t, p) => t + p.price, 0);
-  });
-}
+  ngOnInit() {
+    this.carrinhoService.carrinho$.subscribe(lista => {
+      this.carrinho = lista;
+      this.total = lista.reduce((t, p) => t + p.price, 0);
+    });
+  }
 
   remover(i: number) {
     this.carrinhoService.remover(i);
   }
 
-<<<<<<< HEAD
-enviarWhatsApp() {
-  const numeroConfeitaria = "5511954203620"; // coloque o número da dona aqui
-=======
   usarImagemLocal(event: Event, imageUrl: string) {
     const img = event.target as HTMLImageElement;
     img.src = `assets/produto/${imageUrl}`;
   }
->>>>>>> aaf0b90 (Chamando endpoint /produtos do backend)
 
   enviarWhatsApp() {
     if (!this.nomeCliente || !this.telefoneCliente || !this.enderecoCliente || this.carrinho.length === 0) {
@@ -71,7 +67,7 @@ enviarWhatsApp() {
         this.carrinhoService.limpar();
       },
       error: () => {
-        alert('Nao foi possivel salvar o pedido na API. Verifique se o backend cake foi reiniciado e se /pedidos esta liberado.');
+        alert('Não foi possível salvar o pedido na API. Verifique se o backend está online e se /pedidos está liberado.');
       }
     });
   }
