@@ -4,8 +4,7 @@
   <div class="card" *ngFor="let p of produtos">
 
     <img
-      [src]="'https://cake-api-production.up.railway.app/produtos/imagens/' + p.imageUrl"
-      (error)="usarImagemLocal($event, p.imageUrl)"
+      [src]="p.imageUrl"
       [alt]="p.name"
     >
 
