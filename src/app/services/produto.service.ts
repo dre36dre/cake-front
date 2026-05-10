@@ -20,12 +20,4 @@ export class ProdutoService {
   create(produto: Produto): Observable<Produto> {
     return this.http.post<Produto>(this.apiUrl, produto);
   }
-
-  // 🔹 Aqui entra o método de upload
-  uploadImagem(file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<string>(`${this.apiUrl}/upload`, formData);
-  }
 }

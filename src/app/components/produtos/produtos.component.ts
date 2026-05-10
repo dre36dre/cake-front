@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProdutoService } from '../../services/produto.service';
+import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
 import { environment } from '../../../environments/environments';
 
@@ -14,6 +16,7 @@ import { environment } from '../../../environments/environments';
 export class ProdutosComponent implements OnInit {
 
   produtos: Produto[] = [];
+  total = 0;
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private readonly imagensPorProduto: Record<string, string> = {
     'bolo de coco': 'bolo.JPG',
@@ -29,7 +32,11 @@ export class ProdutosComponent implements OnInit {
     'pudim família': 'pudim.JPG'
   };
 
-  constructor(private produtoService: ProdutoService) {}
+  constructor(
+    private produtoService: ProdutoService,
+    private carrinhoService: CarrinhoService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.produtoService.listar().subscribe({
@@ -40,6 +47,10 @@ export class ProdutosComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
       }
+    });
+
+    this.carrinhoService.carrinho$.subscribe((itens) => {
+      this.total = itens.reduce((soma, produto) => soma + produto.price, 0);
     });
   }
 
@@ -73,20 +84,10 @@ export class ProdutosComponent implements OnInit {
   }
 
   adicionar(produto: Produto) {
-    console.log('Produto adicionado:', produto);
+    this.carrinhoService.adicionar(produto);
   }
 
-  // 🔹 Novo método para upload
-  onFileSelected(event: any, produto: Produto) {
-    const file = event.target.files[0];
-    if (file) {
-      this.produtoService.uploadImagem(file).subscribe({
-        next: (url) => {
-          produto.imageUrl = url; // Atualiza a URL no produto
-          console.log('Imagem enviada, URL:', url);
-        },
-        error: (err) => console.error('Erro no upload:', err)
-      });
-    }
+  finalizarCompra() {
+    this.router.navigate(['/carrinho']);
   }
 }

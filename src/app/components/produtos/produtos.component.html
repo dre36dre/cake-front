@@ -1,12 +1,19 @@
-<h2>🍰 Cardápio</h2>
-<div class="card" *ngFor="let p of produtos">
-  <img [src]="imagemProduto(p)" (error)="usarImagemLocal($event, p)" alt="{{ p.name }}">
-  <h3>{{ p.name }}</h3>
-  <p>{{ p.description }}</p>
-  <p><strong>R$ {{ p.price }}</strong></p>
-  <button (click)="adicionar(p)">Adicionar</button>
+<section class="produtos-page">
+  <div class="produtos-grid">
+    <article class="produto-card" *ngFor="let p of produtos">
+      <img class="produto-imagem" [src]="imagemProduto(p)" (error)="usarImagemLocal($event, p)" alt="{{ p.name }}">
 
-  <!-- Upload de imagem -->
-  <input type="file" (change)="onFileSelected($event, p)">
-</div>
+      <div class="produto-info">
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.description }}</p>
+        <strong>R$ {{ p.price | number:'1.2-2' }}</strong>
+        <button type="button" (click)="adicionar(p)">Adicionar ao Pedido</button>
+      </div>
+    </article>
+  </div>
 
+  <footer class="resumo-pedido" *ngIf="total > 0">
+    <p>Total do Pedido: <strong>R$ {{ total | number:'1.2-2' }}</strong></p>
+    <button type="button" (click)="finalizarCompra()">Finalizar Compra</button>
+  </footer>
+</section>
