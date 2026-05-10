@@ -1,5 +1,7 @@
 <h2>Pedidos Recebidos</h2>
 
+<button type="button" (click)="carregarPedidos()">Atualizar pedidos</button>
+
 <p *ngIf="carregando">Carregando pedidos...</p>
 <p *ngIf="erro">{{ erro }}</p>
 <p *ngIf="!carregando && !erro && pedidos.length === 0">Nenhum pedido recebido ainda.</p>

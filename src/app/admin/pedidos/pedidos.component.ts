@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../services/pedido.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-pedidos',
@@ -18,7 +19,19 @@ export class PedidosComponent implements OnInit {
   constructor(private pedidoService: PedidoService) {}
 
  ngOnInit() {
-  this.pedidoService.listarPedidos().subscribe({
+  this.carregarPedidos();
+}
+
+carregarPedidos() {
+  this.carregando = true;
+  this.erro = '';
+
+  this.pedidoService.listarPedidos().pipe(
+    timeout(15000),
+    finalize(() => {
+      this.carregando = false;
+    })
+  ).subscribe({
     next: (data) => {
       this.pedidos = data.map(p => ({
         ...p,
@@ -26,12 +39,10 @@ export class PedidosComponent implements OnInit {
         status: p.status || 'CONFIRMED',
         itens: p.itens || []
       }));
-      this.carregando = false;
     },
     error: (err) => {
       console.error('Erro ao carregar pedidos:', err);
-      this.erro = 'Nao foi possivel carregar os pedidos da API.';
-      this.carregando = false;
+      this.erro = 'Nao foi possivel carregar os pedidos. Verifique se o backend do Railway esta online e tente atualizar.';
     }
   });
 }
