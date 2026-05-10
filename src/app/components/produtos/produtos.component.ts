@@ -16,14 +16,6 @@ export class ProdutosComponent implements OnInit {
 
   constructor(private produtoService: ProdutoService) {}
 
-  usarImagemLocal(event: any, imageUrl: string) {
-    event.target.src = 'assets/imagens/placeholder.jpg';
-  }
-
-  adicionar(produto: Produto) {
-    console.log('Produto adicionado:', produto);
-  }
-
   ngOnInit(): void {
     this.produtoService.listar().subscribe({
       next: (data) => {
@@ -34,5 +26,27 @@ export class ProdutosComponent implements OnInit {
         console.error('Erro ao carregar produtos:', err);
       }
     });
+  }
+
+  usarImagemLocal(event: any, imageUrl: string) {
+    event.target.src = 'assets/imagens/placeholder.jpg';
+  }
+
+  adicionar(produto: Produto) {
+    console.log('Produto adicionado:', produto);
+  }
+
+  // 🔹 Novo método para upload
+  onFileSelected(event: any, produto: Produto) {
+    const file = event.target.files[0];
+    if (file) {
+      this.produtoService.uploadImagem(file).subscribe({
+        next: (url) => {
+          produto.imageUrl = url; // Atualiza a URL no produto
+          console.log('Imagem enviada, URL:', url);
+        },
+        error: (err) => console.error('Erro no upload:', err)
+      });
+    }
   }
 }
