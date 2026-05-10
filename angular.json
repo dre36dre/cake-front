@@ -22,8 +22,8 @@
             "assets": [
               
                 "src/assets/produto",
-                "src/assets/imagenshome"
-              
+                "src/assets/imagenshome",
+                "src/assets/imagens"
             ],
             "styles": [
               "src/styles.css"
