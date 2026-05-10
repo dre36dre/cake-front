@@ -91,7 +91,6 @@ export class CarrinhoComponent implements OnInit {
       telefoneCliente: this.telefoneCliente,
       enderecoCliente: this.enderecoCliente,
       total: this.total,
-      dataHora: new Date().toISOString(),
       itens: this.carrinho.map((p: Produto) => ({
         nomeProduto: p.name,
         preco: p.price,

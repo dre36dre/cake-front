@@ -10,6 +10,7 @@
   <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
   <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
   <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm') : 'Sem data' }}</p>
+  <p><strong>Status:</strong> {{ p.status === 'CONFIRMED' ? 'Confirmado' : p.status }}</p>
 
   <h4>Itens:</h4>
   <ul>

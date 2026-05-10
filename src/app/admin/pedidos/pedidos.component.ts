@@ -23,11 +23,13 @@ export class PedidosComponent implements OnInit {
       this.pedidos = data.map(p => ({
         ...p,
         dataHora: p.dataHora ? new Date(p.dataHora) : null,
+        status: p.status || 'CONFIRMED',
         itens: p.itens || []
       }));
       this.carregando = false;
     },
-    error: () => {
+    error: (err) => {
+      console.error('Erro ao carregar pedidos:', err);
       this.erro = 'Nao foi possivel carregar os pedidos da API.';
       this.carregando = false;
     }
