@@ -3,8 +3,8 @@
 <div *ngFor="let p of produtos" style="border:1px solid #ccc; padding:10px; margin:10px">
 
   <img
-    [src]="'http://localhost:8080/produtos/imagens/' + p.imageUrl"
-    (error)="usarImagemLocal($event, p.imageUrl)"
+    [src]="imagemProduto(p)"
+    (error)="usarImagemLocal($event, p)"
     [alt]="p.name"
     width="150"
   />

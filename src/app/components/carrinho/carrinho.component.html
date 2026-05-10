@@ -13,8 +13,8 @@
   <!-- AQUI entra a imagem -->
 <img 
   class="foto-produto"
-  [src]="p.imageUrl?.startsWith('http') ? p.imageUrl : 'http://localhost:8080/produtos/imagens/' + p.imageUrl"
-  (error)="usarImagemLocal($event, p.imageUrl)"
+  [src]="imagemProduto(p)"
+  (error)="usarImagemLocal($event, p)"
   alt="{{ p.name }}"
 />
 
