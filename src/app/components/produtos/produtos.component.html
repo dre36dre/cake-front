@@ -1,7 +1,7 @@
 <h2>🍰 Cardápio</h2>
 <div class="grid">
   <div class="card" *ngFor="let p of produtos">
-    <img [src]="p.imageUrl" [alt]="p.name">
+    <img [src]="p.imageUrl" (error)="usarImagemLocal($event, p.imageUrl)" alt="{{ p.name }}">
     <h3>{{ p.name }}</h3>
     <p>{{ p.description }}</p>
     <p><strong>R$ {{ p.price }}</strong></p>
