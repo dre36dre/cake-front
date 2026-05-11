@@ -15,8 +15,12 @@ export class ProdutoService {
   constructor(private http: HttpClient) {}
 
   private getApiBase(): string {
-    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-      return '/api';
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+      if (isLocalhost) {
+        return '/api';
+      }
     }
     return environment.apiUrl.replace(/\/$/, '');
   }
