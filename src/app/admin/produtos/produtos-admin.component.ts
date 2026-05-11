@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, timeout } from 'rxjs/operators';
@@ -40,7 +40,11 @@ export class ProdutosAdminComponent implements OnInit {
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private timeoutId: any;
 
-  constructor(private produtoService: ProdutoService) {}
+  constructor(
+    private produtoService: ProdutoService,
+    private cd: ChangeDetectorRef,
+    private appRef: ApplicationRef
+  ) {}
 
   ngOnInit(): void {
     console.log('ProdutosAdminComponent inicializado');
@@ -64,6 +68,10 @@ export class ProdutosAdminComponent implements OnInit {
       finalize(() => {
         clearTimeout(this.timeoutId);
         this.carregando = false;
+        Promise.resolve().then(() => {
+          this.cd.detectChanges();
+          this.appRef.tick();
+        });
         console.log('Finalize carregarProdutos, carregando:', this.carregando);
       })
     ).subscribe({
@@ -74,6 +82,7 @@ export class ProdutosAdminComponent implements OnInit {
           console.error('Resposta de produtos não é um array:', produtos);
           this.erro = 'Resposta inválida da API de produtos.';
           this.carregando = false;
+          this.cd.detectChanges();
           return;
         }
 
@@ -82,11 +91,13 @@ export class ProdutosAdminComponent implements OnInit {
           imageUrl: this.nomeImagem(produto.imageUrl)
         }));
         this.carregando = false;
+        this.cd.detectChanges();
         console.log('Produtos mapeados:', this.produtos.length);
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
         this.carregando = false;
+        this.cd.detectChanges();
 
         if (err?.name === 'TimeoutError') {
           this.erro = 'Timeout ao conectar com a API. O backend pode estar offline.';
