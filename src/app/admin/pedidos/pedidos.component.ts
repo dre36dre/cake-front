@@ -21,6 +21,7 @@ export class PedidosComponent implements OnInit {
   constructor(private pedidoService: PedidoService) {}
 
  ngOnInit() {
+  console.log('PedidosComponent inicializado');
   this.carregarPedidos();
 }
 

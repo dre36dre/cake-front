@@ -1,4 +1,7 @@
 <section class="admin-produtos">
+  <div style="background: yellow; padding: 10px; margin: 10px 0; color: black;">
+    DEBUG: Componente ProdutosAdmin carregado. Produtos: {{ produtos?.length || 0 }}, Carregando: {{ carregando }}
+  </div>
   <div class="admin-topo">
     <div>
       <h2>Editar Produtos</h2>
@@ -15,7 +18,8 @@
   <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
 
   <div class="produtos-admin-grid" *ngIf="!carregando">
-    <article class="produto-editor" *ngFor="let p of produtos">
+    <p *ngIf="produtos.length === 0" style="color: red;">Nenhum produto encontrado. Verifique o console para mais detalhes.</p>
+    <article class="produto-editor" *ngFor="let p of produtos; trackBy: trackByProduto">
       <img [src]="imagemPreview(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
 
       <div class="campos">

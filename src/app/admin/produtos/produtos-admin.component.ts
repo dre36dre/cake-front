@@ -42,6 +42,7 @@ export class ProdutosAdminComponent implements OnInit {
   constructor(private produtoService: ProdutoService) {}
 
   ngOnInit(): void {
+    console.log('ProdutosAdminComponent inicializado');
     this.carregarProdutos();
   }
 
@@ -62,10 +63,12 @@ export class ProdutosAdminComponent implements OnInit {
     this.produtoService.listar().subscribe({
       next: (produtos) => {
         clearTimeout(this.timeoutId);
+        console.log('Produtos carregados com sucesso:', produtos.length, 'produtos');
         this.produtos = produtos.map((produto) => ({
           ...produto,
           imageUrl: this.nomeImagem(produto.imageUrl)
         }));
+        console.log('Produtos mapeados:', this.produtos.length);
         this.carregando = false;
       },
       error: (err) => {
@@ -146,5 +149,9 @@ export class ProdutosAdminComponent implements OnInit {
     }
 
     return imageUrl.split('/').pop() ?? imageUrl;
+  }
+
+  trackByProduto(index: number, produto: Produto): number {
+    return produto.id;
   }
 }

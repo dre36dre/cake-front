@@ -45,17 +45,21 @@
 }
 
 .produtos-admin-grid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
 }
 
 .produto-editor {
   background: #fff;
-  border: 1px solid #f1dce7;
+  border: 2px solid red; /* Debug: borda vermelha temporária */
   border-radius: 8px;
   box-shadow: 0 4px 14px rgba(84, 36, 58, 0.12);
   overflow: hidden;
+  margin: 10px; /* Debug: margem para visualizar */
+  width: 300px; /* Debug: largura fixa */
+  flex-shrink: 0; /* Debug: não encolher */
 }
 
 .produto-editor img {
