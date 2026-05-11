@@ -78,9 +78,9 @@ cancelarPedido(pedido: any) {
 
   this.salvandoStatus = pedidoId;
 
-  this.pedidoService.atualizarStatus(pedidoId, 'CANCELED').subscribe({
+  this.pedidoService.atualizarStatus(pedidoId, 'CANCELLED').subscribe({
     next: (pedidoAtualizado: any) => {
-      pedido.status = pedidoAtualizado?.status || 'CANCELED';
+      pedido.status = pedidoAtualizado?.status || 'CANCELLED';
     },
     error: (err) => {
       console.error('Erro ao cancelar pedido:', err);
