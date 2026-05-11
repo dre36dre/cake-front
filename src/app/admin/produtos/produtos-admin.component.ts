@@ -64,6 +64,7 @@ export class ProdutosAdminComponent implements OnInit {
       finalize(() => {
         clearTimeout(this.timeoutId);
         this.carregando = false;
+        console.log('Finalize carregarProdutos, carregando:', this.carregando);
       })
     ).subscribe({
       next: (produtos) => {
@@ -72,6 +73,7 @@ export class ProdutosAdminComponent implements OnInit {
         if (!Array.isArray(produtos)) {
           console.error('Resposta de produtos não é um array:', produtos);
           this.erro = 'Resposta inválida da API de produtos.';
+          this.carregando = false;
           return;
         }
 
@@ -79,10 +81,12 @@ export class ProdutosAdminComponent implements OnInit {
           ...produto,
           imageUrl: this.nomeImagem(produto.imageUrl)
         }));
+        this.carregando = false;
         console.log('Produtos mapeados:', this.produtos.length);
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
+        this.carregando = false;
 
         if (err?.name === 'TimeoutError') {
           this.erro = 'Timeout ao conectar com a API. O backend pode estar offline.';

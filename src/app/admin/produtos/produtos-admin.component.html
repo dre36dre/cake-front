@@ -17,8 +17,7 @@
   <p class="erro" *ngIf="erro">{{ erro }}</p>
   <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
 
-  <div class="produtos-admin-grid" *ngIf="!carregando">
-    <p *ngIf="produtos.length === 0" style="color: red;">Nenhum produto encontrado. Verifique o console para mais detalhes.</p>
+  <div class="produtos-admin-grid" *ngIf="!carregando && produtos.length > 0">
     <article class="produto-editor" *ngFor="let p of produtos; trackBy: trackByProduto">
       <img [src]="imagemPreview(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
 
@@ -54,4 +53,5 @@
       </div>
     </article>
   </div>
+  <p *ngIf="!carregando && produtos.length === 0 && !erro" style="color: red;">Nenhum produto encontrado. Verifique o console para mais detalhes.</p>
 </section>
