@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs';
 import { environment } from '../../environments/environments';
 
 @Injectable({
@@ -20,7 +21,14 @@ export class PedidoService {
   }
 
   atualizarPedido(id: string | number, dados: any) {
-    return this.http.patch(`${this.api}/${id}`, dados);
+    return this.http.patch(`${this.api}/${id}`, dados).pipe(
+      catchError((err) => {
+        if (err?.status === 405 || err?.status === 404 || err?.status === 400) {
+          return this.http.put(`${this.api}/${id}`, dados);
+        }
+        throw err;
+      })
+    );
   }
 
   atualizarStatus(id: string | number, status: string) {
