@@ -37,6 +37,7 @@ export class ProdutosAdminComponent implements OnInit {
   ];
 
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
+  private timeoutId: any;
 
   constructor(private produtoService: ProdutoService) {}
 
@@ -49,8 +50,18 @@ export class ProdutosAdminComponent implements OnInit {
     this.erro = '';
     this.mensagem = '';
 
+    // Timeout de segurança de 15 segundos
+    this.timeoutId = setTimeout(() => {
+      if (this.carregando) {
+        this.carregando = false;
+        this.erro = 'Timeout ao carregar produtos. Verifique se o backend está online e tente novamente.';
+        console.error('Timeout ao carregar produtos');
+      }
+    }, 15000);
+
     this.produtoService.listar().subscribe({
       next: (produtos) => {
+        clearTimeout(this.timeoutId);
         this.produtos = produtos.map((produto) => ({
           ...produto,
           imageUrl: this.nomeImagem(produto.imageUrl)
@@ -58,8 +69,18 @@ export class ProdutosAdminComponent implements OnInit {
         this.carregando = false;
       },
       error: (err) => {
+        clearTimeout(this.timeoutId);
         console.error('Erro ao carregar produtos:', err);
-        this.erro = 'Nao foi possivel carregar os produtos.';
+        
+        if (err?.name === 'TimeoutError') {
+          this.erro = 'Timeout ao conectar com a API. O backend pode estar offline.';
+        } else if (err?.status === 0) {
+          this.erro = 'Não foi possível conectar à API. Verifique se o backend está online.';
+        } else if (err?.status === 404) {
+          this.erro = 'Endpoint de produtos não encontrado no backend.';
+        } else {
+          this.erro = 'Não foi possível carregar os produtos. Tente novamente.';
+        }
         this.carregando = false;
       }
     });
@@ -86,7 +107,7 @@ export class ProdutosAdminComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao salvar produto:', err);
-        this.erro = 'Nao foi possivel salvar o produto. Tente novamente.';
+        this.erro = 'Não foi possível salvar o produto. Tente novamente.';
       },
       complete: () => {
         this.salvandoId = null;
