@@ -5,3 +5,27 @@
   border-radius: 8px;
   border: 1px solid #ddd;
 }
+
+.pedido-acoes {
+  margin: 15px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.pedido-acoes button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.botao-concluir {
+  background-color: #4caf50;
+  color: white;
+}
+
+.botao-cancelar {
+  background-color: #f44336;
+  color: white;
+}

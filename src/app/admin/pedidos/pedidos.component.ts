@@ -47,4 +47,54 @@ carregarPedidos() {
   });
 }
 
+concluirPedido(pedido: any) {
+  const pedidoId = pedido?.id || pedido?._id;
+  if (!pedidoId) {
+    return;
+  }
+
+  this.pedidoService.atualizarStatus(pedidoId, 'COMPLETED').subscribe({
+    next: () => {
+      pedido.status = 'COMPLETED';
+      this.carregarPedidos();
+    },
+    error: (err) => {
+      console.error('Erro ao concluir pedido:', err);
+      alert('Não foi possível concluir o pedido. Tente novamente.');
+    }
+  });
+}
+
+cancelarPedido(pedido: any) {
+  const pedidoId = pedido?.id || pedido?._id;
+  if (!pedidoId) {
+    return;
+  }
+
+  this.pedidoService.atualizarStatus(pedidoId, 'CANCELED').subscribe({
+    next: () => {
+      pedido.status = 'CANCELED';
+      this.carregarPedidos();
+    },
+    error: (err) => {
+      console.error('Erro ao cancelar pedido:', err);
+      alert('Não foi possível cancelar o pedido. Tente novamente.');
+    }
+  });
+}
+
+getStatusLabel(status: string) {
+  switch (status) {
+    case 'CONFIRMED':
+      return 'Confirmado';
+    case 'COMPLETED':
+      return 'Concluído';
+    case 'CANCELED':
+    case 'CANCELLED':
+      return 'Cancelado';
+    default:
+      return status;
+  }
+}
+
 }
