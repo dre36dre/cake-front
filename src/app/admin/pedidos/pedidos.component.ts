@@ -15,6 +15,7 @@ export class PedidosComponent implements OnInit {
   pedidos: any[] = [];
   carregando = true;
   erro = '';
+  salvandoStatus: number | null = null;
 
   constructor(private pedidoService: PedidoService) {}
 
@@ -53,14 +54,18 @@ concluirPedido(pedido: any) {
     return;
   }
 
+  this.salvandoStatus = pedidoId;
+
   this.pedidoService.atualizarStatus(pedidoId, 'COMPLETED').subscribe({
-    next: () => {
-      pedido.status = 'COMPLETED';
-      this.carregarPedidos();
+    next: (pedidoAtualizado: any) => {
+      pedido.status = pedidoAtualizado?.status || 'COMPLETED';
     },
     error: (err) => {
       console.error('Erro ao concluir pedido:', err);
       alert('Não foi possível concluir o pedido. Tente novamente.');
+    },
+    complete: () => {
+      this.salvandoStatus = null;
     }
   });
 }
@@ -71,14 +76,18 @@ cancelarPedido(pedido: any) {
     return;
   }
 
+  this.salvandoStatus = pedidoId;
+
   this.pedidoService.atualizarStatus(pedidoId, 'CANCELED').subscribe({
-    next: () => {
-      pedido.status = 'CANCELED';
-      this.carregarPedidos();
+    next: (pedidoAtualizado: any) => {
+      pedido.status = pedidoAtualizado?.status || 'CANCELED';
     },
     error: (err) => {
       console.error('Erro ao cancelar pedido:', err);
       alert('Não foi possível cancelar o pedido. Tente novamente.');
+    },
+    complete: () => {
+      this.salvandoStatus = null;
     }
   });
 }

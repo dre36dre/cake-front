@@ -15,8 +15,20 @@
   <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
 
   <div class="pedido-acoes" *ngIf="p.status === 'CONFIRMED'">
-    <button type="button" class="botao-concluir" (click)="concluirPedido(p)">Concluído</button>
-    <button type="button" class="botao-cancelar" (click)="cancelarPedido(p)">Cancelar</button>
+    <button
+      type="button"
+      class="botao-concluir"
+      [disabled]="salvandoStatus === p.id"
+      (click)="concluirPedido(p)">
+      Concluído
+    </button>
+    <button
+      type="button"
+      class="botao-cancelar"
+      [disabled]="salvandoStatus === p.id"
+      (click)="cancelarPedido(p)">
+      Cancelar
+    </button>
   </div>
 
   <h4>Itens:</h4>
