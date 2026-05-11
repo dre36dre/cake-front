@@ -1,0 +1,53 @@
+<section class="admin-produtos">
+  <div class="admin-topo">
+    <div>
+      <h2>Editar Produtos</h2>
+      <p>Altere imagem, descrição e preço exibidos no cardápio.</p>
+    </div>
+
+    <a routerLink="/admin/pedidos">Ver pedidos</a>
+  </div>
+
+  <button type="button" class="botao-atualizar" (click)="carregarProdutos()">Atualizar produtos</button>
+
+  <p class="estado" *ngIf="carregando">Carregando produtos...</p>
+  <p class="erro" *ngIf="erro">{{ erro }}</p>
+  <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+
+  <div class="produtos-admin-grid" *ngIf="!carregando">
+    <article class="produto-editor" *ngFor="let p of produtos">
+      <img [src]="imagemPreview(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
+
+      <div class="campos">
+        <h3>{{ p.name }}</h3>
+
+        <label>
+          Imagem
+          <select [(ngModel)]="p.imageUrl">
+            <option value="">Escolha uma imagem</option>
+            <option *ngFor="let imagem of imagensDisponiveis" [value]="imagem">{{ imagem }}</option>
+          </select>
+        </label>
+
+        <label>
+          Descrição
+          <textarea [(ngModel)]="p.description" rows="3"></textarea>
+        </label>
+
+        <label>
+          Preço
+          <input type="number" min="0" step="0.01" [(ngModel)]="p.price">
+        </label>
+
+        <label class="disponivel">
+          <input type="checkbox" [(ngModel)]="p.available">
+          Produto disponível
+        </label>
+
+        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id">
+          {{ salvandoId === p.id ? 'Salvando...' : 'Salvar alterações' }}
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

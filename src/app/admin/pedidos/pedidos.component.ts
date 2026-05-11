@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../services/pedido.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { finalize, timeout } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-pedidos',
    standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, RouterLink],
   templateUrl: './pedidos.component.html',
   styleUrls: ['./pedidos.component.css']
 })
