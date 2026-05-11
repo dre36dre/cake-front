@@ -12,7 +12,9 @@ export class ProdutoService {
 
   private apiUrl = `${this.getApiBase()}/produtos`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('ProdutoService inicializado com base de API:', this.apiUrl);
+  }
 
   private getApiBase(): string {
     if (typeof window !== 'undefined') {
@@ -26,6 +28,7 @@ export class ProdutoService {
   }
 
   listar(): Observable<Produto[]> {
+    console.log('ProdutoService listando produtos em:', this.apiUrl);
     return this.http.get<Produto[]>(this.apiUrl).pipe(
       timeout(10000)
     );

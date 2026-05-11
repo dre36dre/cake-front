@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { finalize, timeout } from 'rxjs/operators';
 import { Produto } from '../../models/produto.model';
 import { ProdutoService } from '../../services/produto.service';
 import { environment } from '../../../environments/environments';
@@ -54,27 +55,35 @@ export class ProdutosAdminComponent implements OnInit {
     // Timeout de segurança de 15 segundos
     this.timeoutId = setTimeout(() => {
       if (this.carregando) {
-        this.carregando = false;
         this.erro = 'Timeout ao carregar produtos. Verifique se o backend está online e tente novamente.';
         console.error('Timeout ao carregar produtos');
       }
     }, 15000);
 
-    this.produtoService.listar().subscribe({
-      next: (produtos) => {
+    this.produtoService.listar().pipe(
+      finalize(() => {
         clearTimeout(this.timeoutId);
-        console.log('Produtos carregados com sucesso:', produtos.length, 'produtos');
+        this.carregando = false;
+      })
+    ).subscribe({
+      next: (produtos) => {
+        console.log('Produtos carregados com sucesso:', produtos?.length, 'produtos');
+
+        if (!Array.isArray(produtos)) {
+          console.error('Resposta de produtos não é um array:', produtos);
+          this.erro = 'Resposta inválida da API de produtos.';
+          return;
+        }
+
         this.produtos = produtos.map((produto) => ({
           ...produto,
           imageUrl: this.nomeImagem(produto.imageUrl)
         }));
         console.log('Produtos mapeados:', this.produtos.length);
-        this.carregando = false;
       },
       error: (err) => {
-        clearTimeout(this.timeoutId);
         console.error('Erro ao carregar produtos:', err);
-        
+
         if (err?.name === 'TimeoutError') {
           this.erro = 'Timeout ao conectar com a API. O backend pode estar offline.';
         } else if (err?.status === 0) {
@@ -84,7 +93,6 @@ export class ProdutosAdminComponent implements OnInit {
         } else {
           this.erro = 'Não foi possível carregar os produtos. Tente novamente.';
         }
-        this.carregando = false;
       }
     });
   }
