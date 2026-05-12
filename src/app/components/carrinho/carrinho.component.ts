@@ -34,6 +34,7 @@ export class CarrinhoComponent implements OnInit {
   nomeCliente: string = '';
   telefoneCliente: string = '';
   enderecoCliente: string = '';
+  comentarioCliente: string = '';
 
   constructor(
     private carrinhoService: CarrinhoService,
@@ -90,6 +91,7 @@ export class CarrinhoComponent implements OnInit {
       nomeCliente: this.nomeCliente,
       telefoneCliente: this.telefoneCliente,
       enderecoCliente: this.enderecoCliente,
+      comentarioCliente: this.comentarioCliente,
       total: this.total,
       itens: this.carrinho.map((p: Produto) => ({
         nomeProduto: p.name,
@@ -121,7 +123,8 @@ export class CarrinhoComponent implements OnInit {
       `Novo pedido:%0A%0A` +
       `Cliente: ${this.nomeCliente}%0A` +
       `Telefone: ${this.telefoneCliente}%0A` +
-      `Endereço: ${this.enderecoCliente}%0A%0A` +
+      `Endereço: ${this.enderecoCliente}%0A` +
+      `Comentário: ${this.comentarioCliente || '-'}%0A%0A` +
       `Itens:%0A${itens}%0A%0A` +
       `Total: R$ ${this.total}`;
 
