@@ -131,7 +131,12 @@ export class ProdutosAdminComponent implements OnInit {
       formData.append('produto', JSON.stringify(produtoAtualizado));
       formData.append('imagem', imagemUpload);
 
-      this.produtoService.atualizarComImagem(produto.id, formData).subscribe({
+      this.produtoService.atualizarComImagem(produto.id, formData).pipe(
+        finalize(() => {
+          this.salvandoId = null;
+          this.cd.detectChanges();
+        })
+      ).subscribe({
         next: (atualizado) => {
           produto.description = atualizado.description;
           produto.price = atualizado.price;
@@ -145,14 +150,16 @@ export class ProdutosAdminComponent implements OnInit {
         error: (err) => {
           console.error('Erro ao salvar produto com imagem:', err);
           this.erro = 'Não foi possível salvar o produto com a nova imagem. Tente novamente.';
-        },
-        complete: () => {
-          this.salvandoId = null;
         }
       });
     } else {
       // Salvar sem imagem
-      this.produtoService.atualizar(produto.id, produtoAtualizado).subscribe({
+      this.produtoService.atualizar(produto.id, produtoAtualizado).pipe(
+        finalize(() => {
+          this.salvandoId = null;
+          this.cd.detectChanges();
+        })
+      ).subscribe({
         next: (atualizado) => {
           produto.description = atualizado.description;
           produto.price = atualizado.price;
@@ -163,9 +170,6 @@ export class ProdutosAdminComponent implements OnInit {
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
           this.erro = 'Não foi possível salvar o produto. Tente novamente.';
-        },
-        complete: () => {
-          this.salvandoId = null;
         }
       });
     }
