@@ -19,7 +19,7 @@
 
   <div class="produtos-admin-grid" *ngIf="!carregando && produtos.length > 0">
     <article class="produto-editor" *ngFor="let p of produtos; trackBy: trackByProduto">
-      <img [src]="imagemPreview(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
+      <img [src]="getImagemSrc(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
 
       <div class="campos">
         <h3>{{ p.name }}</h3>
@@ -30,6 +30,17 @@
             <option value="">Escolha uma imagem</option>
             <option *ngFor="let imagem of imagensDisponiveis" [value]="imagem">{{ imagem }}</option>
           </select>
+        </label>
+
+        <label>
+          Ou fazer upload de nova imagem
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event, p)"
+            [disabled]="salvandoId === p.id"
+          />
+          <small *ngIf="getImagemUpload(p)" style="color: #666;">Arquivo selecionado: {{ getImagemUpload(p)?.name }}</small>
         </label>
 
         <label>

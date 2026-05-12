@@ -43,4 +43,10 @@ export class ProdutoService {
       timeout(10000)
     );
   }
+
+  atualizarComImagem(id: number, formData: FormData): Observable<Produto> {
+    return this.http.put<Produto>(`${this.apiUrl}/${id}/upload`, formData).pipe(
+      timeout(30000) // Timeout maior para upload de arquivos
+    );
+  }
 }

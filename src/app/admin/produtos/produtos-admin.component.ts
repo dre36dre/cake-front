@@ -123,22 +123,52 @@ export class ProdutosAdminComponent implements OnInit {
       imageUrl: this.nomeImagem(produto.imageUrl)
     };
 
-    this.produtoService.atualizar(produto.id, produtoAtualizado).subscribe({
-      next: (atualizado) => {
-        produto.description = atualizado.description;
-        produto.price = atualizado.price;
-        produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
-        produto.available = atualizado.available;
-        this.mensagem = `${produto.name} atualizado com sucesso.`;
-      },
-      error: (err) => {
-        console.error('Erro ao salvar produto:', err);
-        this.erro = 'Não foi possível salvar o produto. Tente novamente.';
-      },
-      complete: () => {
-        this.salvandoId = null;
-      }
-    });
+    // Verificar se há imagem para upload
+    const imagemUpload = (produto as any).imagemUpload;
+    if (imagemUpload) {
+      // Usar FormData para enviar arquivo
+      const formData = new FormData();
+      formData.append('produto', JSON.stringify(produtoAtualizado));
+      formData.append('imagem', imagemUpload);
+
+      this.produtoService.atualizarComImagem(produto.id, formData).subscribe({
+        next: (atualizado) => {
+          produto.description = atualizado.description;
+          produto.price = atualizado.price;
+          produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
+          produto.available = atualizado.available;
+          // Limpar dados de upload
+          delete (produto as any).imagemUpload;
+          delete (produto as any).imagemPreview;
+          this.mensagem = `${produto.name} atualizado com sucesso (imagem incluída).`;
+        },
+        error: (err) => {
+          console.error('Erro ao salvar produto com imagem:', err);
+          this.erro = 'Não foi possível salvar o produto com a nova imagem. Tente novamente.';
+        },
+        complete: () => {
+          this.salvandoId = null;
+        }
+      });
+    } else {
+      // Salvar sem imagem
+      this.produtoService.atualizar(produto.id, produtoAtualizado).subscribe({
+        next: (atualizado) => {
+          produto.description = atualizado.description;
+          produto.price = atualizado.price;
+          produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
+          produto.available = atualizado.available;
+          this.mensagem = `${produto.name} atualizado com sucesso.`;
+        },
+        error: (err) => {
+          console.error('Erro ao salvar produto:', err);
+          this.erro = 'Não foi possível salvar o produto. Tente novamente.';
+        },
+        complete: () => {
+          this.salvandoId = null;
+        }
+      });
+    }
   }
 
   imagemPreview(produto: Produto): string {
@@ -159,11 +189,53 @@ export class ProdutosAdminComponent implements OnInit {
     return `assets/imagens/${imagem}`;
   }
 
+  getImagemSrc(produto: Produto): string {
+    const preview = (produto as any).imagemPreview;
+    return preview || this.imagemPreview(produto);
+  }
+
+  getImagemUpload(produto: Produto): File | null {
+    return (produto as any).imagemUpload || null;
+  }
+
   usarImagemLocal(event: Event, produto: Produto) {
     const img = event.target as HTMLImageElement;
     const imagem = this.nomeImagem(produto.imageUrl) || 'bolo.JPG';
 
     img.src = `assets/imagens/${imagem}`;
+  }
+
+  onFileSelected(event: Event, produto: Produto) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      // Verificar se é uma imagem
+      if (!file.type.startsWith('image/')) {
+        this.erro = 'Por favor, selecione apenas arquivos de imagem.';
+        input.value = '';
+        return;
+      }
+
+      // Verificar tamanho (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.erro = 'A imagem deve ter no máximo 5MB.';
+        input.value = '';
+        return;
+      }
+
+      // Armazenar o arquivo no produto
+      (produto as any).imagemUpload = file;
+
+      // Criar preview da imagem
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        (produto as any).imagemPreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+
+      this.erro = '';
+    }
   }
 
   private nomeImagem(imageUrl: string): string {
