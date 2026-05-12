@@ -6,7 +6,29 @@
 
 <p *ngIf="carregando">Carregando pedidos...</p>
 <p *ngIf="erro">{{ erro }}</p>
-<p *ngIf="!carregando && !erro && pedidos.length === 0">Nenhum pedido recebido ainda.</p>
+<p *ngIf="!carregando && !erro && pedidos.length === 0 && pedidosOffline.length === 0">Nenhum pedido recebido ainda.</p>
+
+<div *ngIf="pedidosOffline.length > 0" class="offline-pedidos">
+  <h3>Pedidos salvos localmente</h3>
+  <p>Estes pedidos foram registrados no dispositivo porque o backend não estava disponível.</p>
+  <div *ngFor="let p of pedidosOffline" class="pedido offline">
+    <p><strong>Offline:</strong> Sim</p>
+    <p><strong>Cliente:</strong> {{ p.nomeCliente }}</p>
+    <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
+    <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
+    <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
+    <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm') : 'Sem data' }}</p>
+    <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
+    <h4>Itens:</h4>
+    <ul>
+      <li *ngFor="let item of p.itens">
+        {{ item.nomeProduto }} — R$ {{ item.preco }} (x{{ item.quantidade }})
+      </li>
+    </ul>
+    <p><strong>Total:</strong> R$ {{ p.total }}</p>
+    <hr>
+  </div>
+</div>
 
 <div *ngFor="let p of pedidos" class="pedido">
 

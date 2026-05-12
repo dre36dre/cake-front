@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../services/pedido.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import { finalize, timeout } from 'rxjs';
+import { catchError, finalize, of, timeout } from 'rxjs';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 export class PedidosComponent implements OnInit {
 
   pedidos: any[] = [];
+  pedidosOffline: any[] = [];
   carregando = true;
   erro = '';
   salvandoStatus: number | null = null;
@@ -22,6 +23,7 @@ export class PedidosComponent implements OnInit {
 
  ngOnInit() {
   console.log('PedidosComponent inicializado');
+  this.carregarPedidosOffline();
   this.carregarPedidos();
 }
 
@@ -30,24 +32,37 @@ carregarPedidos() {
   this.erro = '';
 
   this.pedidoService.listarPedidos().pipe(
-    timeout(15000),
+    timeout(7000),
+    catchError((err) => {
+      console.error('Erro ao carregar pedidos:', err);
+      this.erro = 'Não foi possível carregar os pedidos. Verifique se o backend está online e tente atualizar.';
+      this.pedidos = [];
+      return of([]);
+    }),
     finalize(() => {
       this.carregando = false;
+      this.carregarPedidosOffline();
     })
-  ).subscribe({
-    next: (data) => {
+  ).subscribe((data: any[]) => {
+    if (data.length > 0) {
       this.pedidos = data.map(p => ({
         ...p,
         dataHora: p.dataHora ? new Date(p.dataHora) : null,
         status: p.status || 'CONFIRMED',
         itens: p.itens || []
       }));
-    },
-    error: (err) => {
-      console.error('Erro ao carregar pedidos:', err);
-      this.erro = 'Nao foi possivel carregar os pedidos. Verifique se o backend do Railway esta online e tente atualizar.';
     }
   });
+}
+
+carregarPedidosOffline() {
+  const offline = this.pedidoService.getPedidosOffline();
+  this.pedidosOffline = offline.map(p => ({
+    ...p,
+    dataHora: p.dataHora ? new Date(p.dataHora) : null,
+    status: p.status || 'OFFLINE',
+    itens: p.itens || []
+  }));
 }
 
 concluirPedido(pedido: any) {
