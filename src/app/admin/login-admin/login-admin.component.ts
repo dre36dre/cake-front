@@ -25,6 +25,9 @@ export class LoginAdminComponent {
   entrar() {
     this.erro = '';
 
+    // Verificar senha local primeiro (caso tenha sido alterada)
+    const senhaLocal = localStorage.getItem('adminPassword') || 'confeitaria123';
+
     this.authService.login(this.usuario, this.senha).subscribe({
       next: (res) => {
         this.authService.salvarToken(res.token);
@@ -32,7 +35,8 @@ export class LoginAdminComponent {
         this.entrarComoAdmin();
       },
       error: () => {
-        if (this.usuario === 'admin' && (this.senha === 'confeitaria123' || this.senha === 'confeitaria123#')) {
+        // Fallback: verificar credenciais locais
+        if (this.usuario === 'admin' && (this.senha === senhaLocal || this.senha === 'confeitaria123' || this.senha === 'confeitaria123#')) {
           this.entrarComoAdmin();
           return;
         }

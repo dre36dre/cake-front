@@ -1,0 +1,59 @@
+<h2>Alterar Senha do Administrador</h2>
+
+<div class="alterar-senha-form">
+  <div class="campo">
+    <label for="senha-atual">Senha Atual:</label>
+    <input
+      id="senha-atual"
+      type="password"
+      [(ngModel)]="senhaAtual"
+      placeholder="Digite sua senha atual"
+      [disabled]="carregando"
+    />
+  </div>
+
+  <div class="campo">
+    <label for="nova-senha">Nova Senha:</label>
+    <input
+      id="nova-senha"
+      type="password"
+      [(ngModel)]="novaSenha"
+      placeholder="Digite a nova senha (mínimo 6 caracteres)"
+      [disabled]="carregando"
+    />
+  </div>
+
+  <div class="campo">
+    <label for="confirmar-senha">Confirmar Nova Senha:</label>
+    <input
+      id="confirmar-senha"
+      type="password"
+      [(ngModel)]="confirmarSenha"
+      placeholder="Confirme a nova senha"
+      [disabled]="carregando"
+    />
+  </div>
+
+  <div class="botoes">
+    <button
+      type="button"
+      class="botao-alterar"
+      (click)="alterarSenha()"
+      [disabled]="carregando"
+    >
+      {{ carregando ? 'Alterando...' : 'Alterar Senha' }}
+    </button>
+
+    <button
+      type="button"
+      class="botao-voltar"
+      (click)="voltar()"
+      [disabled]="carregando"
+    >
+      Voltar
+    </button>
+  </div>
+
+  <p *ngIf="erro" class="erro">{{ erro }}</p>
+  <p *ngIf="sucesso" class="sucesso">{{ sucesso }}</p>
+</div>

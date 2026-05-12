@@ -17,6 +17,21 @@
   text-decoration: none;
 }
 
+.botao-senha {
+  background: #17a2b8;
+  border-radius: 6px;
+  color: #fff;
+  display: inline-block;
+  font-weight: 700;
+  margin: 0 10px 12px 0;
+  padding: 8px 12px;
+  text-decoration: none;
+}
+
+.botao-senha:hover {
+  background: #138496;
+}
+
 .pedido-acoes {
   margin: 15px 0;
   display: flex;

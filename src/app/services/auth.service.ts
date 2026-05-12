@@ -13,6 +13,13 @@ export class AuthService {
     return this.http.post<any>(`${this.api}/login`, { username, password });
   }
 
+  alterarSenha(senhaAtual: string, novaSenha: string) {
+    return this.http.post<any>(`${this.api}/change-password`, {
+      currentPassword: senhaAtual,
+      newPassword: novaSenha
+    });
+  }
+
   salvarToken(token: string) {
     localStorage.setItem('token', token);
   }
