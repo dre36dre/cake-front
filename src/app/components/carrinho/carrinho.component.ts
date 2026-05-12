@@ -107,7 +107,8 @@ export class CarrinhoComponent implements OnInit {
         this.carrinhoService.limpar();
       },
       error: () => {
-        alert('Não foi possível salvar o pedido na API. O pedido será aberto no WhatsApp como fallback.');
+        this.pedidoService.salvarPedidoOffline(pedido);
+        alert('Não foi possível salvar o pedido na API. Pedido armazenado localmente e aberto no WhatsApp.');
         this.abrirWhatsApp();
         this.carrinhoService.limpar();
       }

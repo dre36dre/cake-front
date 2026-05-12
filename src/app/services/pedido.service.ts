@@ -27,6 +27,21 @@ export class PedidoService {
     return this.http.get<any[]>(this.api);
   }
 
+  salvarPedidoOffline(pedido: any): void {
+    const pedidos = this.getPedidosOffline();
+    pedidos.push({
+      ...pedido,
+      dataHora: new Date().toISOString(),
+      offline: true
+    });
+    localStorage.setItem('pedidosOffline', JSON.stringify(pedidos));
+  }
+
+  getPedidosOffline(): any[] {
+    const data = localStorage.getItem('pedidosOffline');
+    return data ? JSON.parse(data) : [];
+  }
+
   atualizarPedido(id: string | number, dados: any) {
     return this.http.patch(`${this.api}/${id}`, dados).pipe(
       catchError((err) => {
