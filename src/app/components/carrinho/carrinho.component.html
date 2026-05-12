@@ -3,7 +3,10 @@
   <input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
   <input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
   <input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
-  <textarea [(ngModel)]="comentarioCliente" placeholder="Comentário do pedido" rows="3"></textarea>
+  <label class="comentario-label">
+    Comentário do pedido
+    <textarea [(ngModel)]="comentarioCliente" placeholder="Escreva sua observação" rows="4"></textarea>
+  </label>
 </div>
 
 <hr>
