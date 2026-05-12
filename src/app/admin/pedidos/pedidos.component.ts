@@ -18,6 +18,7 @@ export class PedidosComponent implements OnInit {
   carregando = true;
   erro = '';
   salvandoStatus: number | null = null;
+  reenviandoOffline = false;
 
   constructor(private pedidoService: PedidoService) {}
 
@@ -63,6 +64,26 @@ carregarPedidosOffline() {
     status: p.status || 'OFFLINE',
     itens: p.itens || []
   }));
+}
+
+reenviarPedidosOffline() {
+  if (this.pedidosOffline.length === 0) {
+    alert('Não há pedidos offline para reenviar.');
+    return;
+  }
+
+  this.reenviandoOffline = true;
+  this.pedidoService.reenviarPedidosOffline().pipe(
+    finalize(() => {
+      this.reenviandoOffline = false;
+      this.carregarPedidosOffline();
+      this.carregarPedidos();
+    })
+  ).subscribe((results: any[]) => {
+    const enviados = results.filter(r => r.success).length;
+    const naoEnviados = results.length - enviados;
+    alert(`Pedidos reenviados: ${enviados}. Não reenviados: ${naoEnviados}.`);
+  });
 }
 
 concluirPedido(pedido: any) {

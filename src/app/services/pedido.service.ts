@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs';
+import { catchError, concatMap, from, map, of, tap, toArray } from 'rxjs';
 import { environment } from '../../environments/environments';
 
 @Injectable({
@@ -40,6 +40,27 @@ export class PedidoService {
   getPedidosOffline(): any[] {
     const data = localStorage.getItem('pedidosOffline');
     return data ? JSON.parse(data) : [];
+  }
+
+  reenviarPedidosOffline() {
+    const pedidos = this.getPedidosOffline();
+    if (pedidos.length === 0) {
+      return of([]);
+    }
+
+    return from(pedidos).pipe(
+      concatMap((pedido: any) =>
+        this.enviarPedido(pedido).pipe(
+          map((res: any) => ({ success: true, pedido, res })),
+          catchError((err) => of({ success: false, pedido, err }))
+        )
+      ),
+      toArray(),
+      tap((results: any[]) => {
+        const remaining = results.filter(result => !result.success).map(result => result.pedido);
+        localStorage.setItem('pedidosOffline', JSON.stringify(remaining));
+      })
+    );
   }
 
   atualizarPedido(id: string | number, dados: any) {

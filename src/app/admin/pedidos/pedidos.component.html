@@ -11,6 +11,9 @@
 <div *ngIf="pedidosOffline.length > 0" class="offline-pedidos">
   <h3>Pedidos salvos localmente</h3>
   <p>Estes pedidos foram registrados no dispositivo porque o backend não estava disponível.</p>
+  <button type="button" (click)="reenviarPedidosOffline()" [disabled]="reenviandoOffline">
+    {{ reenviandoOffline ? 'Reenviando...' : 'Reenviar pedidos offline' }}
+  </button>
   <div *ngFor="let p of pedidosOffline" class="pedido offline">
     <p><strong>Offline:</strong> Sim</p>
     <p><strong>Cliente:</strong> {{ p.nomeCliente }}</p>
