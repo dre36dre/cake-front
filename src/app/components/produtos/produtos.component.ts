@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { interval, Subscription } from 'rxjs';
 import { ProdutoService } from '../../services/produto.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
@@ -13,11 +14,12 @@ import { environment } from '../../../environments/environments';
   templateUrl: './produtos.component.html',
   styleUrls: ['./produtos.component.css']
 })
-export class ProdutosComponent implements OnInit {
+export class ProdutosComponent implements OnInit, OnDestroy {
 
   produtos: Produto[] = [];
   total = 0;
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
+  private pollingSubscription: Subscription | null = null;
   private readonly imagensPorProduto: Record<string, string> = {
     'bolo de coco': 'bolo.JPG',
     'brigadeiro': 'brigadeiros-tradicional.jpg',
@@ -39,6 +41,25 @@ export class ProdutosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.carregarProdutos();
+
+    // Polling a cada 10 segundos para verificar novos produtos
+    this.pollingSubscription = interval(10000).subscribe(() => {
+      this.carregarProdutos();
+    });
+
+    this.carrinhoService.carrinho$.subscribe((itens) => {
+      this.total = itens.reduce((soma, produto) => soma + produto.price, 0);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+
+  private carregarProdutos(): void {
     this.produtoService.listar().subscribe({
       next: (data) => {
         this.produtos = data;
@@ -47,10 +68,6 @@ export class ProdutosComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
       }
-    });
-
-    this.carrinhoService.carrinho$.subscribe((itens) => {
-      this.total = itens.reduce((soma, produto) => soma + produto.price, 0);
     });
   }
 
