@@ -1,7 +1,7 @@
 <section class="produtos-page">
   <div class="produtos-grid">
     <article class="produto-card" *ngFor="let p of produtos">
-      <img class="produto-imagem" [src]="imagemProduto(p)" (error)="usarImagemLocal($event, p)" alt="{{ p.name }}">
+      <img class="produto-imagem" [src]="imagemProduto(p)" (error)="usarImagemLocal($event, p)" alt="{{ p.name }}" loading="lazy" decoding="async">
 
       <div class="produto-info">
         <h3>{{ p.name }}</h3>
