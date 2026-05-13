@@ -25,7 +25,6 @@ export class MenuComponent implements OnInit {
     'copo surpresa': 'copo-surpresa.JPG',
     'mini pudim': 'mini-pudim.JPG',
     'pudim para compartilhar': 'pudim-compartilhar.JPG',
-    'pudim familia': 'pudim.JPG',
     'pudim família': 'pudim.JPG'
   };
 

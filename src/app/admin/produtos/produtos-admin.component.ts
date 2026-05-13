@@ -88,7 +88,7 @@ export class ProdutosAdminComponent implements OnInit {
 
         this.produtos = produtos.map((produto) => ({
           ...produto,
-          imageUrl: this.nomeImagem(produto.imageUrl)
+          imageUrl: this.nomeImagem(produto.imageUrl ?? '')
         }));
         this.carregando = false;
         this.cd.detectChanges();
@@ -166,21 +166,23 @@ export class ProdutosAdminComponent implements OnInit {
       ...produto,
       name: produto.name.trim(),
       price: Number(produto.price),
-      imageUrl: this.nomeImagem(produto.imageUrl)
+      imageUrl: this.nomeImagem(produto.imageUrl ?? '')
     };
+
+    const isNewProduct = !produto.id;
 
     const concluirSalvar = (atualizado: Produto) => {
       produto.id = atualizado.id;
       produto.name = atualizado.name;
       produto.description = atualizado.description;
       produto.price = atualizado.price;
-      produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
+      produto.imageUrl = this.nomeImagem(atualizado.imageUrl ?? '');
       produto.available = atualizado.available;
       delete (produto as any).imagemUpload;
       delete (produto as any).imagemPreview;
-      this.mensagem = produto.id
-        ? `${produto.name} atualizado com sucesso.`
-        : `${produto.name} criado com sucesso.`;
+      this.mensagem = isNewProduct
+        ? `${produto.name} criado com sucesso.`
+        : `${produto.name} atualizado com sucesso.`;
     };
 
     const finalizar = () => {
@@ -294,7 +296,7 @@ export class ProdutosAdminComponent implements OnInit {
     }
   }
 
-  private nomeImagem(imageUrl: string): string {
+  private nomeImagem(imageUrl: string | null | undefined): string {
     if (!imageUrl) {
       return '';
     }
