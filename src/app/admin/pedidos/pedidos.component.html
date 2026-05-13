@@ -20,7 +20,7 @@
     <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
     <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
     <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
-    <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm') : 'Sem data' }}</p>
+    <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm':'America/Sao_Paulo') : 'Sem data' }}</p>
     <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
     <h4>Itens:</h4>
     <ul>
@@ -39,7 +39,7 @@
   <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
   <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
   <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
-  <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm') : 'Sem data' }}</p>
+  <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm':'America/Sao_Paulo') : 'Sem data' }}</p>
   <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
 
   <div class="pedido-acoes" *ngIf="p.status === 'CONFIRMED'">
