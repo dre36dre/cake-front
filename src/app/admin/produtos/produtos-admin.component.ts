@@ -68,6 +68,7 @@ export class ProdutosAdminComponent implements OnInit {
       finalize(() => {
         clearTimeout(this.timeoutId);
         this.carregando = false;
+        this.salvandoIndex = null;
         Promise.resolve().then(() => {
           this.cd.detectChanges();
           this.appRef.tick();
@@ -170,6 +171,7 @@ export class ProdutosAdminComponent implements OnInit {
     };
 
     const isNewProduct = !produto.id;
+    console.log('Salvando produto:', { isNew: isNewProduct, nome: produto.name, id: produto.id, imageUrl: produtoAtualizado.imageUrl });
 
     const concluirSalvar = (atualizado: Produto) => {
       produto.id = atualizado.id;
@@ -183,6 +185,7 @@ export class ProdutosAdminComponent implements OnInit {
       this.mensagem = isNewProduct
         ? `${produto.name} criado com sucesso.`
         : `${produto.name} atualizado com sucesso.`;
+      console.log('Produto salvo com sucesso:', produto);
     };
 
     const finalizar = () => {
@@ -193,26 +196,38 @@ export class ProdutosAdminComponent implements OnInit {
     const processarSalvar = (imageUrl?: string) => {
       if (imageUrl) {
         produtoAtualizado.imageUrl = imageUrl;
+        console.log('Image URL atualizada:', imageUrl);
       }
 
       const request$ = produto.id
         ? this.produtoService.atualizar(produto.id, produtoAtualizado)
         : this.produtoService.create(produtoAtualizado);
 
-      request$.pipe(
-        finalize(finalizar)
-      ).subscribe({
+      request$.subscribe({
         next: (atualizado) => {
+          console.log('Resposta do servidor:', atualizado);
           concluirSalvar(atualizado);
+          this.salvandoIndex = null;
           if (isNewProduct) {
+            console.log('Novo produto criado, recarregando lista...');
             const mensagemSalva = this.mensagem;
             this.carregarProdutos();
-            this.mensagem = mensagemSalva;
+            Promise.resolve().then(() => {
+              this.mensagem = mensagemSalva;
+              this.cd.detectChanges();
+            });
+          } else {
+            this.cd.detectChanges();
           }
         },
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
           this.erro = 'Não foi possível salvar o produto. Tente novamente.';
+          if (err?.error?.message) {
+            this.erro += ` (${err.error.message})`;
+          }
+          this.salvandoIndex = null;
+          this.cd.detectChanges();
         }
       });
     };
