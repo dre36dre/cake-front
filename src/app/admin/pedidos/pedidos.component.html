@@ -21,12 +21,9 @@
     <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
     <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
    <p>
+  <p>
   <strong>Data:</strong>
-  {{
-    p.dataHora
-      ? ((p.dataHora + '-03:00') | date:'dd/MM/yyyy HH:mm')
-      : 'Sem data'
-  }}
+  {{ p.dataHora | date:'dd/MM/yyyy HH:mm' }}
 </p>
     <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
     <h4>Itens:</h4>
