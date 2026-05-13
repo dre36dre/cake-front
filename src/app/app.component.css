@@ -15,8 +15,9 @@
 }
 
 @media (max-width: 768px) {
-  .admin-link {
-    padding: 8px 18px;
-    margin-left: 10px;
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
   }
+}
 }
