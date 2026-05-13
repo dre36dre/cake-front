@@ -241,12 +241,9 @@ export class ProdutosAdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao enviar imagem:', err);
-          this.erro = 'Não foi possível enviar a imagem. Tente novamente.';
-          if (err?.status) {
-            this.erro += ` (HTTP ${err.status})`;
-          }
-          this.salvandoIndex = null;
-          this.cd.detectChanges();
+          console.warn('Salvando produto sem a nova imagem...');
+          this.mensagem = 'Aviso: A imagem não foi enviada, mas o produto foi salvo.';
+          processarSalvar();
         }
       });
     } else {
@@ -266,10 +263,13 @@ export class ProdutosAdminComponent implements OnInit {
     }
 
     if (produto.imageUrl?.startsWith('/imagens/')) {
+      if (imagem.startsWith('cardapio-')) {
+        return this.assetPath(imagem);
+      }
       return `${this.apiUrl}/imagens/${imagem}`;
     }
 
-    return `assets/imagens/${imagem}`;
+    return this.assetPath(imagem);
   }
 
   getImagemSrc(produto: Produto): string {
@@ -285,7 +285,14 @@ export class ProdutosAdminComponent implements OnInit {
     const img = event.target as HTMLImageElement;
     const imagem = this.nomeImagem(produto.imageUrl) || 'bolo.JPG';
 
-    img.src = `assets/imagens/${imagem}`;
+    img.src = this.assetPath(imagem);
+  }
+
+  private assetPath(imagem: string): string {
+    if (imagem.startsWith('cardapio-')) {
+      return `assets/imagenshome/${imagem}`;
+    }
+    return `assets/imagens/${imagem}`;
   }
 
   onFileSelected(event: Event, produto: Produto) {

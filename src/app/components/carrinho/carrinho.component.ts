@@ -61,6 +61,14 @@ export class CarrinhoComponent implements OnInit {
       return produto.imageUrl;
     }
 
+    const imagem = produto.imageUrl.startsWith('/')
+      ? produto.imageUrl.split('/').pop() ?? ''
+      : produto.imageUrl;
+
+    if (imagem.startsWith('cardapio-')) {
+      return this.assetPath(imagem);
+    }
+
     if (produto.imageUrl.startsWith('/')) {
       return `${this.apiUrl}${produto.imageUrl}`;
     }
@@ -78,6 +86,13 @@ export class CarrinhoComponent implements OnInit {
     const nome = produto.name?.trim().toLowerCase() ?? '';
     const imagem = this.imagensPorProduto[nome] ?? 'bolo.JPG';
 
+    return this.assetPath(imagem);
+  }
+
+  private assetPath(imagem: string): string {
+    if (imagem.startsWith('cardapio-')) {
+      return `assets/imagenshome/${imagem}`;
+    }
     return `assets/imagens/${imagem}`;
   }
 
