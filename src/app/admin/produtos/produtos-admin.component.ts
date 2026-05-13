@@ -204,6 +204,11 @@ export class ProdutosAdminComponent implements OnInit {
       ).subscribe({
         next: (atualizado) => {
           concluirSalvar(atualizado);
+          if (isNewProduct) {
+            const mensagemSalva = this.mensagem;
+            this.carregarProdutos();
+            this.mensagem = mensagemSalva;
+          }
         },
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
