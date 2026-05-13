@@ -42,7 +42,6 @@
             type="file"
             accept="image/*"
             (change)="onFileSelected($event, p)"
-            [disabled]="salvandoId === p.id"
           />
           <small *ngIf="getImagemUpload(p)" style="color: #666;">Arquivo selecionado: {{ getImagemUpload(p)?.name }}</small>
         </label>
@@ -62,8 +61,8 @@
           Produto disponível
         </label>
 
-        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id || (salvandoNovo && p.id === null)">
-          {{ salvandoId === p.id || (salvandoNovo && p.id === null) ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
+        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id">
+          {{ salvandoId === p.id ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
         </button>
         <button type="button" class="botao-excluir" (click)="deletarProduto(p, i)">
           Excluir
