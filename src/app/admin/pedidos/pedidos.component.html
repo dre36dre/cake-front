@@ -20,7 +20,14 @@
     <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
     <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
     <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
-    <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm':'-0300') : 'Sem data' }}</p>
+   <p>
+  <strong>Data:</strong>
+  {{
+    p.dataHora
+      ? ((p.dataHora + '-03:00') | date:'dd/MM/yyyy HH:mm')
+      : 'Sem data'
+  }}
+</p>
     <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
     <h4>Itens:</h4>
     <ul>
