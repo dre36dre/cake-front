@@ -9,18 +9,24 @@
     <a routerLink="/admin/pedidos">Ver pedidos</a>
   </div>
 
-  <button type="button" class="botao-atualizar" (click)="carregarProdutos()">Atualizar produtos</button>
+  <div class="admin-acoes">
+    <button type="button" class="botao-atualizar" (click)="carregarProdutos()">Atualizar produtos</button>
+    <button type="button" class="botao-adicionar" (click)="adicionarProduto()">Adicionar produto</button>
+  </div>
 
   <p class="estado" *ngIf="carregando">Carregando produtos...</p>
   <p class="erro" *ngIf="erro">{{ erro }}</p>
   <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
 
   <div class="produtos-admin-grid" *ngIf="!carregando && produtos.length > 0">
-    <article class="produto-editor" *ngFor="let p of produtos; trackBy: trackByProduto">
+    <article class="produto-editor" *ngFor="let p of produtos; let i = index; trackBy: trackByProduto">
       <img [src]="getImagemSrc(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
 
       <div class="campos">
-        <h3>{{ p.name }}</h3>
+        <label>
+          Nome
+          <input type="text" [(ngModel)]="p.name" placeholder="Nome do produto">
+        </label>
 
         <label>
           Imagem
@@ -56,8 +62,11 @@
           Produto disponível
         </label>
 
-        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id">
-          {{ salvandoId === p.id ? 'Salvando...' : 'Salvar alterações' }}
+        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id || (salvandoNovo && p.id === null)">
+          {{ salvandoId === p.id || (salvandoNovo && p.id === null) ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
+        </button>
+        <button type="button" class="botao-excluir" (click)="deletarProduto(p, i)">
+          Excluir
         </button>
       </div>
     </article>

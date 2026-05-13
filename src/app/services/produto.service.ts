@@ -44,9 +44,17 @@ export class ProdutoService {
     );
   }
 
-  atualizarComImagem(id: number, formData: FormData): Observable<Produto> {
-    return this.http.put<Produto>(`${this.apiUrl}/${id}/upload`, formData).pipe(
-      timeout(30000) // Timeout maior para upload de arquivos
+  deletar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      timeout(10000)
+    );
+  }
+
+  uploadImagem(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<string>(`${this.apiUrl}/upload`, formData).pipe(
+      timeout(30000)
     );
   }
 }

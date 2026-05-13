@@ -21,6 +21,7 @@ export class ProdutosAdminComponent implements OnInit {
   erro = '';
   mensagem = '';
   salvandoId: number | null = null;
+  salvandoNovo = false;
 
   imagensDisponiveis = [
     'beijinho.JPG',
@@ -112,66 +113,120 @@ export class ProdutosAdminComponent implements OnInit {
     });
   }
 
-  salvar(produto: Produto) {
-    this.salvandoId = produto.id;
+  adicionarProduto() {
+    this.produtos.push({
+      id: null,
+      name: '',
+      description: '',
+      price: 0,
+      available: true,
+      imageUrl: ''
+    });
+    this.cd.detectChanges();
+  }
+
+  deletarProduto(produto: Produto, index: number) {
     this.erro = '';
     this.mensagem = '';
 
+    if (produto.id) {
+      this.produtoService.deletar(produto.id).pipe(
+        finalize(() => {
+          this.cd.detectChanges();
+        })
+      ).subscribe({
+        next: () => {
+          this.produtos.splice(index, 1);
+          this.mensagem = 'Produto removido com sucesso.';
+        },
+        error: (err) => {
+          console.error('Erro ao deletar produto:', err);
+          this.erro = 'Não foi possível excluir o produto. Tente novamente.';
+        }
+      });
+      return;
+    }
+
+    this.produtos.splice(index, 1);
+    this.cd.detectChanges();
+  }
+
+  salvar(produto: Produto) {
+    this.salvandoId = produto.id ?? null;
+    this.salvandoNovo = produto.id === null;
+    this.erro = '';
+    this.mensagem = '';
+
+    if (!produto.name || produto.name.trim() === '') {
+      this.erro = 'O nome do produto é obrigatório.';
+      this.salvandoId = null;
+      this.salvandoNovo = false;
+      return;
+    }
+
     const produtoAtualizado: Produto = {
       ...produto,
+      name: produto.name.trim(),
       price: Number(produto.price),
       imageUrl: this.nomeImagem(produto.imageUrl)
     };
 
-    // Verificar se há imagem para upload
-    const imagemUpload = (produto as any).imagemUpload;
-    if (imagemUpload) {
-      // Usar FormData para enviar arquivo
-      const formData = new FormData();
-      formData.append('produto', JSON.stringify(produtoAtualizado));
-      formData.append('imagem', imagemUpload);
+    const concluirSalvar = (atualizado: Produto) => {
+      produto.id = atualizado.id;
+      produto.name = atualizado.name;
+      produto.description = atualizado.description;
+      produto.price = atualizado.price;
+      produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
+      produto.available = atualizado.available;
+      delete (produto as any).imagemUpload;
+      delete (produto as any).imagemPreview;
+      this.mensagem = produto.id
+        ? `${produto.name} atualizado com sucesso.`
+        : `${produto.name} criado com sucesso.`;
+    };
 
-      this.produtoService.atualizarComImagem(produto.id, formData).pipe(
-        finalize(() => {
-          this.salvandoId = null;
-          this.cd.detectChanges();
-        })
+    const finalizar = () => {
+      this.salvandoId = null;
+      this.salvandoNovo = false;
+      this.cd.detectChanges();
+    };
+
+    const processarSalvar = (imageUrl?: string) => {
+      if (imageUrl) {
+        produtoAtualizado.imageUrl = imageUrl;
+      }
+
+      const request$ = produto.id
+        ? this.produtoService.atualizar(produto.id, produtoAtualizado)
+        : this.produtoService.create(produtoAtualizado);
+
+      request$.pipe(
+        finalize(finalizar)
       ).subscribe({
         next: (atualizado) => {
-          produto.description = atualizado.description;
-          produto.price = atualizado.price;
-          produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
-          produto.available = atualizado.available;
-          // Limpar dados de upload
-          delete (produto as any).imagemUpload;
-          delete (produto as any).imagemPreview;
-          this.mensagem = `${produto.name} atualizado com sucesso (imagem incluída).`;
-        },
-        error: (err) => {
-          console.error('Erro ao salvar produto com imagem:', err);
-          this.erro = 'Não foi possível salvar o produto com a nova imagem. Tente novamente.';
-        }
-      });
-    } else {
-      // Salvar sem imagem
-      this.produtoService.atualizar(produto.id, produtoAtualizado).pipe(
-        finalize(() => {
-          this.salvandoId = null;
-          this.cd.detectChanges();
-        })
-      ).subscribe({
-        next: (atualizado) => {
-          produto.description = atualizado.description;
-          produto.price = atualizado.price;
-          produto.imageUrl = this.nomeImagem(atualizado.imageUrl);
-          produto.available = atualizado.available;
-          this.mensagem = `${produto.name} atualizado com sucesso.`;
+          concluirSalvar(atualizado);
         },
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
           this.erro = 'Não foi possível salvar o produto. Tente novamente.';
         }
       });
+    };
+
+    const imagemUpload = (produto as any).imagemUpload as File | undefined;
+    if (imagemUpload) {
+      this.produtoService.uploadImagem(imagemUpload).subscribe({
+        next: (url) => {
+          processarSalvar(url);
+        },
+        error: (err) => {
+          console.error('Erro ao enviar imagem:', err);
+          this.erro = 'Não foi possível enviar a imagem. Tente novamente.';
+          finalizar();
+        }
+      });
+    } else {
+      processarSalvar();
     }
   }
 
@@ -251,6 +306,6 @@ export class ProdutosAdminComponent implements OnInit {
   }
 
   trackByProduto(index: number, produto: Produto): number {
-    return produto.id;
+    return produto.id ?? index;
   }
 }
