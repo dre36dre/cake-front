@@ -136,6 +136,29 @@
   color: #6f6570;
 }
 
+.admin-acoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.botao-adicionar {
+  background: #f25aa8;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 11px 16px;
+}
+
+.botao-adicionar:hover,
+.botao-atualizar:hover,
+.admin-topo a:hover {
+  opacity: 0.92;
+}
+
 @media (max-width: 640px) {
   .admin-produtos {
     padding: 16px;
