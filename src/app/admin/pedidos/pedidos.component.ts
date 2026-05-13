@@ -36,7 +36,7 @@ carregarPedidos() {
     timeout(7000),
     catchError((err) => {
       console.error('Erro ao carregar pedidos:', err);
-      this.erro = 'Não foi possível carregar os pedidos. Verifique se o backend está online e tente atualizar.';
+      
       this.pedidos = [];
       return of([]);
     }),
