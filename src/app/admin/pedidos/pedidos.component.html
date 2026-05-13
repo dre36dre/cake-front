@@ -1,21 +1,21 @@
 <h2>Pedidos Recebidos</h2>
 
 <a routerLink="/admin/produtos" class="botao-produtos">Editar produtos</a>
+<a routerLink="/admin/imagens-home" class="botao-produtos">Editar imagens da home</a>
 <a routerLink="/admin/alterar-senha" class="botao-senha">Alterar senha</a>
 <button type="button" (click)="carregarPedidos()">Atualizar pedidos</button>
 
-<p *ngIf="carregando">Carregando pedidos...</p>
+
 <p *ngIf="erro">{{ erro }}</p>
 <p *ngIf="!carregando && !erro && pedidos.length === 0 && pedidosOffline.length === 0">Nenhum pedido recebido ainda.</p>
 
 <div *ngIf="pedidosOffline.length > 0" class="offline-pedidos">
-  <h3>Pedidos salvos localmente</h3>
-  <p>Estes pedidos foram registrados no dispositivo porque o backend não estava disponível.</p>
+ 
   <button type="button" (click)="reenviarPedidosOffline()" [disabled]="reenviandoOffline">
     {{ reenviandoOffline ? 'Reenviando...' : 'Reenviar pedidos offline' }}
   </button>
   <div *ngFor="let p of pedidosOffline" class="pedido offline">
-    <p><strong>Offline:</strong> Sim</p>
+   
     <p><strong>Cliente:</strong> {{ p.nomeCliente }}</p>
     <p><strong>Telefone:</strong> {{ p.telefoneCliente }}</p>
     <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>

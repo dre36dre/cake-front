@@ -1,0 +1,26 @@
+.imagem-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.imagem-item input[type="text"] {
+  flex: 1;
+}
+
+.imagem-item input[type="file"] {
+  flex: 1;
+}
+
+.imagem-item button {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}

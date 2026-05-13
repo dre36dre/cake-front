@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProdutosComponent } from '../components/produtos/produtos.component';
+
+interface ImagemHome {
+  arquivo: string;
+  titulo: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -9,8 +14,8 @@ import { ProdutosComponent } from '../components/produtos/produtos.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  imagensHome = [
+export class HomeComponent implements OnInit {
+  imagensHome: ImagemHome[] = [
     { arquivo: 'home.JPG', titulo: 'Confeitaria da Dona' },
     { arquivo: 'bolo.JPG', titulo: 'Bolos' },
     { arquivo: 'brigadeiro-home.JPG', titulo: 'Brigadeiros' },
@@ -24,4 +29,11 @@ export class HomeComponent {
     { arquivo: 'cardapio-festa.JPG', titulo: 'Festa' },
     { arquivo: 'cardapio-pudim.JPG', titulo: 'Cardapio pudim' }
   ];
+
+  ngOnInit() {
+    const saved = localStorage.getItem('imagensHome');
+    if (saved) {
+      this.imagensHome = JSON.parse(saved);
+    }
+  }
 }
