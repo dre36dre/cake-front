@@ -236,12 +236,17 @@ export class ProdutosAdminComponent implements OnInit {
     if (imagemUpload) {
       this.produtoService.uploadImagem(imagemUpload).subscribe({
         next: (url) => {
+          console.log('Upload de imagem bem-sucedido:', url);
           processarSalvar(url);
         },
         error: (err) => {
           console.error('Erro ao enviar imagem:', err);
           this.erro = 'Não foi possível enviar a imagem. Tente novamente.';
-          finalizar();
+          if (err?.status) {
+            this.erro += ` (HTTP ${err.status})`;
+          }
+          this.salvandoIndex = null;
+          this.cd.detectChanges();
         }
       });
     } else {

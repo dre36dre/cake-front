@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { timeout } from 'rxjs/operators';
+import { timeout, catchError, map } from 'rxjs/operators';
 import { Produto } from '../models/produto.model';
 import { environment } from '../../environments/environments';
 
@@ -53,8 +53,28 @@ export class ProdutoService {
   uploadImagem(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<string>(`${this.apiUrl}/upload`, formData).pipe(
-      timeout(30000)
+    console.log('Enviando imagem:', file.name, 'Tamanho:', file.size, 'Type:', file.type);
+    return this.http.post(`${this.apiUrl}/upload`, formData, {
+      responseType: 'text'
+    }).pipe(
+      timeout(30000),
+      map(response => {
+        console.log('Resposta do upload (raw):', response);
+        const url = typeof response === 'string' ? response.trim() : String(response).trim();
+        console.log('URL do upload (processada):', url);
+        return url;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Erro no upload:', {
+          status: err.status,
+          statusText: err.statusText,
+          ok: err.ok,
+          message: err.message,
+          error: err.error,
+          url: err.url
+        });
+        throw err;
+      })
     );
   }
 }
