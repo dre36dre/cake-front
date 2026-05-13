@@ -20,8 +20,7 @@ export class ProdutosAdminComponent implements OnInit {
   carregando = true;
   erro = '';
   mensagem = '';
-  salvandoId: number | null = null;
-  salvandoNovo = false;
+  salvandoIndex: number | null = null;
 
   imagensDisponiveis = [
     'beijinho.JPG',
@@ -152,15 +151,14 @@ export class ProdutosAdminComponent implements OnInit {
   }
 
   salvar(produto: Produto) {
-    this.salvandoId = produto.id ?? null;
-    this.salvandoNovo = produto.id === null;
+    const index = this.produtos.indexOf(produto);
+    this.salvandoIndex = index;
     this.erro = '';
     this.mensagem = '';
 
     if (!produto.name || produto.name.trim() === '') {
       this.erro = 'O nome do produto é obrigatório.';
-      this.salvandoId = null;
-      this.salvandoNovo = false;
+      this.salvandoIndex = null;
       return;
     }
 
@@ -186,8 +184,7 @@ export class ProdutosAdminComponent implements OnInit {
     };
 
     const finalizar = () => {
-      this.salvandoId = null;
-      this.salvandoNovo = false;
+      this.salvandoIndex = null;
       this.cd.detectChanges();
     };
 

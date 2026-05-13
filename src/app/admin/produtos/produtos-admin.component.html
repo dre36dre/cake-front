@@ -61,8 +61,8 @@
           Produto disponível
         </label>
 
-        <button type="button" (click)="salvar(p)" [disabled]="salvandoId === p.id">
-          {{ salvandoId === p.id ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
+        <button type="button" (click)="salvar(p)" [disabled]="salvandoIndex === i">
+          {{ salvandoIndex === i ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
         </button>
         <button type="button" class="botao-excluir" (click)="deletarProduto(p, i)">
           Excluir
