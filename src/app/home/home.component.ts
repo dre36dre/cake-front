@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProdutosComponent } from '../components/produtos/produtos.component';
+import { HttpClient } from '@angular/common/http';
 
 interface ImagemHome {
-  arquivo: string;
-  titulo: string;
+  id: number;
+  url: string;
+  ordem: number;
 }
 
 @Component({
@@ -15,25 +17,21 @@ interface ImagemHome {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  imagensHome: ImagemHome[] = [
-    { arquivo: 'home.JPG', titulo: 'Confeitaria da Dona' },
-    { arquivo: 'bolo.JPG', titulo: 'Bolos' },
-    { arquivo: 'brigadeiro-home.JPG', titulo: 'Brigadeiros' },
-    { arquivo: 'brigadeiro-home-2.JPG', titulo: 'Brigadeiros especiais' },
-    { arquivo: 'beijinho.JPG', titulo: 'Beijinhos' },
-    { arquivo: 'pudim.JPG', titulo: 'Pudins' },
-    { arquivo: 'pudim-2.JPG', titulo: 'Pudins especiais' },
-    { arquivo: 'trufas.JPG', titulo: 'Trufas' },
-    { arquivo: 'copo-surpresa.JPG', titulo: 'Copo surpresa' },
-    { arquivo: 'cardapio-doces.JPG', titulo: 'Doces' },
-    { arquivo: 'cardapio-festa.JPG', titulo: 'Festa' },
-    { arquivo: 'cardapio-pudim.JPG', titulo: 'Cardapio pudim' }
-  ];
+
+  imagensHome: ImagemHome[] = [];
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    const saved = localStorage.getItem('imagensHome');
-    if (saved) {
-      this.imagensHome = JSON.parse(saved);
-    }
+    this.http
+      .get<ImagemHome[]>('https://cake-api-production.up.railway.app/imagens-home')
+      .subscribe({
+        next: (dados) => {
+          this.imagensHome = dados;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar imagens da home:', err);
+        }
+      });
   }
 }

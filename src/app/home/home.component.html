@@ -4,13 +4,15 @@
     <p>Escolha nossos produtos no Cardápio</p>
   </div>
 
-  <img src="assets/imagenshome/home.JPG" alt="Confeitaria da Dona">
+  <div class="banner">
+    <img *ngFor="let img of imagensHome" [src]="img.url" [alt]="">
+  </div>
 </section>
 
 <section class="galeria-home">
-  <article class="foto-home" *ngFor="let imagem of imagensHome">
-    <img [src]="'assets/imagenshome/' + imagem.arquivo" [alt]="imagem.titulo">
-    <h3>{{ imagem.titulo }}</h3>
+  <article class="foto-home" *ngFor="let img of imagensHome">
+    <img [src]="img.url" [alt]="">
+    
   </article>
 </section>
 
