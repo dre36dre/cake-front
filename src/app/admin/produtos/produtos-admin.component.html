@@ -41,3 +41,48 @@
           Imagem
           <select [(ngModel)]="p.imageUrl">
             <option value="">Escolha uma imagem</option>
+            <option *ngFor="let imagem of imagensDisponiveis" [value]="imagem">
+              {{ imagem }}
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Ou fazer upload de nova imagem
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event, p)"
+          />
+          <small *ngIf="getImagemUpload(p)" style="color: #666;">
+            Arquivo selecionado: {{ getImagemUpload(p)?.name }}
+          </small>
+        </label>
+
+        <label>
+          Descrição
+          <textarea [(ngModel)]="p.description" rows="3"></textarea>
+        </label>
+
+        <label>
+          Preço
+          <input type="number" min="0" step="0.01" [(ngModel)]="p.price">
+        </label>
+
+        <label class="disponivel">
+          <input type="checkbox" [(ngModel)]="p.available">
+          Produto disponível
+        </label>
+
+        <button type="button" (click)="salvar(p)" [disabled]="salvandoIndex === i">
+          {{ salvandoIndex === i ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
+        </button>
+
+        <button type="button" class="botao-excluir" (click)="deletarProduto(p, i)">
+          Excluir
+        </button>
+
+      </div>
+    </article>
+
+  </div>
