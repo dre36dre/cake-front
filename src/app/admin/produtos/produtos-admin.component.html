@@ -1,112 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { ProdutoService } from '../../services/produto.service';
-import { Produto } from '../../models/produto.model';
-
-@Component({
-  selector: 'app-produtos-admin',
-  templateUrl: './produtos-admin.component.html',
-  styleUrls: ['./produtos-admin.component.css']
-})
-export class ProdutosAdminComponent implements OnInit {
-
-  produtos: Produto[] = [];
-  imagensDisponiveis: string[] = [];
-  carregando = false;
-  erro = '';
-  mensagem = '';
-  salvandoIndex: number | null = null;
-
-  constructor(private produtoService: ProdutoService) {}
-
-  ngOnInit() {
-    this.carregarProdutos();
-  }
-
-  carregarProdutos() {
-    this.carregando = true;
-    this.produtoService.listar().subscribe({
-      next: (dados) => {
-        this.produtos = dados;
-        this.carregando = false;
-      },
-      error: (err) => {
-        this.erro = 'Erro ao carregar produtos';
-        this.carregando = false;
-      }
-    });
-  }
-
-
-  onFileSelected(event: any, produto: Produto) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    console.log('Arquivo selecionado:', file);
-
-    // Envia para o backend
-    this.produtoService.uploadImagem(file).subscribe({
-      next: (urlFinal) => {
-        console.log('URL recebida do backend:', urlFinal);
-
-        // Salva no produto
-        produto.imageUrl = urlFinal;
-
-        this.mensagem = 'Imagem enviada com sucesso!';
-      },
-      error: (err) => {
-        console.error('Erro ao enviar imagem:', err);
-        this.erro = 'Erro ao enviar imagem';
-      }
-    });
-  }
-
-  
-  getImagemSrc(p: Produto): string {
-    if (p.imageUrl) return p.imageUrl;
-    return '/assets/img/placeholder.png';
-  }
-
-  usarImagemLocal(event: any, p: Produto) {
-    event.target.src = '/assets/img/placeholder.png';
-  }
-
+<section class="admin-produtos">
  
-  salvar(p: Produto) {
-    this.salvandoIndex = this.produtos.indexOf(p);
+  <div class="admin-topo">
+    <div>
+      <h2>Editar Produtos</h2>
+      <p>Altere imagem, descrição e preço exibidos no cardápio.</p>
+    </div>
 
-    const operacao = p.id
-      ? this.produtoService.atualizar(p.id, p)
-      : this.produtoService.create(p);
+    <a routerLink="/admin/pedidos">Ver pedidos</a>
+  </div>
 
-    operacao.subscribe({
-      next: () => {
-        this.mensagem = 'Produto salvo com sucesso!';
-        this.salvandoIndex = null;
-      },
-      error: () => {
-        this.erro = 'Erro ao salvar produto';
-        this.salvandoIndex = null;
-      }
-    });
-  }
+  <div class="admin-acoes">
+    <button type="button" class="botao-atualizar" (click)="carregarProdutos()">Atualizar produtos</button>
+    <button type="button" class="botao-adicionar" (click)="adicionarProduto()">Adicionar produto</button>
+  </div>
 
-  deletarProduto(p: Produto, index: number) {
-    if (!p.id) {
-      this.produtos.splice(index, 1);
-      return;
-    }
+  <p class="estado" *ngIf="carregando">Carregando produtos...</p>
+  <p class="erro" *ngIf="erro">{{ erro }}</p>
+  <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
 
-    this.produtoService.deletar(p.id).subscribe({
-      next: () => {
-        this.produtos.splice(index, 1);
-      },
-      error: () => {
-        this.erro = 'Erro ao excluir produto';
-      }
-    });
-  }
+  <div class="produtos-admin-grid" *ngIf="!carregando && produtos.length > 0">
 
-  trackByProduto(index: number, item: Produto) {
-    return item.id;
-  }
-}
+    <article class="produto-editor"
+             *ngFor="let p of produtos; let i = index; trackBy: trackByProduto">
+
+      <!-- IMAGEM DO PRODUTO -->
+      <img 
+        [src]="getImagemSrc(p)"
+        (error)="usarImagemLocal($event, p)"
+        [alt]="p.name"
+      >
+
+      <div class="campos">
+
+        <label>
+          Nome
+          <input type="text" [(ngModel)]="p.name" placeholder="Nome do produto">
+        </label>
+
+        <label>
+          Imagem
+          <select [(ngModel)]="p.imageUrl">
+            <option value="">Escolha uma imagem</option>
