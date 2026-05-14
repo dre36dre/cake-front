@@ -2,14 +2,18 @@
 
 <div *ngFor="let p of produtos" style="border:1px solid #ccc; padding:10px; margin:10px">
 
-  <img
-    [src]="imagemProduto(p)"
-    (error)="usarImagemLocal($event, p)"
-    [alt]="p.name"
-    width="150"
-    loading="lazy"
-    decoding="async"
-  />
+  <div class="imagem-wrapper">
+    <img
+      [src]="imagemProduto(p)"
+      (load)="onImagemLoad(p)"
+      (error)="onImagemError(p); usarImagemLocal($event, p)"
+      [alt]="p.name"
+      width="150"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="imagem-placeholder" *ngIf="isImagemCarregando(p)">Carregando imagem...</div>
+  </div>
 
   <h3>{{ p.name }}</h3>
 

@@ -20,6 +20,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   total = 0;
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private pollingSubscription: Subscription | null = null;
+  private imagemCarregando = new WeakMap<Produto, boolean>();
   private readonly imagensPorProduto: Record<string, string> = {
     'bolo de coco': 'bolo.JPG',
     'brigadeiro': 'brigadeiros-tradicional.jpg',
@@ -117,6 +118,18 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   adicionar(produto: Produto) {
     this.carrinhoService.adicionar(produto);
+  }
+
+  onImagemLoad(produto: Produto) {
+    this.imagemCarregando.set(produto, false);
+  }
+
+  onImagemError(produto: Produto) {
+    this.imagemCarregando.set(produto, false);
+  }
+
+  isImagemCarregando(produto: Produto): boolean {
+    return this.imagemCarregando.get(produto) ?? true;
   }
 
   finalizarCompra() {

@@ -16,6 +16,27 @@ button {
   cursor: pointer;
 }
 
+.imagem-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.imagem-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, #f7e7f4 0%, #fff8fb 100%);
+  color: #c77bac;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .modal {
   position: fixed;
   top: 0;

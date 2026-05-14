@@ -9,11 +9,13 @@ import { environment } from '../../../environments/environments';
   selector: 'app-menu',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './menu.component.html'
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
 
   produtos: Produto[] = [];
+  imagemCarregando = new Map<Produto, boolean>();
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private readonly imagensPorProduto: Record<string, string> = {
     'bolo de coco': 'bolo.JPG',
@@ -42,6 +44,18 @@ export class MenuComponent implements OnInit {
 
   adicionar(p: Produto) {
     this.carrinhoService.adicionar(p);
+  }
+
+  onImagemLoad(produto: Produto) {
+    this.imagemCarregando.set(produto, false);
+  }
+
+  onImagemError(produto: Produto) {
+    this.imagemCarregando.set(produto, false);
+  }
+
+  isImagemCarregando(produto: Produto): boolean {
+    return this.imagemCarregando.get(produto) ?? true;
   }
 
   imagemProduto(produto: Produto): string {

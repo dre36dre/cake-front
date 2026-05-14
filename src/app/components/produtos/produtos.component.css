@@ -22,12 +22,31 @@
   text-align: center;
 }
 
+.imagem-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .produto-imagem {
   aspect-ratio: 16 / 7;
   display: block;
   object-fit: cover;
   object-position: center;
   width: 100%;
+}
+
+.imagem-placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #f7e7f4 0%, #fff8fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c77bac;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .produto-info {
