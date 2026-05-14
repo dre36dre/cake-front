@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProdutosComponent } from '../components/produtos/produtos.component';
-import { HttpClient } from '@angular/common/http';
 
 interface ImagemHome {
-  id: number;
-  url: string;
-  ordem: number;
+  arquivo: string;
 }
 
 @Component({
@@ -16,22 +13,21 @@ interface ImagemHome {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  imagensHome: ImagemHome[] = [];
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.http
-      .get<ImagemHome[]>('https://cake-api-production.up.railway.app/imagens-home')
-      .subscribe({
-        next: (dados) => {
-          this.imagensHome = dados;
-        },
-        error: (err) => {
-          console.error('Erro ao carregar imagens da home:', err);
-        }
-      });
-  }
+  imagensHome: ImagemHome[] = [
+    { arquivo: 'beijinho.JPG' },
+    { arquivo: 'bolo.JPG' },
+    { arquivo: 'brigadeiro-home.JPG' },
+    { arquivo: 'brigadeiro-home-2.JPG' },
+    { arquivo: 'cardapio-doces.JPG' },
+    { arquivo: 'cardapio-festa.JPG' },
+    { arquivo: 'cardapio-pudim.JPG' },
+    { arquivo: 'cardapio-pudim-editada.JPG' },
+    { arquivo: 'copo-surpresa.JPG' },
+    { arquivo: 'home.JPG' },
+    { arquivo: 'pudim.JPG' },
+    { arquivo: 'pudim-2.JPG' },
+    { arquivo: 'trufas.JPG' }
+  ];
 }

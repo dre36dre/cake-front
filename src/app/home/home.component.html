@@ -5,13 +5,15 @@
   </div>
 
   <div class="banner">
-    <img *ngFor="let img of imagensHome" [src]="img.url" alt="">
+    <img *ngFor="let img of imagensHome"
+         [src]="'assets/imagenshome/' + img.arquivo"
+         alt="">
   </div>
 </section>
 
 <section class="galeria-home">
   <article class="foto-home" *ngFor="let img of imagensHome">
-    <img [src]="img.url" alt="">
+    <img [src]="'assets/imagenshome/' + img.arquivo" alt="">
   </article>
 </section>
 
