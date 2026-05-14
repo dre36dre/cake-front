@@ -11,6 +11,7 @@ import { environment } from '../../environments/environments';
 export class ProdutoService {
 
   private apiUrl = `${this.getApiBase()}/produtos`;
+  private imagemUrl = `${this.getApiBase()}/imagens`;
 
   constructor(private http: HttpClient) {
     console.log('ProdutoService inicializado com base de API:', this.apiUrl);
@@ -50,19 +51,30 @@ export class ProdutoService {
     );
   }
 
+  // ============================
+  // UPLOAD DE IMAGEM (CORRETO)
+  // ============================
   uploadImagem(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
+
     console.log('Enviando imagem:', file.name, 'Tamanho:', file.size, 'Type:', file.type);
-    return this.http.post(`${this.apiUrl}/upload`, formData, {
+
+    return this.http.post(`${this.imagemUrl}/upload`, formData, {
       responseType: 'text'
     }).pipe(
       timeout(30000),
       map(response => {
         console.log('Resposta do upload (raw):', response);
+
         const url = typeof response === 'string' ? response.trim() : String(response).trim();
-        console.log('URL do upload (processada):', url);
-        return url;
+
+        // Aqui montamos a URL completa para exibir no Angular
+        const urlCompleta = `${this.getApiBase()}${url}`;
+
+        console.log('URL final da imagem:', urlCompleta);
+
+        return urlCompleta;
       }),
       catchError((err: HttpErrorResponse) => {
         console.error('Erro no upload:', {

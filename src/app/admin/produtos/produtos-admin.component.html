@@ -1,74 +1,112 @@
-<section class="admin-produtos">
+import { Component, OnInit } from '@angular/core';
+import { ProdutoService } from '../../services/produto.service';
+import { Produto } from '../../models/produto.model';
+
+@Component({
+  selector: 'app-produtos-admin',
+  templateUrl: './produtos-admin.component.html',
+  styleUrls: ['./produtos-admin.component.css']
+})
+export class ProdutosAdminComponent implements OnInit {
+
+  produtos: Produto[] = [];
+  imagensDisponiveis: string[] = [];
+  carregando = false;
+  erro = '';
+  mensagem = '';
+  salvandoIndex: number | null = null;
+
+  constructor(private produtoService: ProdutoService) {}
+
+  ngOnInit() {
+    this.carregarProdutos();
+  }
+
+  carregarProdutos() {
+    this.carregando = true;
+    this.produtoService.listar().subscribe({
+      next: (dados) => {
+        this.produtos = dados;
+        this.carregando = false;
+      },
+      error: (err) => {
+        this.erro = 'Erro ao carregar produtos';
+        this.carregando = false;
+      }
+    });
+  }
+
+
+  onFileSelected(event: any, produto: Produto) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    console.log('Arquivo selecionado:', file);
+
+    // Envia para o backend
+    this.produtoService.uploadImagem(file).subscribe({
+      next: (urlFinal) => {
+        console.log('URL recebida do backend:', urlFinal);
+
+        // Salva no produto
+        produto.imageUrl = urlFinal;
+
+        this.mensagem = 'Imagem enviada com sucesso!';
+      },
+      error: (err) => {
+        console.error('Erro ao enviar imagem:', err);
+        this.erro = 'Erro ao enviar imagem';
+      }
+    });
+  }
+
+  
+  getImagemSrc(p: Produto): string {
+    if (p.imageUrl) return p.imageUrl;
+    return '/assets/img/placeholder.png';
+  }
+
+  usarImagemLocal(event: any, p: Produto) {
+    event.target.src = '/assets/img/placeholder.png';
+  }
+
  
-  <div class="admin-topo">
-    <div>
-      <h2>Editar Produtos</h2>
-      <p>Altere imagem, descrição e preço exibidos no cardápio.</p>
-    </div>
+  salvar(p: Produto) {
+    this.salvandoIndex = this.produtos.indexOf(p);
 
-    <a routerLink="/admin/pedidos">Ver pedidos</a>
-  </div>
+    const operacao = p.id
+      ? this.produtoService.atualizar(p.id, p)
+      : this.produtoService.create(p);
 
-  <div class="admin-acoes">
-    <button type="button" class="botao-atualizar" (click)="carregarProdutos()">Atualizar produtos</button>
-    <button type="button" class="botao-adicionar" (click)="adicionarProduto()">Adicionar produto</button>
-  </div>
+    operacao.subscribe({
+      next: () => {
+        this.mensagem = 'Produto salvo com sucesso!';
+        this.salvandoIndex = null;
+      },
+      error: () => {
+        this.erro = 'Erro ao salvar produto';
+        this.salvandoIndex = null;
+      }
+    });
+  }
 
-  <p class="estado" *ngIf="carregando">Carregando produtos...</p>
-  <p class="erro" *ngIf="erro">{{ erro }}</p>
-  <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+  deletarProduto(p: Produto, index: number) {
+    if (!p.id) {
+      this.produtos.splice(index, 1);
+      return;
+    }
 
-  <div class="produtos-admin-grid" *ngIf="!carregando && produtos.length > 0">
-    <article class="produto-editor" *ngFor="let p of produtos; let i = index; trackBy: trackByProduto">
-      <img [src]="getImagemSrc(p)" (error)="usarImagemLocal($event, p)" [alt]="p.name">
+    this.produtoService.deletar(p.id).subscribe({
+      next: () => {
+        this.produtos.splice(index, 1);
+      },
+      error: () => {
+        this.erro = 'Erro ao excluir produto';
+      }
+    });
+  }
 
-      <div class="campos">
-        <label>
-          Nome
-          <input type="text" [(ngModel)]="p.name" placeholder="Nome do produto">
-        </label>
-
-        <label>
-          Imagem
-          <select [(ngModel)]="p.imageUrl">
-            <option value="">Escolha uma imagem</option>
-            <option *ngFor="let imagem of imagensDisponiveis" [value]="imagem">{{ imagem }}</option>
-          </select>
-        </label>
-
-        <label>
-          Ou fazer upload de nova imagem
-          <input
-            type="file"
-            accept="image/*"
-            (change)="onFileSelected($event, p)"
-          />
-          <small *ngIf="getImagemUpload(p)" style="color: #666;">Arquivo selecionado: {{ getImagemUpload(p)?.name }}</small>
-        </label>
-
-        <label>
-          Descrição
-          <textarea [(ngModel)]="p.description" rows="3"></textarea>
-        </label>
-
-        <label>
-          Preço
-          <input type="number" min="0" step="0.01" [(ngModel)]="p.price">
-        </label>
-
-        <label class="disponivel">
-          <input type="checkbox" [(ngModel)]="p.available">
-          Produto disponível
-        </label>
-
-        <button type="button" (click)="salvar(p)" [disabled]="salvandoIndex === i">
-          {{ salvandoIndex === i ? 'Salvando...' : (p.id ? 'Salvar alterações' : 'Criar produto') }}
-        </button>
-        <button type="button" class="botao-excluir" (click)="deletarProduto(p, i)">
-          Excluir
-        </button>
-      </div>
-    </article>
-  </div>
-  <p *ngIf="!carregando && produtos.length === 0 && !erro" style="color: red;">Nenhum produto encontrado. Verifique o console para mais detalhes.</p>
-</section>
+  trackByProduto(index: number, item: Produto) {
+    return item.id;
+  }
+}
