@@ -4,6 +4,7 @@ import { ProdutosComponent } from '../components/produtos/produtos.component';
 
 interface ImagemHome {
   arquivo: string;
+  titulo: string;   // ✅ AQUI
 }
 
 @Component({
@@ -15,19 +16,20 @@ interface ImagemHome {
 })
 export class HomeComponent {
 
-  imagensHome: ImagemHome[] = [
-    { arquivo: 'beijinho.JPG' },
-    { arquivo: 'bolo.JPG' },
-    { arquivo: 'brigadeiro-home.JPG' },
-    { arquivo: 'brigadeiro-home-2.JPG' },
-    { arquivo: 'cardapio-doces.JPG' },
-    { arquivo: 'cardapio-festa.JPG' },
-    { arquivo: 'cardapio-pudim.JPG' },
-    { arquivo: 'cardapio-pudim-editada.JPG' },
-    { arquivo: 'copo-surpresa.JPG' },
-    { arquivo: 'home.JPG' },
-    { arquivo: 'pudim.JPG' },
-    { arquivo: 'pudim-2.JPG' },
-    { arquivo: 'trufas.JPG' }
+  imagensHome: ImagemHome[] = [  
+    { arquivo: 'home.JPG', titulo: 'Home' },
+    { arquivo: 'cardapio-doces.JPG', titulo: 'Cardápio Doces' },
+    { arquivo: 'cardapio-festa.JPG', titulo: 'Cardápio Festa' },
+    { arquivo: 'cardapio-pudim.JPG', titulo: 'Cardápio Pudim' },
+    { arquivo: 'cardapio-pudim-editada.JPG', titulo: 'Cardápio Pudim Editado' },
+    { arquivo: 'brigadeiro-home.JPG', titulo: 'Brigadeiro' },
+    { arquivo: 'brigadeiro-home-2.JPG', titulo: 'Brigadeiro 2' },
+    { arquivo: 'trufas.JPG', titulo: 'Trufas' },
+    { arquivo: 'beijinho.JPG', titulo: 'Beijinho' },
+    { arquivo: 'bolo.JPG', titulo: 'Bolo' },
+    { arquivo: 'copo-surpresa.JPG', titulo: 'Copo Surpresa' },
+    { arquivo: 'pudim.JPG', titulo: 'Pudim' },
+    { arquivo: 'pudim-2.JPG', titulo: 'Pudim 2' }
+    
   ];
 }
