@@ -7,10 +7,11 @@
 
 </section>
 
-<section class="galeria-home">
-  <article class="foto-home" *ngFor="let img of imagensHome">
-    <img [src]="'assets/imagenshome/' + img.arquivo" alt="">
-  </article>
-</section>
+<div class="banner">
+  <img *ngFor="let img of imagensHome"
+       [src]="'assets/imagenshome/' + img.arquivo"
+       alt="">
+</div>
+
 
 <app-produtos></app-produtos>
