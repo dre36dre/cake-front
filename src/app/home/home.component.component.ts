@@ -13,6 +13,7 @@ import { ImagemHome, ImagensHomeService } from '../services/imagens-home.service
 export class HomeComponent implements OnInit {
 
   imagensHome: ImagemHome[] = [];
+  imagemAmpliada: ImagemHome | null = null;
 
   constructor(private imagensHomeService: ImagensHomeService) {}
 
@@ -24,5 +25,13 @@ export class HomeComponent implements OnInit {
 
   getImagemSrc(arquivo: string): string {
     return this.imagensHomeService.getImagemSrc(arquivo);
+  }
+
+  alternarImagem(imagem: ImagemHome): void {
+    this.imagemAmpliada = this.imagemAmpliada === imagem ? null : imagem;
+  }
+
+  isImagemAmpliada(imagem: ImagemHome): boolean {
+    return this.imagemAmpliada === imagem;
   }
 }

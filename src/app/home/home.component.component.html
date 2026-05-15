@@ -1,6 +1,12 @@
 <section class="galeria-home">
-  <article class="foto-home" *ngFor="let img of imagensHome">
-    <img [src]="getImagemSrc(img.arquivo)" [alt]="img.titulo">
+  <article
+    class="foto-home"
+    [class.ampliada]="isImagemAmpliada(img)"
+    *ngFor="let img of imagensHome"
+  >
+    <button type="button" class="foto-botao" (click)="alternarImagem(img)">
+      <img [src]="getImagemSrc(img.arquivo)" [alt]="img.titulo">
+    </button>
     <p class="titulo-img">{{ img.titulo }}</p>
   </article>
 </section>
