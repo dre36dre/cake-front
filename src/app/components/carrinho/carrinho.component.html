@@ -1,60 +1,83 @@
-<!-- Dados do cliente -->
-<div class="cliente-form">
+<div class="carrinho-page">
 
-  <h2 class="titulo-carrinho">Seu carrinho</h2>
+  <div class="card-carrinho">
 
-  <div class="form-group">
-    <label>Seu nome</label>
-    <input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
+    <h2 class="titulo-carrinho">Seu Carrinho</h2>
+
+    <!-- Dados do cliente -->
+    <div class="cliente-form">
+
+      <div class="form-group">
+        <input [(ngModel)]="nomeCliente"
+               placeholder="Seu nome" />
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="telefoneCliente"
+               placeholder="Seu telefone" />
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="enderecoCliente"
+               placeholder="Seu endereço" />
+      </div>
+
+      <div class="form-group">
+        <label class="comentario-label">
+          Observação do pedido
+        </label>
+
+        <textarea
+          [(ngModel)]="comentarioCliente"
+          placeholder="Ex: sem açúcar, entregar após 18h..."
+          rows="4">
+        </textarea>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <!-- Produtos -->
+    <div *ngFor="let p of carrinho; let i = index"
+         class="item">
+
+      <img
+        class="foto-produto"
+        [src]="imagemProduto(p)"
+        (error)="usarImagemLocal($event,p)"
+        alt="{{p.name}}">
+
+      <div class="info">
+        <p class="nome-produto">{{p.name}}</p>
+        <p class="preco-produto">
+          R$ {{p.price}}
+        </p>
+      </div>
+
+      <button
+      class="btn-remover"
+      (click)="remover(i)">
+      Remover
+      </button>
+
+    </div>
+
+    <hr>
+
+    <p class="total">
+      Total:
+      <span>R$ {{total}}</span>
+    </p>
+
+    <button
+      class="finalizar"
+      (click)="enviarWhatsApp()">
+
+      Finalizar Pedido
+
+    </button>
+
   </div>
 
-  <div class="form-group">
-    <label>Seu telefone</label>
-    <input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
-  </div>
-
-  <div class="form-group">
-    <label>Seu endereço</label>
-    <input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
-  </div>
-
-  <div class="form-group">
-    <label>Comentário do pedido</label>
-    <textarea
-      [(ngModel)]="comentarioCliente"
-      placeholder="Ex: sem açúcar, entregar após 18h..."
-      rows="4">
-    </textarea>
-  </div>
 </div>
-
-<hr>
-
-<!-- Lista de produtos no carrinho -->
-<div *ngFor="let p of carrinho; let i = index" class="item">
-
-  <!-- Imagem do produto -->
-  <img
-    class="foto-produto"
-    [src]="imagemProduto(p)"
-    (error)="usarImagemLocal($event, p)"
-    alt="{{ p.name }}"
-  />
-
-  <div class="info">
-    <p class="nome-produto">{{ p.name }}</p>
-    <p class="preco-produto">R$ {{ p.price }}</p>
-  </div>
-
-  <button class="btn-remover" (click)="remover(i)">Remover</button>
-</div>
-
-<hr>
-
-<!-- Total -->
-<p class="total">Total: R$ {{ total }}</p>
-
-<!-- Botão finalizar -->
-<button class="finalizar" (click)="enviarWhatsApp()">
-  Finalizar pedido
-</button>
