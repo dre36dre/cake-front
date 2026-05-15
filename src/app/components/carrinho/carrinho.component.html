@@ -1,12 +1,31 @@
 <!-- Dados do cliente -->
 <div class="cliente-form">
-  <input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
-  <input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
-  <input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
-  <label class="comentario-label">
-    Comentário do pedido
-    <textarea [(ngModel)]="comentarioCliente" placeholder="Escreva sua observação" rows="4"></textarea>
-  </label>
+
+  <h2 class="titulo-carrinho">Seu carrinho</h2>
+
+  <div class="form-group">
+    <label>Seu nome</label>
+    <input [(ngModel)]="nomeCliente" placeholder="Seu nome" />
+  </div>
+
+  <div class="form-group">
+    <label>Seu telefone</label>
+    <input [(ngModel)]="telefoneCliente" placeholder="Seu telefone" />
+  </div>
+
+  <div class="form-group">
+    <label>Seu endereço</label>
+    <input [(ngModel)]="enderecoCliente" placeholder="Seu endereço" />
+  </div>
+
+  <div class="form-group">
+    <label>Comentário do pedido</label>
+    <textarea
+      [(ngModel)]="comentarioCliente"
+      placeholder="Ex: sem açúcar, entregar após 18h..."
+      rows="4">
+    </textarea>
+  </div>
 </div>
 
 <hr>
@@ -14,22 +33,21 @@
 <!-- Lista de produtos no carrinho -->
 <div *ngFor="let p of carrinho; let i = index" class="item">
 
-  <!-- AQUI entra a imagem -->
-<img 
-  class="foto-produto"
-  [src]="imagemProduto(p)"
-  (error)="usarImagemLocal($event, p)"
-  alt="{{ p.name }}"
-/>
+  <!-- Imagem do produto -->
+  <img
+    class="foto-produto"
+    [src]="imagemProduto(p)"
+    (error)="usarImagemLocal($event, p)"
+    alt="{{ p.name }}"
+  />
 
   <div class="info">
-    <p>{{ p.name }}</p>
-    <p>R$ {{ p.price }}</p>
+    <p class="nome-produto">{{ p.name }}</p>
+    <p class="preco-produto">R$ {{ p.price }}</p>
   </div>
 
-  <button (click)="remover(i)">Remover</button>
+  <button class="btn-remover" (click)="remover(i)">Remover</button>
 </div>
-
 
 <hr>
 
