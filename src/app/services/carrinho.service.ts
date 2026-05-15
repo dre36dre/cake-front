@@ -29,3 +29,4 @@ export class CarrinhoService {
     return this.itens.reduce((t, p) => t + p.price, 0);
   }
 }
+//
