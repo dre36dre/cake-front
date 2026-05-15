@@ -1,0 +1,22 @@
+.galeria-home {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.foto-home {
+  text-align: center;
+}
+
+.foto-home img {
+  width: 200px;
+  border-radius: 10px;
+}
+
+.titulo-img {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+}

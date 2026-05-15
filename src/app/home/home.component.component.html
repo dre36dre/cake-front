@@ -1,0 +1,8 @@
+<section class="galeria-home">
+  <article class="foto-home" *ngFor="let img of imagensHome">
+    <img [src]="getImagemSrc(img.arquivo)" [alt]="img.titulo">
+    <p class="titulo-img">{{ img.titulo }}</p>
+  </article>
+</section>
+
+<app-produtos></app-produtos>

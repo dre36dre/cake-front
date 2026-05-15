@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
-import { ProdutoService } from '../../services/produto.service';
+import { ProdutoService } from '../../services/produtos.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
 import { environment } from '../../../environments/environments';
@@ -44,7 +44,6 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.carregarProdutos();
 
-    // Polling a cada 10 segundos para verificar novos produtos
     this.pollingSubscription = interval(10000).subscribe(() => {
       this.carregarProdutos();
     });
@@ -55,9 +54,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
+    this.pollingSubscription?.unsubscribe();
   }
 
   private carregarProdutos(): void {
@@ -96,9 +93,8 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     return `${this.apiUrl}/imagens/${produto.imageUrl}`;
   }
 
-  usarImagemLocal(event: Event, produto: Produto) {
+  usarImagemLocal(event: Event, produto: Produto): void {
     const img = event.target as HTMLImageElement;
-
     img.src = this.imagemLocal(produto);
   }
 
@@ -116,15 +112,15 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     return `assets/imagens/${imagem}`;
   }
 
-  adicionar(produto: Produto) {
+  adicionar(produto: Produto): void {
     this.carrinhoService.adicionar(produto);
   }
 
-  onImagemLoad(produto: Produto) {
+  onImagemLoad(produto: Produto): void {
     this.imagemCarregando.set(produto, false);
   }
 
-  onImagemError(produto: Produto) {
+  onImagemError(produto: Produto): void {
     this.imagemCarregando.set(produto, false);
   }
 
@@ -132,7 +128,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     return this.imagemCarregando.get(produto) ?? true;
   }
 
-  finalizarCompra() {
+  finalizarCompra(): void {
     this.router.navigate(['/carrinho']);
   }
 }

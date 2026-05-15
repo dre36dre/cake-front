@@ -1,0 +1,45 @@
+<section class="admin-imagens-home">
+  <div class="admin-topo">
+    <div>
+      <h2>Editar Imagens da Home</h2>
+      <p>Gerencie as fotos exibidas na página inicial.</p>
+    </div>
+
+    <div class="admin-acoes">
+      <button type="button" (click)="adicionarImagem()">Adicionar</button>
+      <button type="button" class="secundario" (click)="resetar()">Restaurar</button>
+      <button type="button" class="principal" (click)="salvar()" [disabled]="salvando">
+        {{ salvando ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+
+  <p class="erro" *ngIf="erro">{{ erro }}</p>
+  <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+  <p class="estado" *ngIf="carregando">Carregando imagens...</p>
+
+  <div class="imagens-grid" *ngIf="!carregando">
+    <article class="imagem-item" *ngFor="let imagem of imagens; let i = index; trackBy: trackByImagem">
+      <img [src]="getImagemSrc(imagem.arquivo)" [alt]="imagem.titulo || 'Imagem da home'">
+
+      <div class="campos">
+        <label>
+          Título
+          <input type="text" [(ngModel)]="imagem.titulo" placeholder="Nome exibido na home">
+        </label>
+
+        <label>
+          Arquivo ou URL
+          <input type="text" [(ngModel)]="imagem.arquivo" placeholder="home.JPG">
+        </label>
+
+        <label>
+          Trocar imagem
+          <input type="file" (change)="onFileSelected($event, i)" accept="image/*">
+        </label>
+
+        <button type="button" class="excluir" (click)="removerImagem(i)">Excluir</button>
+      </div>
+    </article>
+  </div>
+</section>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, timeout } from 'rxjs/operators';
 import { Produto } from '../../models/produto.model';
-import { ProdutoService } from '../../services/produto.service';
+import { ProdutoService } from '../../services/produtos.service';
 import { environment } from '../../../environments/environments';
 
 @Component({
