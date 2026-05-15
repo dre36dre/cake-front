@@ -6,6 +6,8 @@ import { environment } from '../../environments/environments';
 export class AuthService {
 
   private api = `${environment.apiUrl}/auth`;
+  private readonly adminPasswordKey = 'adminPassword';
+  private readonly senhasPadrao = ['confeitaria123', 'confeitaria123#'];
 
   constructor(private http: HttpClient) {}
 
@@ -18,6 +20,24 @@ export class AuthService {
       currentPassword: senhaAtual,
       newPassword: novaSenha
     });
+  }
+
+  validarSenhaAdminLocal(senha: string): boolean {
+    const senhaSalva = this.getSenhaAdminLocal();
+
+    if (senhaSalva) {
+      return senha === senhaSalva;
+    }
+
+    return this.senhasPadrao.includes(senha);
+  }
+
+  salvarSenhaAdminLocal(senha: string) {
+    localStorage.setItem(this.adminPasswordKey, senha);
+  }
+
+  getSenhaAdminLocal(): string | null {
+    return localStorage.getItem(this.adminPasswordKey);
   }
 
   salvarToken(token: string) {

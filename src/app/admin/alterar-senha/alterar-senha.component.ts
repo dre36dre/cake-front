@@ -45,8 +45,7 @@ export class AlterarSenhaComponent {
       return;
     }
 
-    // Verificar senha atual (fallback local)
-    if (this.senhaAtual !== 'confeitaria123' && this.senhaAtual !== 'confeitaria123#') {
+    if (!this.authService.validarSenhaAdminLocal(this.senhaAtual)) {
       this.erro = 'Senha atual incorreta';
       return;
     }
@@ -56,6 +55,7 @@ export class AlterarSenhaComponent {
     // Tentar alterar no backend primeiro
     this.authService.alterarSenha(this.senhaAtual, this.novaSenha).subscribe({
       next: () => {
+        this.authService.salvarSenhaAdminLocal(this.novaSenha);
         this.sucesso = 'Senha alterada com sucesso!';
         this.limparCampos();
         setTimeout(() => {
@@ -74,8 +74,7 @@ export class AlterarSenhaComponent {
   }
 
   private alterarSenhaLocal() {
-    // Simulação de alteração local (fallback)
-    localStorage.setItem('adminPassword', this.novaSenha);
+    this.authService.salvarSenhaAdminLocal(this.novaSenha);
     this.sucesso = 'Senha alterada com sucesso! (modo offline)';
     this.limparCampos();
     setTimeout(() => {
