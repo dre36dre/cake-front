@@ -38,6 +38,20 @@ export class ProdutosAdminComponent implements OnInit {
   ];
 
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
+  private readonly imagensPorProduto: Record<string, string> = {
+    'bolo de coco': 'bolo.JPG',
+    'bolo': 'bolo.JPG',
+    'brigadeiro': 'brigadeiros-tradicional.jpg',
+    'brigadeiro recheado': 'brigadeiros-recheados.jpg',
+    'mousse': 'mousse.jpg',
+    'trufas': 'trufas.JPG',
+    'bolo de pote': 'bolo-pote.JPG',
+    'copo surpresa': 'copo-surpresa.JPG',
+    'mini pudim': 'mini-pudim.JPG',
+    'pudim para compartilhar': 'pudim-compartilhar.JPG',
+    'pudim familia': 'pudim.JPG',
+    'pudim família': 'pudim.JPG'
+  };
   private timeoutId: any;
 
   constructor(
@@ -87,10 +101,7 @@ export class ProdutosAdminComponent implements OnInit {
           return;
         }
 
-        this.produtos = produtos.map((produto) => ({
-          ...produto,
-          imageUrl: this.nomeImagem(produto.imageUrl ?? '')
-        }));
+        this.produtos = produtos;
         this.carregando = false;
         this.cd.detectChanges();
         console.log('Produtos mapeados:', this.produtos.length);
@@ -167,7 +178,7 @@ export class ProdutosAdminComponent implements OnInit {
       ...produto,
       name: produto.name.trim(),
       price: Number(produto.price),
-      imageUrl: this.nomeImagem(produto.imageUrl ?? '')
+      imageUrl: produto.imageUrl?.trim() ?? ''
     };
 
     const isNewProduct = !produto.id;
@@ -178,7 +189,7 @@ export class ProdutosAdminComponent implements OnInit {
       produto.name = atualizado.name;
       produto.description = atualizado.description;
       produto.price = atualizado.price;
-      produto.imageUrl = this.nomeImagem(atualizado.imageUrl ?? '');
+      produto.imageUrl = atualizado.imageUrl ?? '';
       produto.available = atualizado.available;
       delete (produto as any).imagemUpload;
       delete (produto as any).imagemPreview;
@@ -252,24 +263,29 @@ export class ProdutosAdminComponent implements OnInit {
   }
 
   imagemPreview(produto: Produto): string {
-    const imagem = this.nomeImagem(produto.imageUrl);
+    const imageUrl = produto.imageUrl?.trim();
 
-    if (!imagem) {
-      return 'assets/imagens/bolo.JPG';
+    if (!imageUrl) {
+      return this.imagemLocal(produto);
     }
 
-    if (imagem.startsWith('http://') || imagem.startsWith('https://') || imagem.startsWith('assets/')) {
-      return imagem;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('assets/')) {
+      return imageUrl;
     }
 
-    if (produto.imageUrl?.startsWith('/imagens/')) {
-      if (imagem.startsWith('cardapio-')) {
-        return this.assetPath(imagem);
-      }
-      return `${this.apiUrl}/imagens/${imagem}`;
+    const imagem = imageUrl.startsWith('/')
+      ? imageUrl.split('/').pop() ?? ''
+      : imageUrl;
+
+    if (imagem.startsWith('cardapio-')) {
+      return this.assetPath(imagem);
     }
 
-    return this.assetPath(imagem);
+    if (imageUrl.startsWith('/')) {
+      return `${this.apiUrl}${imageUrl}`;
+    }
+
+    return `${this.apiUrl}/imagens/${imageUrl}`;
   }
 
   getImagemSrc(produto: Produto): string {
@@ -283,9 +299,8 @@ export class ProdutosAdminComponent implements OnInit {
 
   usarImagemLocal(event: Event, produto: Produto) {
     const img = event.target as HTMLImageElement;
-    const imagem = this.nomeImagem(produto.imageUrl) || 'bolo.JPG';
 
-    img.src = this.assetPath(imagem);
+    img.src = this.imagemLocal(produto);
   }
 
   private assetPath(imagem: string): string {
@@ -293,6 +308,13 @@ export class ProdutosAdminComponent implements OnInit {
       return `assets/imagenshome/${imagem}`;
     }
     return `assets/imagens/${imagem}`;
+  }
+
+  private imagemLocal(produto: Produto): string {
+    const nome = produto.name?.trim().toLowerCase() ?? '';
+    const imagem = this.imagensPorProduto[nome] ?? 'bolo.JPG';
+
+    return this.assetPath(imagem);
   }
 
   onFileSelected(event: Event, produto: Produto) {
@@ -326,14 +348,6 @@ export class ProdutosAdminComponent implements OnInit {
 
       this.erro = '';
     }
-  }
-
-  private nomeImagem(imageUrl: string | null | undefined): string {
-    if (!imageUrl) {
-      return '';
-    }
-
-    return imageUrl.split('/').pop() ?? imageUrl;
   }
 
   trackByProduto(index: number, produto: Produto): number {
