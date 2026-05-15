@@ -32,6 +32,10 @@ export class AuthService {
     return this.senhasPadrao.includes(senha);
   }
 
+  existeSenhaAdminAlterada(): boolean {
+    return !!this.getSenhaAdminLocal();
+  }
+
   salvarSenhaAdminLocal(senha: string) {
     localStorage.setItem(this.adminPasswordKey, senha);
   }
@@ -57,6 +61,8 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('adminLogado');
   }
 }
