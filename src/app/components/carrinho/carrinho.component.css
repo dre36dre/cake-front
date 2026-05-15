@@ -1,85 +1,109 @@
-.carrinho-container {
+/* ======== CONTAINER ======== */
+.carrinho-page {
   max-width: 420px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Poppins', sans-serif;
 }
 
-.titulo {
+/* ======== TÍTULO ======== */
+.titulo-carrinho {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 25px;
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 600;
   color: #333;
 }
 
-.form-group {
-  margin-bottom: 18px;
+/* ======== FORMULÁRIO ======== */
+.cliente-form {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #444;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.cliente-form input,
+.cliente-form textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc !important;
   font-size: 15px;
   outline: none;
+  background: #fff;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #ff69b4;
+.cliente-form input:focus,
+.cliente-form textarea:focus {
+  border-color: #ff4fa3 !important;
 }
 
-textarea {
-  resize: none;
-  height: 90px;
-}
-
-.total-area {
+.comentario-label {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 6px;
+}
+
+/* ======== LISTA DE PRODUTOS ======== */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.foto-produto {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.info {
+  flex: 1;
+}
+
+.nome-produto {
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.preco-produto {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+}
+
+/* ======== BOTÃO REMOVER ======== */
+.btn-remover {
+  background: transparent;
+  border: 1px solid #ff4fa3 !important;
+  color: #ff4fa3 !important;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+/* ======== TOTAL ======== */
+.total {
+  text-align: right;
   font-size: 20px;
-  margin-top: 20px;
-  padding: 10px 0;
-  border-top: 2px solid #eee;
-}
-
-.btn-finalizar {
-  width: 100%;
-  background-color: #ff69b4;
-  color: white;
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  margin-top: 20px;
-  cursor: pointer;
   font-weight: 600;
-}
-
-.btn-finalizar {
-  width: 100%;
-  background-color: var(--cor-menu);
-  color: white;
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
   margin-top: 20px;
-  cursor: pointer;
+}
+
+/* ======== BOTÃO FINALIZAR ======== */
+.finalizar {
+  width: 100%;
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background-color: #ff4fa3 !important; /* mesma cor do menu */
+  color: white;
+  font-size: 18px;
   font-weight: 600;
-  transition: 0.2s;
+  cursor: pointer;
 }
-
-.btn-finalizar:hover {
-  background-color: var(--cor-menu-hover);
-}
-
