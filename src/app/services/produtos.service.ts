@@ -34,7 +34,7 @@ export class ProdutoService {
   }
 
   listar(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl).pipe(timeout(10000));
+    return this.http.get<Produto[]>(this.apiUrl).pipe(timeout(10));
   }
 
   create(produto: Produto): Observable<Produto> {
@@ -42,11 +42,11 @@ export class ProdutoService {
   }
 
   atualizar(id: number, produto: Produto): Observable<Produto> {
-    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto).pipe(timeout(10000));
+    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto).pipe(timeout(100));
   }
 
   deletar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(timeout(10000));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(timeout(100));
   }
 
 
