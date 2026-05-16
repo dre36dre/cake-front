@@ -34,7 +34,7 @@ export class ProdutoService {
   }
 
   listar(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl).pipe(timeout(10));
+    return this.http.get<Produto[]>(this.apiUrl).pipe(timeout(10000));
   }
 
   create(produto: Produto): Observable<Produto> {

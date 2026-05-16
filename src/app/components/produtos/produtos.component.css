@@ -12,6 +12,19 @@
   max-width: 1180px;
 }
 
+.estado {
+  color: #281422;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 36px auto;
+  max-width: 1180px;
+  text-align: center;
+}
+
+.estado-erro {
+  color: #b4235b;
+}
+
 .produto-card {
   background: #fff;
   border: 1px solid #f1dce7;

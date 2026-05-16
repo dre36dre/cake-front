@@ -19,6 +19,8 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   produtos: Produto[] = [];
   total = 0;
+  carregando = false;
+  erro = '';
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private pollingSubscription: Subscription | null = null;
   private imagemCarregando = new WeakMap<Produto, boolean>();
@@ -57,13 +59,24 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   private carregarProdutos(): void {
+    this.carregando = true;
+    this.erro = '';
+
     this.produtoService.listar().subscribe({
       next: (data) => {
-        this.produtos = data;
+        this.produtos = Array.isArray(data) ? data : [];
         console.log('Produtos carregados:', data);
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
+        this.produtos = [];
+        this.carregando = false;
+        this.erro = err?.name === 'TimeoutError'
+          ? 'A API demorou para responder. Tente atualizar a página.'
+          : 'Não foi possível carregar os produtos no momento.';
+      },
+      complete: () => {
+        this.carregando = false;
       }
     });
   }
