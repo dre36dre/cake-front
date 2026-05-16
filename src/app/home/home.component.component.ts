@@ -6,7 +6,7 @@ import { ImagemHome, ImagensHomeService } from '../services/imagens-home.service
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ProdutosComponent],
+  imports: [CommonModule],
   templateUrl: './home.component.component.html',
   styleUrls: ['./home.component.component.css']
 })
