@@ -10,8 +10,10 @@ import { environment } from '../../../environments/environments';
   selector: 'app-carrinho',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './carrinho.component.html'
+  templateUrl: './carrinho.component.html',
+  styleUrls: ['./carrinho.component.css']
 })
+
 export class CarrinhoComponent implements OnInit {
 
   carrinho: Produto[] = [];
