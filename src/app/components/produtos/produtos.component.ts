@@ -6,11 +6,12 @@ import { ProdutoService } from '../../services/produtos.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
 import { environment } from '../../../environments/environments';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-produtos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './produtos.component.html',
   styleUrls: ['./produtos.component.css']
 })
