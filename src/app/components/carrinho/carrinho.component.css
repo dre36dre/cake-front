@@ -1,4 +1,10 @@
 /* ======== CONTAINER PRINCIPAL ======== */
+
+* {
+  border: 2px solid red !important;
+}
+
+
 .carrinho-page {
   max-width: 420px;
   margin: 0 auto;
