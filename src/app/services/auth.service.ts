@@ -5,11 +5,27 @@ import { environment } from '../../environments/environments';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private api = `${environment.apiUrl}/auth`;
+  private api = `${this.getApiBase()}/auth`;
   private readonly adminPasswordKey = 'adminPassword';
   private readonly senhasPadrao = ['confeitaria123', 'confeitaria123#'];
 
   constructor(private http: HttpClient) {}
+
+  private getApiBase(): string {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isLocalhost =
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === '[::1]';
+
+      if (isLocalhost) {
+        return '/api';
+      }
+    }
+
+    return environment.apiUrl.replace(/\/$/, '');
+  }
 
   login(username: string, password: string) {
     return this.http.post<any>(`${this.api}/login`, { username, password });

@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
       return this.imagemLocal(produto);
     }
 
-    if (produto.imageUrl.startsWith('http://') || produto.imageUrl.startsWith('https://') || produto.imageUrl.startsWith('assets/')) {
+    if (produto.imageUrl.startsWith('http://') || produto.imageUrl.startsWith('https://') || produto.imageUrl.startsWith('data:') || produto.imageUrl.startsWith('assets/')) {
       return produto.imageUrl;
     }
 

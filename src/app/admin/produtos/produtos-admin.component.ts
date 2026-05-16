@@ -269,7 +269,7 @@ export class ProdutosAdminComponent implements OnInit {
       return this.imagemLocal(produto);
     }
 
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('assets/')) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('data:') || imageUrl.startsWith('assets/')) {
       return imageUrl;
     }
 

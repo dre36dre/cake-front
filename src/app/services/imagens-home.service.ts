@@ -15,7 +15,7 @@ export interface ImagemHome {
 })
 export class ImagensHomeService {
   private readonly storageKey = 'imagensHome';
-  private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
+  private readonly apiUrl = this.getApiBase();
   private readonly imagensPadrao: ImagemHome[] = [
     { id: 1, arquivo: 'home.JPG', titulo: 'Home', ordem: 1 },
     { id: 2, arquivo: 'cardapio-doces.JPG', titulo: 'Cardapio Doces', ordem: 2 },
@@ -33,6 +33,22 @@ export class ImagensHomeService {
   ];
 
   constructor(private http: HttpClient) {}
+
+  private getApiBase(): string {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const isLocalhost =
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === '[::1]';
+
+      if (isLocalhost) {
+        return '/api';
+      }
+    }
+
+    return environment.apiUrl.replace(/\/$/, '');
+  }
 
   listar(): Observable<ImagemHome[]> {
     const salvas = this.lerLocalStorage();
