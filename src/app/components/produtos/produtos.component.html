@@ -3,15 +3,15 @@
     <article class="produto-card" *ngFor="let p of produtos">
       <div class="imagem-wrapper">
         <img
-          class="produto-imagem"
-          [src]="imagemProduto(p)"
-          (load)="onImagemLoad(p)"
-          (error)="onImagemError(p); usarImagemLocal($event, p)"
-          [alt]="p.name"
-          loading="lazy"
-          decoding="async"
-        >
-        <div class="imagem-placeholder" *ngIf="isImagemCarregando(p)">Carregando imagem...</div>
+  class="produto-imagem"
+  [src]="imagemProduto(p)"
+  (error)="usarImagemLocal($event, p)"
+  [alt]="p.name"
+  loading="lazy"
+  decoding="async"
+/>
+
+    <!--    <div class="imagem-placeholder" *ngIf="isImagemCarregando(p)">Carregando imagem...</div>-->
       </div>
 
       <div class="produto-info">

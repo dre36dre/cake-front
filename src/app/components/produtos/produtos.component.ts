@@ -115,14 +115,14 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     this.carrinhoService.adicionar(produto);
   }
 
-  onImagemLoad(produto: Produto): void {
+/*  onImagemLoad(produto: Produto): void {
     this.imagemCarregando.set(produto, false);
   }
 
   onImagemError(produto: Produto): void {
     this.imagemCarregando.set(produto, false);
   }
-
+*/
   isImagemCarregando(produto: Produto): boolean {
     return this.imagemCarregando.get(produto) ?? true;
   }
