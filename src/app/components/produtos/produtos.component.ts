@@ -44,9 +44,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.carregarProdutos();
 
-    this.pollingSubscription = interval(10000).subscribe(() => {
-      this.carregarProdutos();
-    });
+   
 
     this.carrinhoService.carrinho$.subscribe((itens) => {
       this.total = itens.reduce((soma, produto) => soma + produto.price, 0);
