@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+const pg = require('pg');
 require('dotenv').config();
 
 const databaseUrl =
@@ -8,7 +9,14 @@ const databaseUrl =
 
 const sequelize = new Sequelize(databaseUrl, {
   dialect: 'postgres',
+  dialectModule: pg,
   logging: process.env.DB_LOGGING === 'true' ? console.log : false,
+  pool: {
+    max: Number(process.env.DB_POOL_MAX || 3),
+    min: Number(process.env.DB_POOL_MIN || 0),
+    acquire: Number(process.env.DB_POOL_ACQUIRE || 30000),
+    idle: Number(process.env.DB_POOL_IDLE || 10000)
+  },
   dialectOptions: process.env.DB_SSL === 'true'
     ? {
         ssl: {

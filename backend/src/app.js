@@ -10,7 +10,8 @@ const ordersRoutes = require('./routes/orders.routes');
 const imagesRoutes = require('./routes/images.routes');
 const homeImagesRoutes = require('./routes/home-images.routes');
 
-const uploadsDir = path.resolve(__dirname, '../uploads');
+const uploadsDir = process.env.UPLOADS_DIR ||
+  (process.env.VERCEL ? path.join('/tmp', 'uploads') : path.resolve(__dirname, '../uploads'));
 fs.mkdirSync(uploadsDir, { recursive: true });
 
 const app = express();
