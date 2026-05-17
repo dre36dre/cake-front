@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { DEFAULT_PRODUCTS } from '../../data/default-products';
+import { carregarProdutosSalvos, removerProdutoLocalmente, salvarProdutoLocalmente } from '../../data/produtos-storage';
 import { Produto } from '../../models/produto.model';
 import { ProdutoService } from '../../services/produtos.service';
 import { environment } from '../../../environments/environments';
@@ -100,7 +101,7 @@ export class ProdutosAdminComponent implements OnInit {
           return;
         }
 
-        this.produtos = produtos.length > 0 ? produtos : this.clonarProdutosPadrao();
+        this.produtos = carregarProdutosSalvos() ?? (produtos.length > 0 ? produtos : this.clonarProdutosPadrao());
         this.mensagem = produtos.length > 0
           ? ''
           : 'Nenhum produto veio da API. Mostrando os produtos do cardápio atual.';
@@ -119,7 +120,7 @@ export class ProdutosAdminComponent implements OnInit {
   }
 
   private usarProdutosPadrao(mensagem: string): void {
-    this.produtos = this.clonarProdutosPadrao();
+    this.produtos = carregarProdutosSalvos() ?? this.clonarProdutosPadrao();
     this.erro = '';
     this.mensagem = mensagem;
     this.carregando = false;
@@ -160,7 +161,9 @@ export class ProdutosAdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao deletar produto:', err);
-          this.erro = 'Não foi possível excluir o produto. Tente novamente.';
+          removerProdutoLocalmente(produto);
+          this.produtos.splice(index, 1);
+          this.mensagem = 'Produto removido localmente. A API não respondeu no momento.';
         }
       });
       return;
@@ -241,10 +244,14 @@ export class ProdutosAdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
-          this.erro = 'Não foi possível salvar o produto. Tente novamente.';
-          if (err?.error?.message) {
-            this.erro += ` (${err.error.message})`;
-          }
+          const preview = (produto as any).imagemPreview as string | undefined;
+          const salvoLocalmente = salvarProdutoLocalmente({
+            ...produtoAtualizado,
+            imageUrl: produtoAtualizado.imageUrl || preview || ''
+          });
+          concluirSalvar(salvoLocalmente);
+          this.erro = '';
+          this.mensagem = `${produto.name} salvo localmente. Abra Produtos para ver a alteração.`;
           this.salvandoIndex = null;
           this.cd.detectChanges();
         }
