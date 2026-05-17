@@ -46,7 +46,7 @@
   <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm':'America/Sao_Paulo') : 'Sem data' }}</p>
   <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
 
-  <div class="pedido-acoes" *ngIf="p.status === 'CONFIRMED'">
+  <div class="pedido-acoes" *ngIf="podeAlterarStatus(p.status)">
     <button
       type="button"
       class="botao-concluir"

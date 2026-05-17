@@ -177,9 +177,14 @@ export class PedidosComponent implements OnInit {
     });
   }
 
+  podeAlterarStatus(status: string): boolean {
+    const normalized = this.normalizeStatus(status);
+    return normalized !== 'COMPLETED' && normalized !== 'CANCELLED' && normalized !== 'OFFLINE';
+  }
+
   getStatusLabel(status: string) {
 
-    switch (status) {
+    switch (this.normalizeStatus(status)) {
 
       case 'CONFIRMED':
         return 'Confirmado';
@@ -194,5 +199,23 @@ export class PedidosComponent implements OnInit {
       default:
         return status;
     }
+  }
+
+  private normalizeStatus(status: string): string {
+    const value = String(status || 'CONFIRMED').trim().toUpperCase();
+
+    if (value === 'COMPLETED' || value === 'CONCLUIDO' || value === 'CONCLUÍDO') {
+      return 'COMPLETED';
+    }
+
+    if (value === 'CANCELED' || value === 'CANCELLED' || value === 'CANCELADO') {
+      return 'CANCELLED';
+    }
+
+    if (value === 'OFFLINE') {
+      return 'OFFLINE';
+    }
+
+    return value;
   }
 }
