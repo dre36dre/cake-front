@@ -101,7 +101,9 @@ export class ProdutosAdminComponent implements OnInit {
           return;
         }
 
-        this.produtos = carregarProdutosSalvos() ?? (produtos.length > 0 ? produtos : this.clonarProdutosPadrao());
+        this.produtos = produtos.length > 0
+          ? produtos
+          : carregarProdutosSalvos() ?? this.clonarProdutosPadrao();
         this.mensagem = produtos.length > 0
           ? ''
           : 'Nenhum produto veio da API. Mostrando os produtos do cardápio atual.';
@@ -265,18 +267,16 @@ export class ProdutosAdminComponent implements OnInit {
 
     const imagemUpload = (produto as any).imagemUpload as File | undefined;
     if (imagemUpload) {
-      this.produtoService.uploadImagem(imagemUpload).subscribe({
-        next: (url) => {
-          console.log('Upload de imagem bem-sucedido:', url);
-          processarSalvar(url);
-        },
-        error: (err) => {
-          console.error('Erro ao enviar imagem:', err);
-          console.warn('Salvando produto sem a nova imagem...');
-          this.mensagem = 'Aviso: A imagem não foi enviada, mas o produto foi salvo.';
-          processarSalvar();
-        }
-      });
+      const preview = (produto as any).imagemPreview as string | undefined;
+
+      if (preview) {
+        processarSalvar(preview);
+        return;
+      }
+
+      this.erro = 'Aguarde a imagem carregar e tente salvar novamente.';
+      this.salvandoIndex = null;
+      this.cd.detectChanges();
     } else {
       processarSalvar();
     }
