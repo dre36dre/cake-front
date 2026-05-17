@@ -5,6 +5,7 @@ import { interval, Subscription } from 'rxjs';
 import { ProdutoService } from '../../services/produtos.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
+import { DEFAULT_PRODUCTS } from '../../data/default-products';
 import { environment } from '../../../environments/environments';
 import { RouterModule } from '@angular/router';
 
@@ -64,16 +65,14 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
     this.produtoService.listar().subscribe({
       next: (data) => {
-        this.produtos = Array.isArray(data) ? data : [];
+        this.produtos = Array.isArray(data) && data.length > 0 ? data : DEFAULT_PRODUCTS;
         console.log('Produtos carregados:', data);
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
-        this.produtos = [];
+        this.produtos = DEFAULT_PRODUCTS;
         this.carregando = false;
-        this.erro = err?.name === 'TimeoutError'
-          ? 'A API demorou para responder. Tente atualizar a página.'
-          : 'Não foi possível carregar os produtos no momento.';
+        this.erro = '';
       },
       complete: () => {
         this.carregando = false;
