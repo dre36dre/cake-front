@@ -27,10 +27,15 @@ export function salvarProdutosLocalmente(produtos: Produto[]): void {
     return;
   }
 
-  window.localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(produtos.map((produto) => ({ ...produto })))
-  );
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(produtos.map((produto) => ({ ...produto })))
+    );
+  } catch (error) {
+    console.error('Erro ao salvar produtos localmente:', error);
+    throw new Error('Não foi possível salvar no navegador. Tente uma imagem menor.');
+  }
 }
 
 export function salvarProdutoLocalmente(produto: Produto): Produto {
@@ -40,7 +45,7 @@ export function salvarProdutoLocalmente(produto: Produto): Produto {
     id: produto.id ?? proximoId(produtos),
     name: produto.name.trim(),
     price: Number(produto.price || 0),
-    imageUrl: produto.imageUrl?.trim() || null
+    imageUrl: normalizarImagemLocal(produto.imageUrl)
   };
   const index = produtos.findIndex((item) => item.id === produtoSalvo.id);
 
@@ -69,4 +74,24 @@ function proximoId(produtos: Produto[]): number {
 
 function temLocalStorage(): boolean {
   return typeof window !== 'undefined' && !!window.localStorage;
+}
+
+function normalizarImagemLocal(imageUrl: string | null | undefined): string | null {
+  const value = imageUrl?.trim();
+
+  if (!value) {
+    return null;
+  }
+
+  if (
+    value.startsWith('data:') ||
+    value.startsWith('http://') ||
+    value.startsWith('https://') ||
+    value.startsWith('assets/')
+  ) {
+    return value;
+  }
+
+  const fileName = value.split(/[\\/]/).pop();
+  return fileName ? `assets/imagens/${fileName}` : null;
 }

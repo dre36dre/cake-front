@@ -39,7 +39,7 @@
 
         <label>
           Imagem
-          <select [(ngModel)]="p.imageUrl">
+          <select [(ngModel)]="p.imageUrl" (ngModelChange)="onImagemSelecionada(p)">
             <option value="">Escolha uma imagem</option>
             <option *ngFor="let imagem of imagensDisponiveis" [value]="imagem">
               {{ imagem }}

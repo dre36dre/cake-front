@@ -102,6 +102,10 @@ export class ProdutosComponent implements OnInit, OnDestroy {
       return `${this.apiUrl}${produto.imageUrl}`;
     }
 
+    if (/\.(jpe?g|png|webp|gif)$/i.test(produto.imageUrl)) {
+      return this.assetPath(produto.imageUrl);
+    }
+
     return `${this.apiUrl}/imagens/${produto.imageUrl}`;
   }
 

@@ -245,13 +245,18 @@ export class ProdutosAdminComponent implements OnInit {
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
           const preview = (produto as any).imagemPreview as string | undefined;
-          const salvoLocalmente = salvarProdutoLocalmente({
-            ...produtoAtualizado,
-            imageUrl: produtoAtualizado.imageUrl || preview || ''
-          });
-          concluirSalvar(salvoLocalmente);
-          this.erro = '';
-          this.mensagem = `${produto.name} salvo localmente. Abra Produtos para ver a alteração.`;
+          try {
+            const salvoLocalmente = salvarProdutoLocalmente({
+              ...produtoAtualizado,
+              imageUrl: preview || this.normalizarImagemSelecionada(produtoAtualizado.imageUrl) || ''
+            });
+            concluirSalvar(salvoLocalmente);
+            this.erro = '';
+            this.mensagem = `${produto.name} salvo localmente. Abra Produtos para ver a alteração.`;
+          } catch (storageError: any) {
+            console.error('Erro ao salvar no navegador:', storageError);
+            this.erro = storageError?.message || 'Não foi possível salvar no navegador.';
+          }
           this.salvandoIndex = null;
           this.cd.detectChanges();
         }
@@ -296,6 +301,10 @@ export class ProdutosAdminComponent implements OnInit {
       return this.assetPath(imagem);
     }
 
+    if (/\.(jpe?g|png|webp|gif)$/i.test(imageUrl)) {
+      return this.assetPath(imageUrl);
+    }
+
     if (imageUrl.startsWith('/')) {
       return `${this.apiUrl}${imageUrl}`;
     }
@@ -332,6 +341,25 @@ export class ProdutosAdminComponent implements OnInit {
     return this.assetPath(imagem);
   }
 
+  onImagemSelecionada(produto: Produto) {
+    delete (produto as any).imagemUpload;
+    delete (produto as any).imagemPreview;
+  }
+
+  private normalizarImagemSelecionada(imageUrl: string | null | undefined): string {
+    const value = imageUrl?.trim() ?? '';
+
+    if (!value || value.startsWith('data:') || value.startsWith('http://') || value.startsWith('https://') || value.startsWith('assets/')) {
+      return value;
+    }
+
+    if (value.startsWith('/')) {
+      return value;
+    }
+
+    return `assets/imagens/${value.split(/[\\/]/).pop()}`;
+  }
+
   onFileSelected(event: Event, produto: Produto) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -354,15 +382,52 @@ export class ProdutosAdminComponent implements OnInit {
       // Armazenar o arquivo no produto
       (produto as any).imagemUpload = file;
 
-      // Criar preview da imagem
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        (produto as any).imagemPreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      this.criarPreviewReduzido(file)
+        .then((preview) => {
+          (produto as any).imagemPreview = preview;
+          this.cd.detectChanges();
+        })
+        .catch((error) => {
+          console.error('Erro ao gerar preview da imagem:', error);
+          this.erro = 'Não foi possível preparar a imagem selecionada.';
+          input.value = '';
+        });
 
       this.erro = '';
     }
+  }
+
+  private criarPreviewReduzido(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onerror = () => reject(reader.error);
+      reader.onload = () => {
+        const img = new Image();
+
+        img.onerror = () => reject(new Error('Imagem inválida.'));
+        img.onload = () => {
+          const maxSize = 900;
+          const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+
+          const context = canvas.getContext('2d');
+          if (!context) {
+            resolve(reader.result as string);
+            return;
+          }
+
+          context.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        };
+
+        img.src = reader.result as string;
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   trackByProduto(index: number, produto: Produto): number {
