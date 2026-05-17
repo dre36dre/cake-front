@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ApplicationRef, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { finalize, timeout } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
+import { DEFAULT_PRODUCTS } from '../../data/default-products';
 import { Produto } from '../../models/produto.model';
 import { ProdutoService } from '../../services/produtos.service';
 import { environment } from '../../../environments/environments';
@@ -73,7 +74,7 @@ export class ProdutosAdminComponent implements OnInit {
     // Timeout de segurança de 15 segundos
     this.timeoutId = setTimeout(() => {
       if (this.carregando) {
-        this.erro = 'Timeout ao carregar produtos. Verifique se o backend está online e tente novamente.';
+        this.usarProdutosPadrao('A API demorou para responder. Mostrando os produtos do cardápio atual.');
         console.error('Timeout ao carregar produtos');
       }
     }, 15000);
@@ -95,13 +96,14 @@ export class ProdutosAdminComponent implements OnInit {
 
         if (!Array.isArray(produtos)) {
           console.error('Resposta de produtos não é um array:', produtos);
-          this.erro = 'Resposta inválida da API de produtos.';
-          this.carregando = false;
-          this.cd.detectChanges();
+          this.usarProdutosPadrao('Resposta inválida da API. Mostrando os produtos do cardápio atual.');
           return;
         }
 
-        this.produtos = produtos;
+        this.produtos = produtos.length > 0 ? produtos : this.clonarProdutosPadrao();
+        this.mensagem = produtos.length > 0
+          ? ''
+          : 'Nenhum produto veio da API. Mostrando os produtos do cardápio atual.';
         this.carregando = false;
         this.cd.detectChanges();
         console.log('Produtos mapeados:', this.produtos.length);
@@ -111,17 +113,23 @@ export class ProdutosAdminComponent implements OnInit {
         this.carregando = false;
         this.cd.detectChanges();
 
-        if (err?.name === 'TimeoutError') {
-          this.erro = 'Timeout ao conectar com a API. O backend pode estar offline.';
-        } else if (err?.status === 0) {
-          this.erro = 'Não foi possível conectar à API. Verifique se o backend está online.';
-        } else if (err?.status === 404) {
-          this.erro = 'Endpoint de produtos não encontrado no backend.';
-        } else {
-          this.erro = 'Não foi possível carregar os produtos. Tente novamente.';
-        }
+        this.usarProdutosPadrao('Não foi possível conectar à API. Mostrando os produtos do cardápio atual.');
       }
     });
+  }
+
+  private usarProdutosPadrao(mensagem: string): void {
+    this.produtos = this.clonarProdutosPadrao();
+    this.erro = '';
+    this.mensagem = mensagem;
+    this.carregando = false;
+    this.salvandoIndex = null;
+    clearTimeout(this.timeoutId);
+    this.cd.detectChanges();
+  }
+
+  private clonarProdutosPadrao(): Produto[] {
+    return DEFAULT_PRODUCTS.map((produto) => ({ ...produto }));
   }
 
   adicionarProduto() {
