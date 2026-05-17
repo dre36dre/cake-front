@@ -6,6 +6,7 @@ import { ProdutoService } from '../../services/produtos.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
 import { DEFAULT_PRODUCTS } from '../../data/default-products';
+import { assetPath, imagemLocalPorProduto } from '../../data/produto-imagens';
 import { carregarProdutosSalvos } from '../../data/produtos-storage';
 import { environment } from '../../../environments/environments';
 import { RouterModule } from '@angular/router';
@@ -26,19 +27,6 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private pollingSubscription: Subscription | null = null;
   private imagemCarregando = new WeakMap<Produto, boolean>();
-  private readonly imagensPorProduto: Record<string, string> = {
-    'bolo de coco': 'bolo.JPG',
-    'brigadeiro': 'brigadeiros-tradicional.jpg',
-    'brigadeiro recheado': 'brigadeiros-recheados.jpg',
-    'mousse': 'mousse.jpg',
-    'trufas': 'trufas.JPG',
-    'bolo de pote': 'bolo-pote.JPG',
-    'copo surpresa': 'copo-surpresa.JPG',
-    'mini pudim': 'mini-pudim.JPG',
-    'pudim para compartilhar': 'pudim-compartilhar.JPG',
-    'pudim familia': 'pudim.JPG',
-    'pudim família': 'pudim.JPG'
-  };
 
   constructor(
     private produtoService: ProdutoService,
@@ -117,17 +105,11 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   private imagemLocal(produto: Produto): string {
-    const nome = produto.name?.trim().toLowerCase() ?? '';
-    const imagem = this.imagensPorProduto[nome] ?? 'bolo.JPG';
-
-    return this.assetPath(imagem);
+    return imagemLocalPorProduto(produto);
   }
 
   private assetPath(imagem: string): string {
-    if (imagem.startsWith('cardapio-')) {
-      return `assets/imagenshome/${imagem}`;
-    }
-    return `assets/imagens/${imagem}`;
+    return assetPath(imagem);
   }
 
   adicionar(produto: Produto): void {

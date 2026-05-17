@@ -68,10 +68,37 @@ async function ensureReady() {
           );
         }
       }
+
+      await corrigirImagensPadrao(db);
     })();
   }
 
   return readyPromise;
+}
+
+async function corrigirImagensPadrao(db) {
+  const fixes = [
+    ['100 Brigadeiros recheados', 'assets/imagens/brigadeiros-recheados.jpg'],
+    ['100 Brigadeiros', 'assets/imagens/brigadeiros-tradicional.jpg'],
+    ['Pudim 2', 'assets/imagens/pudim-2.JPG'],
+    ['Beijinho', 'assets/imagens/beijinho.JPG']
+  ];
+
+  for (const [name, imageUrl] of fixes) {
+    await db.query(
+      `UPDATE produto
+       SET image_url = $2,
+           updated_at = NOW()
+       WHERE LOWER(name) = LOWER($1)
+         AND (
+           image_url IS NULL
+           OR image_url = ''
+           OR image_url = 'assets/imagens/bolo.JPG'
+           OR image_url = '/imagens/bolo.JPG'
+         )`,
+      [name, imageUrl]
+    );
+  }
 }
 
 function mapProduct(row) {

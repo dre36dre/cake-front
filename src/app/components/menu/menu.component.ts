@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProdutoService } from '../../services/produtos.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Produto } from '../../models/produto.model';
+import { assetPath, imagemLocalPorProduto } from '../../data/produto-imagens';
 import { environment } from '../../../environments/environments';
 
 @Component({
@@ -17,19 +18,6 @@ export class MenuComponent implements OnInit {
   produtos: Produto[] = [];
   imagemCarregando = new Map<Produto, boolean>();
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
-  private readonly imagensPorProduto: Record<string, string> = {
-    'bolo de coco': 'bolo.JPG',
-    'brigadeiro': 'brigadeiros-tradicional.jpg',
-    'brigadeiro recheado': 'brigadeiros-recheados.jpg',
-    'mousse': 'mousse.jpg',
-    'trufas': 'trufas.JPG',
-    'bolo de pote': 'bolo-pote.JPG',
-    'copo surpresa': 'copo-surpresa.JPG',
-    'mini pudim': 'mini-pudim.JPG',
-    'pudim para compartilhar': 'pudim-compartilhar.JPG',
-    'pudim familia': 'pudim.JPG',
-    'pudim família': 'pudim.JPG'
-  };
 
   constructor(
     private produtoService: ProdutoService,
@@ -89,16 +77,10 @@ export class MenuComponent implements OnInit {
   }
 
   private imagemLocal(produto: Produto): string {
-    const nome = produto.name?.trim().toLowerCase() ?? '';
-    const imagem = this.imagensPorProduto[nome] ?? 'bolo.JPG';
-
-    return this.assetPath(imagem);
+    return imagemLocalPorProduto(produto);
   }
 
   private assetPath(imagem: string): string {
-    if (imagem.startsWith('cardapio-')) {
-      return `assets/imagenshome/${imagem}`;
-    }
-    return `assets/imagens/${imagem}`;
+    return assetPath(imagem);
   }
 }

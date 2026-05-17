@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { DEFAULT_PRODUCTS } from '../../data/default-products';
+import { assetPath, imagemLocalPorProduto } from '../../data/produto-imagens';
 import { carregarProdutosSalvos } from '../../data/produtos-storage';
 import { Produto } from '../../models/produto.model';
 import { ProdutoService } from '../../services/produtos.service';
@@ -40,20 +41,6 @@ export class ProdutosAdminComponent implements OnInit {
   ];
 
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
-  private readonly imagensPorProduto: Record<string, string> = {
-    'bolo de coco': 'bolo.JPG',
-    'bolo': 'bolo.JPG',
-    'brigadeiro': 'brigadeiros-tradicional.jpg',
-    'brigadeiro recheado': 'brigadeiros-recheados.jpg',
-    'mousse': 'mousse.jpg',
-    'trufas': 'trufas.JPG',
-    'bolo de pote': 'bolo-pote.JPG',
-    'copo surpresa': 'copo-surpresa.JPG',
-    'mini pudim': 'mini-pudim.JPG',
-    'pudim para compartilhar': 'pudim-compartilhar.JPG',
-    'pudim familia': 'pudim.JPG',
-    'pudim família': 'pudim.JPG'
-  };
   private timeoutId: any;
 
   constructor(
@@ -315,17 +302,11 @@ export class ProdutosAdminComponent implements OnInit {
   }
 
   private assetPath(imagem: string): string {
-    if (imagem.startsWith('cardapio-')) {
-      return `assets/imagenshome/${imagem}`;
-    }
-    return `assets/imagens/${imagem}`;
+    return assetPath(imagem);
   }
 
   private imagemLocal(produto: Produto): string {
-    const nome = produto.name?.trim().toLowerCase() ?? '';
-    const imagem = this.imagensPorProduto[nome] ?? 'bolo.JPG';
-
-    return this.assetPath(imagem);
+    return imagemLocalPorProduto(produto);
   }
 
   onImagemSelecionada(produto: Produto) {
