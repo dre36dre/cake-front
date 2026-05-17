@@ -17,21 +17,10 @@ export class ProdutoService {
     console.log('ProdutoService inicializado com base de API:', this.apiUrl);
   }
 
-  private getApiBase(): string {
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname.toLowerCase();
-      const isLocalhost =
-        hostname === 'localhost' ||
-        hostname === '127.0.0.1' ||
-        hostname === '[::1]';
+ private getApiBase(): string {
+  return environment.apiUrl.replace(/\/$/, '');
+}
 
-      if (isLocalhost) {
-        return '/api';
-      }
-    }
-
-    return environment.apiUrl.replace(/\/$/, '');
-  }
 
   listar(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.apiUrl).pipe(timeout(10000));
