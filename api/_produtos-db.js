@@ -19,16 +19,20 @@ let pool;
 let readyPromise;
 
 function getPool() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL nao configurada na Vercel.');
+  const databaseUrl = process.env.DATABASE_PUBLIC_URL ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL;
+
+  if (!databaseUrl) {
+    throw new Error('Configure DATABASE_URL ou DATABASE_PUBLIC_URL nas variaveis da Vercel.');
   }
 
   if (!pool) {
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.DB_SSL === 'true'
-        ? { rejectUnauthorized: false }
-        : undefined
+      connectionString: databaseUrl,
+      ssl: process.env.DB_SSL === 'false'
+        ? undefined
+        : { rejectUnauthorized: false }
     });
   }
 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { DEFAULT_PRODUCTS } from '../../data/default-products';
-import { carregarProdutosSalvos, removerProdutoLocalmente, salvarProdutoLocalmente } from '../../data/produtos-storage';
+import { carregarProdutosSalvos } from '../../data/produtos-storage';
 import { Produto } from '../../models/produto.model';
 import { ProdutoService } from '../../services/produtos.service';
 import { environment } from '../../../environments/environments';
@@ -163,9 +163,7 @@ export class ProdutosAdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao deletar produto:', err);
-          removerProdutoLocalmente(produto);
-          this.produtos.splice(index, 1);
-          this.mensagem = 'Produto removido localmente. A API não respondeu no momento.';
+          this.erro = this.mensagemErroApi(err, 'Não foi possível excluir o produto no banco.');
         }
       });
       return;
@@ -246,19 +244,8 @@ export class ProdutosAdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao salvar produto:', err);
-          const preview = (produto as any).imagemPreview as string | undefined;
-          try {
-            const salvoLocalmente = salvarProdutoLocalmente({
-              ...produtoAtualizado,
-              imageUrl: preview || this.normalizarImagemSelecionada(produtoAtualizado.imageUrl) || ''
-            });
-            concluirSalvar(salvoLocalmente);
-            this.erro = '';
-            this.mensagem = `${produto.name} salvo localmente. Abra Produtos para ver a alteração.`;
-          } catch (storageError: any) {
-            console.error('Erro ao salvar no navegador:', storageError);
-            this.erro = storageError?.message || 'Não foi possível salvar no navegador.';
-          }
+          this.erro = this.mensagemErroApi(err, 'Não foi possível salvar o produto no banco.');
+          this.mensagem = '';
           this.salvandoIndex = null;
           this.cd.detectChanges();
         }
@@ -358,6 +345,11 @@ export class ProdutosAdminComponent implements OnInit {
     }
 
     return `assets/imagens/${value.split(/[\\/]/).pop()}`;
+  }
+
+  private mensagemErroApi(err: any, fallback: string): string {
+    const detalhe = err?.error?.message || err?.message || '';
+    return detalhe ? `${fallback} (${detalhe})` : fallback;
   }
 
   onFileSelected(event: Event, produto: Produto) {
