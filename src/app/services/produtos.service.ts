@@ -31,11 +31,12 @@ export class ProdutoService {
   }
 
   atualizar(id: number, produto: Produto): Observable<Produto> {
-    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto).pipe(timeout(100));
+    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto);
   }
 
   deletar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(timeout(100));
+  return this.http.delete<void>(`${this.apiUrl}/${id}`);
+
   }
 
 
