@@ -4,8 +4,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "api": "node backend/src/server.js",
-    "seed": "node backend/src/seed.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
