@@ -18,6 +18,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './produtos.component.html',
   styleUrls: ['./produtos.component.css']
 })
+
 export class ProdutosComponent implements OnInit, OnDestroy {
 
   produtos: Produto[] = [];
