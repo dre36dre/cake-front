@@ -8,14 +8,9 @@ import { environment } from '../../environments/environments';
 })
 export class PedidoService {
 
-  private api = `${this.getApiBase()}/pedidos`;
+ private api = '/api/pedidos';
 
-  private getApiBase(): string {
-    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-      return '/api';
-    }
-    return environment.apiUrl.replace(/\/$/, '');
-  }
+ 
 
   constructor(private http: HttpClient) {}
 
