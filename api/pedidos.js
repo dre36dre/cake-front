@@ -115,7 +115,7 @@ VALUES ($1, $2, $3, $4, $5, $6)
     );
 
       return res.status(201).json({
-  sucesso: true,
+  sucess: true,
   pedido: rows[0]
 });
     }
