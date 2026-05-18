@@ -19,13 +19,15 @@ module.exports = async (req, res) => {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS pedido (
-        id SERIAL PRIMARY KEY,
-        cliente TEXT,
-        telefone TEXT,
-        itens JSONB,
-        total NUMERIC(10,2),
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
-      )
+  id SERIAL PRIMARY KEY,
+  cliente TEXT,
+  telefone TEXT,
+  endereco TEXT,
+  comentario TEXT,
+  itens JSONB,
+  total NUMERIC(10,2),
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+)
     `);
 
     // LISTAR PEDIDOS
@@ -44,40 +46,57 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
 
       const cliente =
-        req.body.cliente ||
-        req.body.nome ||
-        '';
+  req.body.cliente ||
+  req.body.nome ||
+  req.body.nomeCliente ||
+  '';
 
-      const telefone =
-        req.body.telefone ||
-        req.body.whatsapp ||
-        '';
+const telefone =
+  req.body.telefone ||
+  req.body.whatsapp ||
+  req.body.telefoneCliente ||
+  '';
 
-      const itens =
-        req.body.itens ||
-        req.body.produtos ||
-        [];
+const endereco =
+  req.body.endereco ||
+  req.body.enderecoCliente ||
+  '';
 
-      const total =
-        req.body.total ||
-        req.body.valorTotal ||
-        0;
+const comentario =
+  req.body.comentario ||
+  req.body.comentarioCliente ||
+  '';
 
+const itens =
+  req.body.itens ||
+  req.body.produtos ||
+  [];
+
+const total =
+  req.body.total ||
+  req.body.valorTotal ||
+  0;
       const { rows } = await db.query(`
-        INSERT INTO pedido (
-          cliente,
-          telefone,
-          itens,
-          total
-        )
-        VALUES ($1, $2, $3, $4)
+      INSERT INTO pedido (
+  cliente,
+  telefone,
+  endereco,
+  comentario,
+  itens,
+  total
+)
+VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *
-      `, [
-        cliente,
-        telefone,
-        JSON.stringify(itens),
-        total
-      ]);
+      `,
+      [
+  cliente,
+  telefone,
+  endereco,
+  comentario,
+  JSON.stringify(itens),
+  total
+]
+    );
 
       return res.status(201).json(rows[0]);
     }
