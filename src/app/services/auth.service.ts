@@ -31,12 +31,14 @@ export class AuthService {
     return this.http.post<any>(`${this.api}/login`, { username, password });
   }
 
-  alterarSenha(senhaAtual: string, novaSenha: string) {
-    return this.http.post<any>(`${this.api}/change-password`, {
-      currentPassword: senhaAtual,
-      newPassword: novaSenha
-    });
-  }
+ alterarSenha(senhaAtual: string, novaSenha: string) {
+
+  return this.http.put('/api/alterar-senha', {
+    senhaAtual,
+    novaSenha
+  });
+
+}
 
   validarSenhaAdminLocal(senha: string): boolean {
     const senhaSalva = this.getSenhaAdminLocal();
