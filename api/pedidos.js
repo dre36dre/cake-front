@@ -18,17 +18,33 @@ module.exports = async (req, res) => {
     const db = getPool();
 
     await db.query(`
-      CREATE TABLE IF NOT EXISTS pedido (
-  id SERIAL PRIMARY KEY,
-  cliente TEXT,
-  telefone TEXT,
-  endereco TEXT,
-  comentario TEXT,
-  itens JSONB,
-  total NUMERIC(10,2),
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
-)
-    `);
+  CREATE TABLE IF NOT EXISTS pedido (
+    id SERIAL PRIMARY KEY,
+    cliente TEXT,
+    telefone TEXT,
+    endereco TEXT,
+    comentario TEXT,
+    itens JSONB,
+    total NUMERIC(10,2),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+  )
+`);
+
+await db.query(`
+  ALTER TABLE pedido
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT NOW()
+`);
+
+await db.query(`
+  ALTER TABLE pedido
+  ADD COLUMN IF NOT EXISTS endereco TEXT
+`);
+
+await db.query(`
+  ALTER TABLE pedido
+  ADD COLUMN IF NOT EXISTS comentario TEXT
+`);
+    
 
     // LISTAR PEDIDOS
     if (req.method === 'GET') {
