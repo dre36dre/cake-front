@@ -135,11 +135,13 @@ module.exports = async (req, res) => {
       message: 'Método não permitido.'
     });
 
-  } catch (error) {
+ } catch (error) {
 
-    console.error('ERRO API PEDIDOS:', error);
+  console.error('ERRO API PEDIDOS:', error);
 
-    return sendError(res, error);
+  return res.status(500).json({
+    error: error.message,
+    stack: error.stack
+  });
 
-  }
-};
+}
