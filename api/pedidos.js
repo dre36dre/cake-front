@@ -98,7 +98,10 @@ VALUES ($1, $2, $3, $4, $5, $6)
 ]
     );
 
-      return res.status(201).json(rows[0]);
+      return res.status(201).json({
+  sucesso: true,
+  pedido: rows[0]
+});
     }
 
     res.setHeader('Allow', 'GET,POST,OPTIONS');
