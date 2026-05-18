@@ -1,13 +1,11 @@
 {
   "version": 2,
-
   "buildCommand": "npm run build",
-
   "outputDirectory": "dist/confeitaria-app/browser",
 
   "functions": {
     "api/**/*.js": {
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     }
   },
 
