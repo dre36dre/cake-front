@@ -4,7 +4,7 @@ const {
   ensureReady,
   getPool,
   sendError
-} = require('./_produtos-db');
+} = require('../backend/src/api/_produtos-db');
 
 module.exports = async (req, res) => {
 
