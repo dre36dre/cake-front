@@ -52,7 +52,7 @@ await db.query(`
       const { rows } = await db.query(`
         SELECT *
         FROM pedido
-        ORDER BY created_at DESC
+        ORDER BY data_hora DESC
       `);
 
       return res.status(200).json(rows);
@@ -93,26 +93,28 @@ const total =
   req.body.valorTotal ||
   0;
       const { rows } = await db.query(`
-      INSERT INTO pedido (
-  cliente,
-  telefone,
-  endereco,
-  comentario,
-  itens,
-  total
-)
-VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *
-      `,
-      [
+  INSERT INTO pedido (
+    nome_cliente,
+    telefone_cliente,
+    endereco_cliente,
+    comentario_cliente,
+    itens,
+    total,
+    status,
+    data_hora
+  )
+  VALUES ($1,$2,$3,$4,$5,$6,$7,NOW())
+  RETURNING *
+`,
+[
   cliente,
   telefone,
   endereco,
   comentario,
   JSON.stringify(itens),
-  total
-]
-    );
+  total,
+  'CONFIRMED'
+]);
 
       return res.status(201).json({
   sucess: true,
