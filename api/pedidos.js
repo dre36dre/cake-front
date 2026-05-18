@@ -17,7 +17,6 @@ module.exports = async (req, res) => {
 
     const db = getPool();
 
-    // Criar tabela se não existir
     await db.query(`
       CREATE TABLE IF NOT EXISTS pedido (
         id SERIAL PRIMARY KEY,
@@ -41,15 +40,28 @@ module.exports = async (req, res) => {
       return res.status(200).json(rows);
     }
 
-    // CRIAR PEDIDO
+    // SALVAR PEDIDO
     if (req.method === 'POST') {
 
-      const {
-        cliente,
-        telefone,
-        itens,
-        total
-      } = req.body;
+      const cliente =
+        req.body.cliente ||
+        req.body.nome ||
+        '';
+
+      const telefone =
+        req.body.telefone ||
+        req.body.whatsapp ||
+        '';
+
+      const itens =
+        req.body.itens ||
+        req.body.produtos ||
+        [];
+
+      const total =
+        req.body.total ||
+        req.body.valorTotal ||
+        0;
 
       const { rows } = await db.query(`
         INSERT INTO pedido (
@@ -61,13 +73,11 @@ module.exports = async (req, res) => {
         VALUES ($1, $2, $3, $4)
         RETURNING *
       `, [
-        cliente || '',
-        telefone || '',
-        JSON.stringify(itens || []),
-        total || 0
+        cliente,
+        telefone,
+        JSON.stringify(itens),
+        total
       ]);
-
-      console.log('Pedido salvo:', rows[0]);
 
       return res.status(201).json(rows[0]);
     }
