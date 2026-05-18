@@ -8,9 +8,7 @@ import { environment } from '../../environments/environments';
 })
 export class PedidoService {
 
- private api = '/api/pedidos';
-
- 
+  private api = '/api/pedidos';
 
   constructor(private http: HttpClient) {}
 
@@ -21,6 +19,7 @@ export class PedidoService {
   listarPedidos() {
     return this.http.get<any[]>(this.api);
   }
+
 
   salvarPedidoOffline(pedido: any): void {
     const pedidos = this.getPedidosOffline();
