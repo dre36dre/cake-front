@@ -101,17 +101,24 @@ export class CarrinhoComponent implements OnInit {
     };
 
     this.pedidoService.enviarPedido(pedido).subscribe({
-      next: () => {
-        this.abrirWhatsApp();
-        this.carrinhoService.limpar();
-      },
-      error: (err) => {
-        console.error('Falha ao enviar pedido para a API:', err);
-        this.pedidoService.salvarPedidoOffline(pedido);
-        alert('Não foi possível salvar o pedido na API. Pedido armazenado localmente e aberto no WhatsApp.');
-        this.abrirWhatsApp();
-        this.carrinhoService.limpar();
-      }
+   next: (res: any) => {
+
+  console.log('Pedido salvo:', res);
+
+  alert('Pedido enviado com sucesso!');
+
+  this.abrirWhatsApp();
+
+  this.carrinhoService.limpar();
+
+},
+     error: (err) => {
+
+  console.error('Erro real:', err);
+
+  alert('Erro ao enviar pedido.');
+
+}
     });
   }
 
