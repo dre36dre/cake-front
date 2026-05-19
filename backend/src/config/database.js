@@ -11,22 +11,20 @@ const databaseUrl =
 const sequelize = new Sequelize(databaseUrl, {
   dialect: 'postgres',
   dialectModule: pg,
-  logging: process.env.DB_LOGGING === 'true' ? console.log : false,
+  logging: false,
   pool: {
-    max: Number(process.env.DB_POOL_MAX || 3),
-    min: Number(process.env.DB_POOL_MIN || 0),
-    acquire: Number(process.env.DB_POOL_ACQUIRE || 30000),
-    idle: Number(process.env.DB_POOL_IDLE || 10000)
+    max: 1,
+    min: 0,
+    idle: 10000
   },
-  dialectOptions: process.env.DB_SSL === 'false'
-    ? {}
-    : {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      }
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
 });
+
 
 module.exports = sequelize;
 
