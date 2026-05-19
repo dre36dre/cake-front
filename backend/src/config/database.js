@@ -26,6 +26,7 @@ const sequelize = new Sequelize(databaseUrl, {
 });
 
 
+
 module.exports = sequelize;
 
 function buildPostgresUrlFromSpringStyleEnv() {
