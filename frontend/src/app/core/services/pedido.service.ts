@@ -18,7 +18,7 @@ private api = `${environment.apiUrl}/pedidos`;
   }
 
   listarPedidos() {
-    return this.http.get<any[]>(this.api);
+    return this.http.get<any[]>(`${this.api}/listar`);
   }
 
 
@@ -59,10 +59,10 @@ private api = `${environment.apiUrl}/pedidos`;
   }
 
   atualizarPedido(id: string | number, dados: any) {
-    return this.http.patch(`${this.api}/${id}`, dados).pipe(
+    return this.http.patch(`${this.api}/atualizar?id=${id}`, dados).pipe(
       catchError((err) => {
         if (err?.status === 405 || err?.status === 404 || err?.status === 400) {
-          return this.http.put(`${this.api}/${id}`, dados);
+          return this.http.put(`${this.api}/atualizar?id=${id}`, dados);
         }
         throw err;
       })

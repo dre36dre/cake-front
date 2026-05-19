@@ -1,4 +1,4 @@
-const { getPool } = require('../_produtos-db')
+const { ensureOrderTables, getPool, mapPedido } = require('../_pedidos-db')
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -16,6 +16,7 @@ module.exports = async function handler(req, res) {
   try {
     const { id } = req.query
     const pool = getPool()
+    await ensureOrderTables(pool)
 
     if (!id) {
       return res.status(400).json({ error: 'ID do pedido é obrigatório' })
@@ -29,10 +30,7 @@ module.exports = async function handler(req, res) {
 
     const itensResult = await pool.query(`SELECT * FROM pedido_itens WHERE pedido_id = $1`, [id])
 
-    return res.status(200).json({
-      ...pedidoResult.rows[0],
-      itens: itensResult.rows
-    })
+    return res.status(200).json(mapPedido(pedidoResult.rows[0], itensResult.rows))
 
   } catch (error) {
     console.error(error)

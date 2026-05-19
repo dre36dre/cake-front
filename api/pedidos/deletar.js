@@ -1,4 +1,4 @@
-const { getPool } = require('../_produtos-db')
+const { ensureOrderTables, getPool } = require('../_pedidos-db')
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -16,6 +16,7 @@ module.exports = async function handler(req, res) {
   try {
     const { id } = req.query
     const pool = getPool()
+    await ensureOrderTables(pool)
 
     if (!id) {
       return res.status(400).json({ error: 'ID do pedido é obrigatório' })

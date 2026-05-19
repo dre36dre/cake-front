@@ -1,4 +1,4 @@
-const { getPool } = require('../_produtos-db')
+const { ensureOrderTables, getPool, mapPedido } = require('../_pedidos-db')
 
 module.exports = async function handler(req, res) {
   // CORS
@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
     const { id } = req.query
     const { nomeCliente, telefoneCliente, enderecoCliente, comentarioCliente, status, total } = req.body
     const pool = getPool()
+    await ensureOrderTables(pool)
 
     if (!id) {
       return res.status(400).json({ error: 'ID do pedido é obrigatório' })
@@ -53,7 +54,7 @@ module.exports = async function handler(req, res) {
       return res.status(404).json({ error: 'Pedido não encontrado' })
     }
 
-    return res.status(200).json(result.rows[0])
+    return res.status(200).json(mapPedido(result.rows[0]))
 
   } catch (error) {
     console.error(error)

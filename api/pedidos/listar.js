@@ -1,4 +1,4 @@
-const { getPool } = require('../_produtos-db')
+const { ensureOrderTables, getPool, mapPedido } = require('../_pedidos-db')
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -7,6 +7,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const pool = getPool()
+    await ensureOrderTables(pool)
     const pedidosQuery = `
       SELECT *
       FROM pedidos
@@ -22,10 +23,7 @@ module.exports = async function handler(req, res) {
     const itensResult = await pool.query(itensQuery)
     const itens = itensResult.rows
 
-    const pedidosComItens = pedidos.map(p => ({
-      ...p,
-      itens: itens.filter(i => i.pedido_id === p.id)
-    }))
+    const pedidosComItens = pedidos.map(p => mapPedido(p, itens.filter(i => i.pedido_id === p.id)))
 
     return res.status(200).json(pedidosComItens)
 
