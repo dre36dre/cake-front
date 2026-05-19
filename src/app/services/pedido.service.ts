@@ -8,7 +8,8 @@ import { environment } from '../../environments/environments';
 })
 export class PedidoService {
 
-  private api = '/api/pedidos';
+private api = `${environment.apiUrl}/pedidos`;
+
 
   constructor(private http: HttpClient) {}
 
