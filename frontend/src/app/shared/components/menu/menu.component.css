@@ -17,8 +17,16 @@ button {
 }
 
 .imagem-wrapper {
+  background: #f3e4ec;
   position: relative;
   display: inline-block;
+}
+
+.imagem-wrapper img {
+  aspect-ratio: 1 / 1;
+  display: block;
+  object-fit: contain;
+  width: 150px;
 }
 
 .imagem-placeholder {

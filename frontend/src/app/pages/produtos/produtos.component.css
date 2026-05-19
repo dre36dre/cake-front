@@ -36,14 +36,15 @@
 }
 
 .imagem-wrapper {
+  background: #f3e4ec;
   position: relative;
   width: 100%;
 }
 
 .produto-imagem {
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 4 / 3;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   width: 100%;
 }
