@@ -21,10 +21,11 @@ let readyPromise;
 function getPool() {
   const databaseUrl = process.env.DATABASE_PUBLIC_URL ||
     process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL;
+    process.env.POSTGRES_URL ||
+    process.env.NEON_DATABASE_URL;
 
   if (!databaseUrl) {
-    throw new Error('Configure DATABASE_URL ou DATABASE_PUBLIC_URL nas variaveis da Vercel.');
+    throw new Error('Configure DATABASE_URL com a connection string do Neon nas variaveis da Vercel.');
   }
 
   if (!pool) {

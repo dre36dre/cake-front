@@ -10,29 +10,29 @@
     "confeitaria-app": {
       "projectType": "application",
       "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
+      "root": "frontend",
+      "sourceRoot": "frontend/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
+            "browser": "frontend/src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "public",
-              "src/assets"
+              "frontend/public",
+              "frontend/src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "frontend/src/styles.css"
             ]
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environments.ts",
-                  "with": "src/environments/environments.production.ts"
+                  "replace": "frontend/src/environments/environments.ts",
+                  "with": "frontend/src/environments/environments.production.ts"
                 }
               ],
               "budgets": [

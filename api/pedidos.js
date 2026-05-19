@@ -1,9 +1,4 @@
-const { Pool } = require('pg')
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-})
+const { getPool } = require('./_produtos-db')
 
 module.exports = async function handler(req, res) {
   // CORS
@@ -33,6 +28,7 @@ module.exports = async function handler(req, res) {
       RETURNING id
     `
     const pedidoValues = [nomeCliente, telefoneCliente, enderecoCliente, comentarioCliente || '', total]
+    const pool = getPool()
 
     const pedidoResult = await pool.query(pedidoQuery, pedidoValues)
     const pedidoId = pedidoResult.rows[0].id

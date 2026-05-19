@@ -6,6 +6,7 @@ const databaseUrl =
   process.env.DATABASE_PUBLIC_URL ||
   process.env.DATABASE_URL ||
   process.env.POSTGRES_URL ||
+  process.env.NEON_DATABASE_URL ||
   buildPostgresUrlFromSpringStyleEnv();
 
 const sequelize = new Sequelize(databaseUrl, {
