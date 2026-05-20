@@ -17,6 +17,22 @@
   text-decoration: none;
 }
 
+.botao-atualizar {
+  background: #f25aa8;
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  margin: 0 10px 12px 0;
+  padding: 8px 12px;
+}
+
+.botao-produtos:hover,
+.botao-atualizar:hover {
+  background: #e94b9d;
+}
+
 .botao-senha {
   background: #17a2b8;
   border-radius: 6px;
