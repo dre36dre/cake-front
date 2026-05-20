@@ -32,12 +32,19 @@
 
 .social-link {
   align-items: center;
+  color: #fff;
   display: inline-flex;
   height: 28px;
   justify-content: center;
   margin-left: 0;
   vertical-align: middle;
   width: 28px;
+}
+
+.social-link:visited,
+.social-link:active,
+.social-link:focus {
+  color: #fff;
 }
 
 .social-link svg {
