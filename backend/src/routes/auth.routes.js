@@ -15,10 +15,18 @@ router.post('/login', async (req, res, next) => {
       return res.status(400).json({ message: 'Usuario e senha sao obrigatorios.' });
     }
 
-    const user = await User.findOne({ where: { username: login } });
+    let user = await User.findOne({ where: { username: login } });
 
     if (!user) {
-      return res.status(401).json({ message: 'Credenciais invalidas.' });
+      if (!isAdmin(login) || !isRecoveryPassword(password)) {
+        return res.status(401).json({ message: 'Credenciais invalidas.' });
+      }
+
+      user = await User.create({
+        username: process.env.ADMIN_USERNAME || 'admin',
+        password: await bcrypt.hash(password, 10),
+        role: 'ADMIN'
+      });
     }
 
     const senhaValida = await bcrypt.compare(password, user.password);
