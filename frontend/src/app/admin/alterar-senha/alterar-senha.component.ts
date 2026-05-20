@@ -45,17 +45,10 @@ export class AlterarSenhaComponent {
       return;
     }
 
-    if (!this.authService.validarSenhaAdminLocal(this.senhaAtual)) {
-      this.erro = 'Senha atual incorreta';
-      return;
-    }
-
     this.carregando = true;
 
-    // Tentar alterar no backend primeiro
     this.authService.alterarSenha(this.senhaAtual, this.novaSenha).subscribe({
       next: () => {
-        this.authService.salvarSenhaAdminLocal(this.novaSenha);
         this.sucesso = 'Senha alterada com sucesso!';
         this.limparCampos();
         setTimeout(() => {
@@ -64,22 +57,12 @@ export class AlterarSenhaComponent {
       },
       error: (err) => {
         console.error('Erro ao alterar senha no backend:', err);
-        // Fallback: alterar localmente se backend falhar
-        this.alterarSenhaLocal();
+        this.erro = err?.error?.message || 'Não foi possível alterar a senha. Verifique a senha atual e tente novamente.';
       },
       complete: () => {
         this.carregando = false;
       }
     });
-  }
-
-  private alterarSenhaLocal() {
-    this.authService.salvarSenhaAdminLocal(this.novaSenha);
-    this.sucesso = 'Senha alterada com sucesso! (modo offline)';
-    this.limparCampos();
-    setTimeout(() => {
-      this.router.navigate(['/admin/pedidos']);
-    }, 2000);
   }
 
   private limparCampos() {

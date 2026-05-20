@@ -6,8 +6,6 @@ import { environment } from '../../../environments/environments';
 export class AuthService {
 
   private api = `${this.getApiBase()}/auth`;
-  private readonly adminPasswordKey = 'adminPassword';
-  private readonly senhasPadrao = ['confeitaria123', 'confeitaria123#'];
 
   constructor(private http: HttpClient) {}
 
@@ -31,39 +29,16 @@ export class AuthService {
     return this.http.post<any>(`${this.api}/login`, { username, password });
   }
 
- alterarSenha(senhaAtual: string, novaSenha: string) {
-
-  return this.http.put('/api/alterar-senha', {
-    senhaAtual,
-    novaSenha
-  });
-
-}
-
-  validarSenhaAdminLocal(senha: string): boolean {
-    const senhaSalva = this.getSenhaAdminLocal();
-
-    if (senhaSalva) {
-      return senha === senhaSalva;
-    }
-
-    return this.senhasPadrao.includes(senha);
-  }
-
-  existeSenhaAdminAlterada(): boolean {
-    return !!this.getSenhaAdminLocal();
-  }
-
-  salvarSenhaAdminLocal(senha: string) {
-    localStorage.setItem(this.adminPasswordKey, senha);
-  }
-
-  getSenhaAdminLocal(): string | null {
-    return localStorage.getItem(this.adminPasswordKey);
+  alterarSenha(senhaAtual: string, novaSenha: string) {
+    return this.http.post<any>(`${this.api}/change-password`, {
+      currentPassword: senhaAtual,
+      newPassword: novaSenha
+    });
   }
 
   salvarToken(token: string) {
     localStorage.setItem('token', token);
+    localStorage.removeItem('adminPassword');
   }
 
   salvarRole(role: string) {
