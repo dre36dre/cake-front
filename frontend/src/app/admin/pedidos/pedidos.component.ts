@@ -53,18 +53,9 @@ export class PedidosComponent implements OnInit {
 
         this.pedidos = data.map(p => {
 
-          let dataAjustada = null;
-
-          if (p.dataHora) {
-            dataAjustada = new Date(p.dataHora);
-
-            // Ajusta UTC -> São Paulo
-            dataAjustada.setHours(dataAjustada.getHours() - 3);
-          }
-
           return {
             ...p,
-            dataHora: dataAjustada,
+            dataHora: p.dataHora ? new Date(p.dataHora) : null,
             status: p.status || 'CONFIRMED',
             itens: p.itens || []
           };
@@ -79,18 +70,9 @@ export class PedidosComponent implements OnInit {
 
     this.pedidosOffline = offline.map(p => {
 
-      let dataAjustada = null;
-
-      if (p.dataHora) {
-        dataAjustada = new Date(p.dataHora);
-
-        // Ajusta UTC -> São Paulo
-        dataAjustada.setHours(dataAjustada.getHours() - 3);
-      }
-
       return {
         ...p,
-        dataHora: dataAjustada,
+        dataHora: p.dataHora ? new Date(p.dataHora) : null,
         status: p.status || 'OFFLINE',
         itens: p.itens || []
       };

@@ -23,7 +23,7 @@
    <p>
   <p>
   <strong>Data:</strong>
-  {{ p.dataHora | date:'dd/MM/yyyy HH:mm' }}
+  {{ p.dataHora | date:'dd/MM/yyyy HH:mm':'America/Sao_Paulo' }}
 </p>
     <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
     <h4>Itens:</h4>
