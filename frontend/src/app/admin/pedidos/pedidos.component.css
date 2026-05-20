@@ -38,6 +38,25 @@
   gap: 10px;
 }
 
+.status-controle {
+  margin: 12px 0;
+}
+
+.status-controle label {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-controle select {
+  border: 1px solid #cdb7c1;
+  border-radius: 6px;
+  color: #281422;
+  font: inherit;
+  padding: 8px 10px;
+}
+
 .pedido-acoes button {
   padding: 8px 12px;
   border: none;

@@ -44,7 +44,19 @@
   <p><strong>Endereço:</strong> {{ p.enderecoCliente }}</p>
   <p *ngIf="p.comentarioCliente"><strong>Comentário:</strong> {{ p.comentarioCliente }}</p>
   <p><strong>Data:</strong> {{ p.dataHora ? (p.dataHora | date:'dd/MM/yyyy HH:mm':'America/Sao_Paulo') : 'Sem data' }}</p>
-  <p><strong>Status:</strong> {{ getStatusLabel(p.status) }}</p>
+  <div class="status-controle">
+    <label>
+      <strong>Status:</strong>
+      <select
+        [value]="statusValue(p.status)"
+        [disabled]="salvandoStatus === p.id"
+        (change)="alterarStatusSelecionado(p, $event)">
+        <option value="CONFIRMED">Confirmado</option>
+        <option value="COMPLETED">Concluído</option>
+        <option value="CANCELLED">Cancelado</option>
+      </select>
+    </label>
+  </div>
 
   <div class="pedido-acoes" *ngIf="podeAlterarStatus(p.status)">
     <button

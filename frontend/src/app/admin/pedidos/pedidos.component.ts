@@ -17,7 +17,7 @@ export class PedidosComponent implements OnInit {
   pedidosOffline: any[] = [];
   carregando = true;
   erro = '';
-  salvandoStatus: number | null = null;
+  salvandoStatus: string | number | null = null;
   reenviandoOffline = false;
 
   constructor(private pedidoService: PedidoService) {}
@@ -124,55 +124,42 @@ export class PedidosComponent implements OnInit {
   }
 
   concluirPedido(pedido: any) {
-
-    const pedidoId = pedido?.id || pedido?._id;
-
-    if (!pedidoId) {
-      return;
-    }
-
-    this.salvandoStatus = pedidoId;
-
-    this.pedidoService.atualizarStatus(pedidoId, 'COMPLETED').subscribe({
-
-      next: (pedidoAtualizado: any) => {
-        pedido.status = pedidoAtualizado?.status || 'COMPLETED';
-      },
-
-      error: (err) => {
-        console.error('Erro ao concluir pedido:', err);
-        alert('Não foi possível concluir o pedido. Tente novamente.');
-      },
-
-      complete: () => {
-        this.salvandoStatus = null;
-      }
-    });
+    this.alterarStatusPedido(pedido, 'COMPLETED');
   }
 
   cancelarPedido(pedido: any) {
+    this.alterarStatusPedido(pedido, 'CANCELLED');
+  }
 
+  alterarStatusSelecionado(pedido: any, event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.alterarStatusPedido(pedido, select.value as 'CONFIRMED' | 'COMPLETED' | 'CANCELLED');
+  }
+
+  private alterarStatusPedido(pedido: any, status: 'CONFIRMED' | 'COMPLETED' | 'CANCELLED') {
     const pedidoId = pedido?.id || pedido?._id;
 
     if (!pedidoId) {
+      alert('Pedido sem ID. Atualize a página e tente novamente.');
       return;
     }
 
     this.salvandoStatus = pedidoId;
 
-    this.pedidoService.atualizarStatus(pedidoId, 'CANCELLED').subscribe({
+    this.pedidoService.atualizarStatus(pedidoId, status).pipe(
+      finalize(() => {
+        this.salvandoStatus = null;
+      })
+    ).subscribe({
 
       next: (pedidoAtualizado: any) => {
-        pedido.status = pedidoAtualizado?.status || 'CANCELLED';
+        Object.assign(pedido, pedidoAtualizado || {});
+        pedido.status = pedidoAtualizado?.status || status;
       },
 
       error: (err) => {
-        console.error('Erro ao cancelar pedido:', err);
-        alert('Não foi possível cancelar o pedido. Tente novamente.');
-      },
-
-      complete: () => {
-        this.salvandoStatus = null;
+        console.error('Erro ao atualizar status do pedido:', err);
+        alert('Não foi possível atualizar o status do pedido. Tente novamente.');
       }
     });
   }
@@ -180,6 +167,10 @@ export class PedidosComponent implements OnInit {
   podeAlterarStatus(status: string): boolean {
     const normalized = this.normalizeStatus(status);
     return normalized !== 'COMPLETED' && normalized !== 'CANCELLED' && normalized !== 'OFFLINE';
+  }
+
+  statusValue(status: string): string {
+    return this.normalizeStatus(status);
   }
 
   getStatusLabel(status: string) {

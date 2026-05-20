@@ -32,7 +32,7 @@ module.exports = async function handler(req, res) {
     if (telefoneCliente) { fields.push(`telefone_cliente = $${index++}`); values.push(telefoneCliente) }
     if (enderecoCliente) { fields.push(`endereco_cliente = $${index++}`); values.push(enderecoCliente) }
     if (comentarioCliente) { fields.push(`comentario_cliente = $${index++}`); values.push(comentarioCliente) }
-    if (status) { fields.push(`status = $${index++}`); values.push(status) }
+    if (status) { fields.push(`status = $${index++}`); values.push(normalizeStatus(status)) }
     if (total !== undefined) { fields.push(`total = $${index++}`); values.push(total) }
 
     if (fields.length === 0) {
@@ -60,4 +60,18 @@ module.exports = async function handler(req, res) {
     console.error(error)
     return res.status(500).json({ error: 'Erro interno do servidor' })
   }
+}
+
+function normalizeStatus(status) {
+  const value = String(status || 'CONFIRMED').trim().toUpperCase()
+
+  if (value === 'COMPLETED' || value === 'CONCLUIDO' || value === 'CONCLUÍDO') {
+    return 'COMPLETED'
+  }
+
+  if (value === 'CANCELED' || value === 'CANCELLED' || value === 'CANCELADO') {
+    return 'CANCELLED'
+  }
+
+  return 'CONFIRMED'
 }
