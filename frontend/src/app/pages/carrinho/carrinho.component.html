@@ -72,12 +72,29 @@
 
     <button
       class="finalizar"
-      (click)="enviarWhatsApp()">
+      (click)="abrirConfirmacaoPedido()">
 
       Finalizar Pedido
 
     </button>
 
+  </div>
+
+  <div class="confirmacao-overlay" *ngIf="mostrandoConfirmacao">
+    <div class="confirmacao-modal" role="dialog" aria-modal="true" aria-labelledby="confirmacao-titulo">
+      <h3 id="confirmacao-titulo">Confirmar pedido?</h3>
+      <p>Seu pedido será enviado para a confeitaria e o WhatsApp será aberto para continuar o atendimento.</p>
+
+      <div class="confirmacao-resumo">
+        <strong>Total: R$ {{ total }}</strong>
+        <span>{{ carrinho.length }} item(ns)</span>
+      </div>
+
+      <div class="confirmacao-acoes">
+        <button type="button" class="btn-voltar" (click)="cancelarConfirmacao()">Voltar</button>
+        <button type="button" class="btn-confirmar" (click)="confirmarPedido()">Confirmar pedido</button>
+      </div>
+    </div>
   </div>
 
 </div>

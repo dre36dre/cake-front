@@ -25,6 +25,7 @@ export class CarrinhoComponent implements OnInit {
   telefoneCliente: string = '';
   enderecoCliente: string = '';
   comentarioCliente: string = '';
+  mostrandoConfirmacao = false;
 
   constructor(
     private carrinhoService: CarrinhoService,
@@ -78,6 +79,24 @@ export class CarrinhoComponent implements OnInit {
 
   private assetPath(imagem: string): string {
     return assetPath(imagem);
+  }
+
+  abrirConfirmacaoPedido() {
+    if (!this.nomeCliente || !this.telefoneCliente || !this.enderecoCliente || this.carrinho.length === 0) {
+      alert('Preencha os dados do cliente e adicione pelo menos um produto.');
+      return;
+    }
+
+    this.mostrandoConfirmacao = true;
+  }
+
+  cancelarConfirmacao() {
+    this.mostrandoConfirmacao = false;
+  }
+
+  confirmarPedido() {
+    this.mostrandoConfirmacao = false;
+    this.enviarWhatsApp();
   }
 
   enviarWhatsApp() {
