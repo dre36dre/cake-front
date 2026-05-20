@@ -58,23 +58,6 @@
     </label>
   </div>
 
-  <div class="pedido-acoes" *ngIf="podeAlterarStatus(p.status)">
-    <button
-      type="button"
-      class="botao-concluir"
-      [disabled]="salvandoStatus === p.id"
-      (click)="concluirPedido(p)">
-      Concluído
-    </button>
-    <button
-      type="button"
-      class="botao-cancelar"
-      [disabled]="salvandoStatus === p.id"
-      (click)="cancelarPedido(p)">
-      Cancelar
-    </button>
-  </div>
-
   <h4>Itens:</h4>
   <ul>
     <li *ngFor="let item of p.itens">
