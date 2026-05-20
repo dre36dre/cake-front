@@ -7,6 +7,16 @@
   align-items: center;
 }
 
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.logo {
+  font-weight: 700;
+}
+
 .menu a {
   color: white;
   margin-left: 15px;
@@ -14,12 +24,18 @@
   font-weight: bold;
 }
 
+.social-links {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
 .social-link {
   align-items: center;
   display: inline-flex;
   height: 28px;
   justify-content: center;
-  margin-left: 12px;
+  margin-left: 0;
   vertical-align: middle;
   width: 28px;
 }
@@ -44,5 +60,9 @@
 
   .menu a:first-child {
     margin-left: 0;
+  }
+
+  .brand {
+    flex-wrap: wrap;
   }
 }
