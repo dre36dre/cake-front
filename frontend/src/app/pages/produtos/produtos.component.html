@@ -1,9 +1,9 @@
 <section class="produtos-page">
-  <p class="estado" *ngIf="carregando">Carregando produtos...</p>
+  <p class="estado" *ngIf="carregando && produtos.length === 0">Carregando produtos...</p>
   <p class="estado estado-erro" *ngIf="!carregando && erro">{{ erro }}</p>
   <p class="estado" *ngIf="!carregando && !erro && produtos.length === 0">Nenhum produto cadastrado.</p>
 
-  <div class="produtos-grid" *ngIf="!carregando && !erro && produtos.length > 0">
+  <div class="produtos-grid" *ngIf="!erro && produtos.length > 0">
     <article class="produto-card" *ngFor="let p of produtos">
       <div class="imagem-wrapper">
         <img

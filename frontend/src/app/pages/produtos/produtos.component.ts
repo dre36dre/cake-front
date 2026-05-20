@@ -50,19 +50,19 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   private carregarProdutos(): void {
+    this.produtos = carregarProdutosSalvos() ?? DEFAULT_PRODUCTS;
     this.carregando = true;
     this.erro = '';
 
     this.produtoService.listar().subscribe({
       next: (data) => {
-        this.produtos = Array.isArray(data) && data.length > 0
-          ? data
-          : carregarProdutosSalvos() ?? DEFAULT_PRODUCTS;
+        if (Array.isArray(data) && data.length > 0) {
+          this.produtos = data;
+        }
         console.log('Produtos carregados:', data);
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
-        this.produtos = carregarProdutosSalvos() ?? DEFAULT_PRODUCTS;
         this.carregando = false;
         this.erro = '';
       },
