@@ -1,3 +1,42 @@
+.contatos-home {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 18px auto 4px;
+  max-width: 980px;
+  padding: 0 16px;
+}
+
+.contato-link {
+  align-items: center;
+  border-radius: 8px;
+  color: #fff;
+  display: inline-flex;
+  font-weight: 700;
+  gap: 8px;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+
+.contato-link svg {
+  fill: currentColor;
+  height: 22px;
+  width: 22px;
+}
+
+.contato-link.whatsapp {
+  background: #18bd58;
+}
+
+.contato-link.instagram {
+  background: #e94b9d;
+}
+
+.contato-link:hover {
+  filter: brightness(0.95);
+}
+
 .galeria-home {
   display: grid;
   gap: 14px;

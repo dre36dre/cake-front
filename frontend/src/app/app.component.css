@@ -14,9 +14,35 @@
   font-weight: bold;
 }
 
+.social-link {
+  align-items: center;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  margin-left: 12px;
+  vertical-align: middle;
+  width: 28px;
+}
+
+.social-link svg {
+  display: block;
+  fill: currentColor;
+  height: 22px;
+  width: 22px;
+}
+
+.social-link:hover {
+  opacity: 0.82;
+}
+
 @media (max-width: 768px) {
-  .nav-links {
+  .topbar {
+    align-items: flex-start;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .menu a:first-child {
+    margin-left: 0;
   }
 }
