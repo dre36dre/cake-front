@@ -4,7 +4,7 @@ const defaultProducts = require('./data/default-products');
 
 async function ensureAdmin() {
   const username = process.env.ADMIN_USERNAME || 'admin';
-  const password = process.env.ADMIN_PASSWORD || 'confeitaria123#';
+  const password = process.env.ADMIN_PASSWORD || 'cake123';
 
   const [user, created] = await User.findOrCreate({
     where: { username },
