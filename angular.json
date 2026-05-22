@@ -20,8 +20,16 @@
             "browser": "frontend/src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "frontend/public",
-              "frontend/src/assets"
+              {
+                "glob": "**/*",
+                "input": "frontend/public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "frontend/src/assets",
+                "output": "/assets"
+              }
             ],
             "styles": [
               "frontend/src/styles.css"
