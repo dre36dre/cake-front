@@ -5,13 +5,20 @@ import { ProdutoDetail } from './pages/produtos/produto-detail/produto-detail';
 import { Login } from './auth/login/login';
 import { AdminPage } from './pages/admin/admin';
 import { ClientePage } from './pages/cliente/cliente';
+import { Catalogo } from './pages/catalogo/catalogo';
+import { Carrinho } from './pages/carrinho/carrinho';
+import { HomePage } from './pages/home/home';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/produtos', pathMatch: 'full' },
-  { path: 'login', component: Login },
-  { path: 'produtos', component: ProdutoList },
-  { path: 'produtos/novo', component: ProdutoForm },
-  { path: 'produtos/:id', component: ProdutoDetail },
+  { path: '', component: HomePage, pathMatch: 'full' },
+  { path: 'produtos', component: Catalogo },
+  { path: 'carrinho', component: Carrinho },
   { path: 'admin', component: AdminPage },
-  { path: 'cliente', component: ClientePage }
+  { path: 'admin/produtos', component: ProdutoList },
+  { path: 'admin/produtos/novo', component: ProdutoForm },
+  { path: 'admin/produtos/:id', component: ProdutoDetail },
+  { path: 'login', component: Login },
+  { path: 'cliente', component: ClientePage },
+  { path: 'produtos/novo', redirectTo: 'admin/produtos/novo', pathMatch: 'full' },
+  { path: 'produtos/:id', redirectTo: 'admin/produtos/:id', pathMatch: 'full' }
 ];

@@ -1,13 +1,16 @@
 // src/app/pages/produtos/produto-list/produto-list.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ProdutoService } from '../../../services/produtos.service';
 import { Produto } from '../../../models/produto';
 
 @Component({
-  standalone: false,
+  standalone: true,
   selector: 'app-produto-list',
   templateUrl: './produto-list.html',
-  styleUrls: ['./produto-list.css']
+  styleUrls: ['./produto-list.css'],
+  imports: [CommonModule, RouterLink]
 })
 export class ProdutoList implements OnInit {
   produtos: Produto[] = [];

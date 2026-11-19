@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ProdutoService } from '../../../services/produtos.service';
 import { Produto } from '../../../models/produto';
 
 @Component({
-  standalone: false,
+  standalone: true,
   selector: 'app-produto-form',
   templateUrl: './produto-form.html',
-  styleUrls: ['./produto-form.css']
+  styleUrls: ['./produto-form.css'],
+  imports: [CommonModule, FormsModule]
 })
 export class ProdutoForm {
   produto: Produto = {

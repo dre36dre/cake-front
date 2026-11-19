@@ -1,12 +1,39 @@
-<h2>Catálogo de Produtos</h2>
+<section class="catalog-page">
+  <header class="catalog-header">
+    <p class="eyebrow">PREPARADOS COM CARINHO</p>
+    <h1>Nosso cardápio</h1>
+    <p>Escolha seus favoritos e deixe o próximo momento ainda mais gostoso.</p>
+  </header>
 
+  <p class="status" *ngIf="carregando">Carregando produtos...</p>
+  <p class="status error" *ngIf="!carregando && erro">{{ erro }}</p>
+  <p class="status" *ngIf="!carregando && !erro && produtos().length === 0">Nenhum produto disponível no momento.</p>
 
-
-<div class="grid">
-  <div class="card" *ngFor="let produto of produtosFiltrados">
-    <h3>{{ produto.name }}</h3>
-    <p>{{ produto.description }}</p>
-    <strong>R$ {{ produto.price }}</strong>
-    <button (click)="adicionar(produto)">Adicionar ao carrinho</button>
+  <div class="product-grid" *ngIf="produtos().length">
+    <article class="product-card" *ngFor="let produto of produtosFiltrados">
+      <div class="product-image">
+        <span class="image-placeholder" aria-hidden="true">🍰</span>
+        <img
+          *ngIf="produto.imageUrl"
+          [src]="produto.imageUrl"
+          [alt]="produto.name"
+          loading="lazy"
+          (error)="imagemFalhou($event)">
+      </div>
+      <div class="product-info">
+        <h2>{{ produto.name }}</h2>
+        <p>{{ produto.description }}</p>
+        <strong>{{ produto.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        <button type="button" (click)="adicionar(produto)">Adicionar ao pedido</button>
+      </div>
+    </article>
   </div>
-</div>
+
+  <aside class="cart-summary" *ngIf="carrinho.itens().length">
+    <div>
+      <span>Total do pedido</span>
+      <strong>{{ carrinho.total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    </div>
+    <a routerLink="/carrinho">Ver carrinho <span aria-hidden="true">→</span></a>
+  </aside>
+</section>

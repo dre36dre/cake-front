@@ -22,9 +22,18 @@ export class CarrinhoService {
   }
 
   alterarQtd(produtoId: number, qtd: number) {
+    if (!Number.isInteger(qtd) || qtd < 1) {
+      this.remover(produtoId);
+      return;
+    }
+
     this.itens.update(lista =>
       lista.map(i => i.produto.id === produtoId ? { ...i, qtd } : i)
     );
+  }
+
+  limpar() {
+    this.itens.set([]);
   }
 
   total(): number {

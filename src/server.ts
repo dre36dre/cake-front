@@ -5,14 +5,20 @@ import express, { Request, Response } from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { AppServerModule } from './main.server';
+import bootstrap from './main.server';
 
 const app = express();
 const port = process.env.PORT || 4000;
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 const indexHtml = join(serverDistFolder, 'index.server.html');
-const commonEngine = new CommonEngine();
+const allowedHosts = [
+  'localhost',
+  '127.0.0.1',
+  process.env.VERCEL_URL,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
+].filter((host): host is string => Boolean(host));
+const commonEngine = new CommonEngine({ allowedHosts });
 
 app.use(express.static(browserDistFolder, {
   maxAge: '1y',
@@ -23,7 +29,7 @@ app.use(express.static(browserDistFolder, {
 app.get(/.*/, (req: Request, res: Response, next) => {
   commonEngine
     .render({
-      bootstrap: AppServerModule,
+      bootstrap,
       documentFilePath: indexHtml,
       url: `${req.protocol}://${req.get('host') ?? 'localhost'}${req.originalUrl}`,
       publicPath: browserDistFolder,

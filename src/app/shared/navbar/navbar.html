@@ -1,15 +1,29 @@
-<nav class="navbar">
-  <h2>Loja de Bolos 🎂</h2>
+<header class="topbar">
+  <a class="brand" routerLink="/" aria-label="Leticia Luiz Doces Artesanais - início">
+    <span>Leticia Luiz</span>
+    <span class="brand-detail">Doces Artesanais</span>
+  </a>
 
-   <!-- Ícone hambúrguer visível em telas pequenas -->
-  <button class="menu-btn" (click)="toggleMenu()">☰</button>
+  <nav class="navigation" aria-label="Navegação principal">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/produtos" routerLinkActive="active">Produtos</a>
+    <a routerLink="/carrinho" routerLinkActive="active">Carrinho</a>
+    <a class="admin-link" routerLink="/admin" routerLinkActive="active">Login</a>
+  </nav>
 
-  <ul>
-    <li><a routerLink="/dashboard">Dashboard</a></li>
-    <li><a routerLink="/admin">Dona da loja</a></li>
-    <li><a routerLink="/cliente">Cliente</a></li>
-    <li><a routerLink="/produtos">Produtos</a></li>
-    <li><a routerLink="/pedidos">Pedidos</a></li>
-    <li *ngIf="logado"><a (click)="logout()">Sair</a></li>
-  </ul>
-</nav>
+  <button
+    type="button"
+    class="menu-btn"
+    [attr.aria-expanded]="menuAberto"
+    aria-label="Abrir menu"
+    (click)="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="mobile-navigation" [class.aberto]="menuAberto" aria-label="Navegação móvel">
+    <a routerLink="/" (click)="fecharMenu()">Home</a>
+    <a routerLink="/produtos" (click)="fecharMenu()">Produtos</a>
+    <a routerLink="/carrinho" (click)="fecharMenu()">Carrinho</a>
+    <a routerLink="/admin" (click)="fecharMenu()">Área administrativa</a>
+  </nav>
+</header>

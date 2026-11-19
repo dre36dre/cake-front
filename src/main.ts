@@ -1,13 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { App } from './app/app';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { jwtInterceptor } from './app/auth/jwt.interceptor';
-import { provideRouter } from '@angular/router';
-import { routes } from './app/app.routes';
+import { appConfig } from './app/app.config';
 
-bootstrapApplication(App, {
-  providers: [
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([jwtInterceptor]))
-  ]
-});
+bootstrapApplication(App, appConfig).catch((error: unknown) => console.error(error));

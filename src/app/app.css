@@ -10,7 +10,7 @@ app-navbar {
   z-index: 1000;
 }
 
-router-outlet {
+main {
   flex: 1;
-  padding: 1rem;
+  min-width: 0;
 }

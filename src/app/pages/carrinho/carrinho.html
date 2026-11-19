@@ -1,15 +1,76 @@
-<h2>Meu Carrinho</h2>
+<main class="cart-page">
+  <section class="cart-card">
+    <h1>Seu carrinho</h1>
+    <p class="intro">Confira seus itens e informe os dados para combinar a entrega.</p>
 
-<ul>
-  <li *ngFor="let item of itens">
-    {{ item.produto.nome }} - R$ {{ item.produto.preco }}
+    <div class="empty-cart" *ngIf="!carrinho.itens().length">
+      <span class="empty-icon" aria-hidden="true">♡</span>
+      <p>Seu carrinho ainda está vazio.</p>
+      <a routerLink="/produtos">Explorar o cardápio</a>
+    </div>
 
-    <input type="number"
-           [value]="item.quantidade"
-           (change)="alterarQtd(item.produto.id, $event.target.valueAsNumber)" />
+    <form #pedidoForm="ngForm" (ngSubmit)="revisando = true">
+      <div class="customer-form">
+        <div class="form-group">
+          <label for="customer-name">Seu nome</label>
+          <input id="customer-name" name="nome" [(ngModel)]="nome" autocomplete="name" placeholder="Como podemos chamar você?" required>
+        </div>
+        <div class="form-group">
+          <label for="customer-phone">Telefone</label>
+          <input id="customer-phone" name="telefone" [(ngModel)]="telefone" autocomplete="tel" inputmode="tel" placeholder="(11) 99999-9999" required>
+        </div>
+        <div class="form-group">
+          <label for="customer-address">Endereço de entrega</label>
+          <input id="customer-address" name="endereco" [(ngModel)]="endereco" autocomplete="street-address" placeholder="Rua, número e bairro" required>
+        </div>
+        <div class="form-group">
+          <label for="order-notes">Observação <span>(opcional)</span></label>
+          <textarea id="order-notes" name="observacoes" [(ngModel)]="observacoes" placeholder="Algum detalhe importante para o pedido?" rows="4"></textarea>
+        </div>
+      </div>
 
-    <button (click)="remover(item.produto.id)">Remover</button>
-  </li>
-</ul>
+      <section class="cart-items" *ngIf="carrinho.itens().length" aria-label="Itens do pedido">
+        <h2>Seus itens <span>{{ carrinho.itens().length }}</span></h2>
+        <article class="cart-item" *ngFor="let item of carrinho.itens()">
+          <div class="item-image">
+            <span aria-hidden="true">🍰</span>
+            <img *ngIf="item.produto.imageUrl" [src]="item.produto.imageUrl" [alt]="item.produto.name" loading="lazy">
+          </div>
+          <div class="item-details">
+            <p class="item-name">{{ item.produto.name }}</p>
+            <p class="item-price">{{ item.produto.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+          </div>
+          <label class="quantity">
+            <span class="visually-hidden">Quantidade de {{ item.produto.name }}</span>
+            <input type="number" min="1" [value]="item.qtd" (change)="alterarQtd(item.produto.id, $event)">
+          </label>
+          <button type="button" class="remove-button" (click)="remover(item.produto.id)" [attr.aria-label]="'Remover ' + item.produto.name">Remover</button>
+        </article>
+      </section>
 
-<strong>Total: R$ {{ calcularTotal() }}</strong>
+      <p class="total">
+        <span>Total do pedido</span>
+        <strong>{{ carrinho.total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      </p>
+      <button class="checkout-button" type="submit" [disabled]="!carrinho.itens().length || pedidoForm.invalid">
+        Finalizar pedido
+      </button>
+      <p class="checkout-note">O pedido será confirmado pelo WhatsApp.</p>
+    </form>
+  </section>
+</main>
+
+<div class="confirmacao-overlay" *ngIf="revisando" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+  <section class="confirmacao-modal">
+    <h2 id="confirm-title">Confirmar pedido?</h2>
+    <p>Seu pedido será preparado para envio e o WhatsApp será aberto para continuar o atendimento.</p>
+    <div class="confirmacao-resumo">
+      <strong>Total: {{ carrinho.total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      <span>{{ carrinho.itens().length }} item(ns)</span>
+    </div>
+    <div class="confirmacao-acoes">
+      <button type="button" class="btn-voltar" (click)="revisando = false">Voltar</button>
+      <button type="button" class="btn-confirmar" (click)="confirmarPedido()">Confirmar pedido</button>
+    </div>
+  </section>
+</div>

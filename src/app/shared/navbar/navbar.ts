@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
-import { NgIf } from '@angular/common';
-
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, NgIf], // precisa estar aqui
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
@@ -20,18 +18,15 @@ export class Navbar {
     this.menuAberto = !this.menuAberto;
   }
 
-get logado(): boolean {
-  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    return !!localStorage.getItem('token');
+  fecharMenu() {
+    this.menuAberto = false;
   }
-  return false;
-}
 
-logout() {
-  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+  logout() {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+    }
+    this.router.navigate(['/login']);
   }
-  this.router.navigate(['/login']);
-}
 }
