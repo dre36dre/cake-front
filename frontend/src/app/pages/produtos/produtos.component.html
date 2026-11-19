@@ -1,0 +1,39 @@
+<section class="produtos-page">
+  <header class="produtos-cabecalho">
+    <p class="eyebrow">PREPARADOS COM CARINHO</p>
+    <h1>Nosso cardápio</h1>
+    <p>Escolha seus favoritos e deixe o próximo momento ainda mais gostoso.</p>
+  </header>
+
+  <p class="estado" *ngIf="carregando && produtos.length === 0">Carregando produtos...</p>
+  <p class="estado estado-erro" *ngIf="!carregando && erro">{{ erro }}</p>
+  <p class="estado" *ngIf="!carregando && !erro && produtos.length === 0">Nenhum produto cadastrado.</p>
+
+  <div class="produtos-grid" *ngIf="!erro && produtos.length > 0">
+    <article class="produto-card" *ngFor="let p of produtos; let indice = index">
+      <div class="imagem-wrapper">
+        <img
+  class="produto-imagem"
+  [src]="imagemProduto(p)"
+  (error)="usarImagemLocal($event, p)"
+  [alt]="p.name"
+  [loading]="indice < 6 ? 'eager' : 'lazy'"
+  decoding="async"
+/>
+
+      </div>
+
+      <div class="produto-info">
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.description }}</p>
+        <strong>{{ p.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        <button type="button" (click)="adicionar(p)">Adicionar ao pedido</button>
+      </div>
+    </article>
+  </div>
+
+  <footer class="resumo-pedido" *ngIf="total > 0">
+    <p><span>Total do pedido</span><strong>{{ total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
+    <button type="button" (click)="finalizarCompra()">Ver carrinho <span aria-hidden="true">→</span></button>
+  </footer>
+</section>

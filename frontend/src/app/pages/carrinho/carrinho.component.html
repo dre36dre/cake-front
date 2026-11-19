@@ -1,0 +1,73 @@
+<main class="carrinho-page">
+  <section class="card-carrinho">
+    <h2 class="titulo-carrinho">Seu Carrinho</h2>
+    <p class="introducao-carrinho">Confira seus itens e informe os dados para combinar a entrega.</p>
+
+    <div class="carrinho-vazio" *ngIf="carrinho.length === 0">
+      <span class="icone-carrinho" aria-hidden="true">♡</span>
+      <p>Seu carrinho ainda está vazio.</p>
+      <a routerLink="/produtos">Explorar o cardápio</a>
+    </div>
+
+    <div class="cliente-form">
+      <div class="form-group">
+        <label for="nome-cliente">Seu nome</label>
+        <input id="nome-cliente" [(ngModel)]="nomeCliente" autocomplete="name" placeholder="Como podemos chamar você?" />
+      </div>
+
+      <div class="form-group">
+        <label for="telefone-cliente">Telefone</label>
+        <input id="telefone-cliente" [(ngModel)]="telefoneCliente" autocomplete="tel" inputmode="tel" placeholder="(11) 99999-9999" />
+      </div>
+
+      <div class="form-group">
+        <label for="endereco-cliente">Endereço de entrega</label>
+        <input id="endereco-cliente" [(ngModel)]="enderecoCliente" autocomplete="street-address" placeholder="Rua, número e bairro" />
+      </div>
+
+      <div class="form-group">
+        <label for="observacao-pedido">Observação <span>(opcional)</span></label>
+        <textarea id="observacao-pedido" [(ngModel)]="comentarioCliente" placeholder="Algum detalhe importante para o pedido?" rows="4"></textarea>
+      </div>
+    </div>
+
+    <section class="itens-carrinho" *ngIf="carrinho.length > 0" aria-label="Itens do pedido">
+      <h3>Seus itens <span>{{ carrinho.length }}</span></h3>
+      <div *ngFor="let p of carrinho; let i = index" class="item">
+        <img class="foto-produto" [src]="imagemProduto(p)" (error)="usarImagemLocal($event,p)" [alt]="p.name">
+        <div class="info">
+          <p class="nome-produto">{{ p.name }}</p>
+          <p class="preco-produto">{{ p.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+        </div>
+        <button type="button" class="btn-remover" (click)="remover(i)" [attr.aria-label]="'Remover ' + p.name">Remover</button>
+      </div>
+    </section>
+
+    <p class="total">
+      <span>Total do pedido</span>
+      <strong>{{ total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    </p>
+
+    <button type="button" class="finalizar" [disabled]="carrinho.length === 0" (click)="abrirConfirmacaoPedido()">
+      Finalizar pedido
+    </button>
+    <p class="nota-finalizacao">O pedido será confirmado pelo WhatsApp.</p>
+  </section>
+
+  <div class="confirmacao-overlay" *ngIf="mostrandoConfirmacao">
+    <div class="confirmacao-modal" role="dialog" aria-modal="true" aria-labelledby="confirmacao-titulo">
+      <h3 id="confirmacao-titulo">Confirmar pedido?</h3>
+      <p>Seu pedido será enviado para a confeitaria e o WhatsApp será aberto para continuar o atendimento.</p>
+
+      <div class="confirmacao-resumo">
+        <strong>Total: {{ total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        <span>{{ carrinho.length }} item(ns)</span>
+      </div>
+
+      <div class="confirmacao-acoes">
+        <button type="button" class="btn-voltar" (click)="cancelarConfirmacao()">Voltar</button>
+        <button type="button" class="btn-confirmar" (click)="confirmarPedido()">Confirmar pedido</button>
+      </div>
+    </div>
+  </div>
+</main>

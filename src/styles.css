@@ -1,1 +1,146 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: light;
+  --primary: #b93870;
+  --primary-dark: #962654;
+  --accent: #9a6d35;
+  --warn: #b42338;
+  --text-primary: #34242d;
+  --text-muted: #746670;
+  --surface: #fffaf7;
+  --surface-raised: #fff;
+  --border: #eedde4;
+  --shadow-card: 0 12px 32px rgba(74, 38, 54, 0.08);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--surface);
+}
+
+body {
+  background: var(--surface);
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(185, 56, 112, 0.35);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #f3cada;
+  color: var(--text-primary);
+}
+
+.confirmacao-overlay {
+  align-items: center;
+  background: rgba(40, 20, 34, 0.55);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 1000;
+}
+
+.confirmacao-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(40, 20, 34, 0.28);
+  max-width: 400px;
+  padding: 26px;
+  width: 100%;
+}
+
+.confirmacao-modal h3 {
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+.confirmacao-modal p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.confirmacao-resumo {
+  background: #fff5f8;
+  border-radius: 10px;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 18px 0;
+  padding: 14px;
+}
+
+.confirmacao-acoes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.confirmacao-acoes button {
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px;
+}
+
+.btn-voltar {
+  background: #f2e9ed;
+  color: var(--text-primary);
+}
+
+.btn-voltar:hover {
+  background: #e9dbe2;
+}
+
+.btn-confirmar {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-confirmar:hover {
+  background: var(--primary-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

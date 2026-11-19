@@ -1,0 +1,214 @@
+.apresentacao-home {
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(247, 218, 228, 0.72), transparent 68%),
+    var(--surface);
+  padding: clamp(42px, 8vw, 84px) 20px 24px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  margin: 0 0 12px;
+}
+
+.apresentacao-home h1 {
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 6vw, 62px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.apresentacao-home h1 span {
+  color: var(--primary);
+  font-style: italic;
+}
+
+.subtitulo-home {
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 18px auto 0;
+  max-width: 520px;
+}
+
+.contatos-home {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 4px auto 0;
+  padding: 0 20px 44px;
+}
+
+.contato-link {
+  align-items: center;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-weight: 700;
+  gap: 8px;
+  padding: 12px 19px;
+  text-decoration: none;
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.contato-link svg {
+  fill: currentColor;
+  height: 20px;
+  width: 20px;
+}
+
+.contato-link.whatsapp {
+  background: #198754;
+}
+
+.contato-link.instagram {
+  background: var(--primary);
+}
+
+.contato-link:hover {
+  box-shadow: 0 7px 18px rgba(86, 43, 62, 0.16);
+  transform: translateY(-2px);
+}
+
+.galeria-secao {
+  margin: 0 auto;
+  max-width: 1240px;
+  padding: 0 24px 64px;
+}
+
+.galeria-cabecalho {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.galeria-cabecalho h2 {
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.galeria-home {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.foto-home {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  padding: 10px;
+  text-align: center;
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.foto-home:hover {
+  box-shadow: 0 18px 38px rgba(74, 38, 54, 0.13);
+  transform: translateY(-4px);
+}
+
+.foto-home.ampliada {
+  grid-column: 1 / -1;
+}
+
+.foto-botao {
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(145deg, #fcf3f6, #f8e9ef);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.foto-botao img {
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  transition: transform 220ms ease;
+  width: 100%;
+}
+
+.foto-home:not(.ampliada):hover .foto-botao img {
+  transform: scale(1.035);
+}
+
+.foto-home.ampliada img {
+  aspect-ratio: 16 / 10;
+  max-height: 70vh;
+  object-fit: contain;
+  padding: 12px;
+}
+
+.titulo-img {
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 12px 4px 5px;
+}
+
+@media (max-width: 900px) {
+  .galeria-home {
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .apresentacao-home {
+    padding-top: 42px;
+  }
+
+  .subtitulo-home {
+    font-size: 14px;
+  }
+
+  .contatos-home {
+    padding-bottom: 32px;
+  }
+
+  .galeria-secao {
+    padding: 0 16px 42px;
+  }
+
+  .galeria-home {
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foto-home {
+    border-radius: 12px;
+    padding: 7px;
+  }
+
+  .titulo-img {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foto-home,
+  .foto-botao img,
+  .contato-link {
+    transition: none;
+  }
+}
