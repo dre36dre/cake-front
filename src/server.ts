@@ -1,25 +1,36 @@
 import 'zone.js/node';
 import { APP_BASE_HREF } from '@angular/common';
-import { ngExpressEngine } from '@nguniversal/express-engine';
+import { CommonEngine } from '@angular/ssr/node';
 import express, { Request, Response } from 'express';
-import { join } from 'path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { AppServerModule } from './main.server';
 
 const app = express();
 const port = process.env.PORT || 4000;
+const serverDistFolder = dirname(fileURLToPath(import.meta.url));
+const browserDistFolder = resolve(serverDistFolder, '../browser');
+const indexHtml = join(serverDistFolder, 'index.server.html');
+const commonEngine = new CommonEngine();
 
-// Configura o motor de renderização do Angular Universal
-app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }));
-app.set('view engine', 'html');
-app.set('views', join(process.cwd(), 'dist/browser'));
+app.use(express.static(browserDistFolder, {
+  maxAge: '1y',
+  index: false,
+  redirect: false
+}));
 
-// Todas as rotas são tratadas pelo Angular
-app.get(/.*/, (req: Request, res: Response) => {
-  res.render('index', {
-    req,
-    providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
-  });
+app.get(/.*/, (req: Request, res: Response, next) => {
+  commonEngine
+    .render({
+      bootstrap: AppServerModule,
+      documentFilePath: indexHtml,
+      url: `${req.protocol}://${req.get('host') ?? 'localhost'}${req.originalUrl}`,
+      publicPath: browserDistFolder,
+      providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
+    })
+    .then(html => res.send(html))
+    .catch(next);
 });
 
 // Inicializa o servidor
