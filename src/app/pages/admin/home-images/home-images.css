@@ -1,0 +1,151 @@
+.home-images-page {
+  margin: 32px auto 60px;
+  max-width: 1100px;
+  padding: 0 20px;
+}
+
+.back-link {
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-images-page h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 5vw, 40px);
+  margin: 14px 0 6px;
+}
+
+.page-intro {
+  color: var(--text-muted);
+  margin: 0 0 24px;
+}
+
+.image-form {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: grid;
+  gap: 10px;
+  max-width: 620px;
+  padding: clamp(20px, 4vw, 30px);
+}
+
+.image-form h2,
+.managed-images h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  margin: 0 0 5px;
+}
+
+.image-form label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.image-form input:not([type="file"]) {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+.image-form input[type="file"] {
+  border: 1px dashed #d9b8c5;
+  border-radius: 9px;
+  padding: 12px;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.preview {
+  border-radius: 12px;
+  max-width: 280px;
+  overflow: hidden;
+}
+
+.preview img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.image-form button {
+  background: var(--primary);
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 46px;
+  margin-top: 8px;
+}
+
+.image-form button:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.managed-images {
+  margin-top: 36px;
+}
+
+.managed-images > p {
+  color: var(--text-muted);
+}
+
+.image-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  margin-top: 18px;
+}
+
+.image-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image-card > img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.image-info {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.image-info strong {
+  overflow-wrap: anywhere;
+}
+
+.image-info button {
+  background: transparent;
+  border: 0;
+  color: #9c2335;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.message.error {
+  background: #fff0f1;
+  border-radius: 9px;
+  color: #9c2335;
+  padding: 12px;
+}

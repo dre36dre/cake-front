@@ -1,0 +1,40 @@
+<main class="home-images-page">
+  <a routerLink="/admin" class="back-link">← Painel administrativo</a>
+  <h1>Imagens da Home</h1>
+  <p class="page-intro">Adicione fotos que aparecerão na vitrine da página inicial.</p>
+
+  <p class="message error" *ngIf="erro" role="alert">{{ erro }}</p>
+
+  <form class="image-form" (ngSubmit)="adicionar()" #imageForm="ngForm">
+    <h2>Adicionar imagem</h2>
+    <label for="image-title">Título ou descrição da foto</label>
+    <input id="image-title" name="title" [(ngModel)]="titulo" required maxlength="100" placeholder="Ex.: Bolo de chocolate" />
+
+    <label for="home-image-file">Imagem</label>
+    <input id="home-image-file" type="file" (change)="selecionarArquivo($event)" accept="image/jpeg,image/png,image/webp" required />
+    <span class="hint">JPG, PNG ou WebP, até 5 MB.</span>
+
+    <div class="preview" *ngIf="preview">
+      <img [src]="preview" [alt]="'Prévia: ' + titulo" />
+    </div>
+
+    <button type="submit" [disabled]="imageForm.invalid || !arquivo || salvando">
+      {{ salvando ? 'Enviando...' : 'Adicionar à Home' }}
+    </button>
+  </form>
+
+  <section class="managed-images" aria-labelledby="managed-title">
+    <h2 id="managed-title">Imagens publicadas</h2>
+    <p *ngIf="carregando">Carregando imagens...</p>
+    <p *ngIf="!carregando && !imagens.length">Nenhuma imagem adicional cadastrada. A Home continuará mostrando os produtos disponíveis.</p>
+    <div class="image-grid" *ngIf="imagens.length">
+      <article class="image-card" *ngFor="let imagem of imagens">
+        <img [src]="imagem.imageUrl" [alt]="imagem.title" loading="lazy" />
+        <div class="image-info">
+          <strong>{{ imagem.title }}</strong>
+          <button type="button" (click)="excluir(imagem)">Remover</button>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

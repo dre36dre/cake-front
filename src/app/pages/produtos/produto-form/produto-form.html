@@ -1,24 +1,38 @@
-<h2>Cadastrar Produto</h2>
-<form (ngSubmit)="salvar()" #produtoForm="ngForm">
-  <label>Nome:</label>
-  <input [(ngModel)]="produto.name" name="name" required />
+<main class="admin-form-page">
+  <a class="back-link" routerLink="/admin/produtos">← Voltar aos produtos</a>
+  <h1>{{ produtoId ? 'Editar produto' : 'Novo produto' }}</h1>
+  <p>Atualize as informações que aparecem no cardápio.</p>
 
-  <label>Descrição:</label>
-  <input [(ngModel)]="produto.description" name="description" />
+  <p class="form-message error" *ngIf="erro" role="alert">{{ erro }}</p>
+  <p class="form-message success" *ngIf="sucesso" role="status">{{ sucesso }}</p>
+  <p *ngIf="carregando && produtoId">Carregando produto...</p>
 
-  <label>Preço:</label>
-  <input type="number" [(ngModel)]="produto.price" name="price" required />
+  <form *ngIf="!produtoId || produto.name" (ngSubmit)="salvar()" #produtoForm="ngForm">
+    <label for="product-name">Nome</label>
+    <input id="product-name" [(ngModel)]="produto.name" name="name" required maxlength="100" />
 
-  <label>Imagem do Produto:</label>
-  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-  
-  <div *ngIf="produto.imageUrl" style="margin: 10px 0;">
-    <img [src]="produto.imageUrl" alt="Preview" style="max-width: 200px; max-height: 200px;">
-    <p><small>Preview da imagem</small></p>
-  </div>
+    <label for="product-description">Descrição</label>
+    <textarea id="product-description" [(ngModel)]="produto.description" name="description" rows="4" maxlength="500"></textarea>
 
-  <label>Disponível:</label>
-  <input type="checkbox" [(ngModel)]="produto.available" name="available" />
+    <label for="product-price">Preço (R$)</label>
+    <input id="product-price" type="number" [(ngModel)]="produto.price" name="price" min="0.01" step="0.01" required />
 
-  <button type="submit" [disabled]="!produtoForm.form.valid">Salvar</button>
-</form>
+    <label for="product-image">Imagem do produto</label>
+    <input id="product-image" type="file" (change)="onFileSelected($event)" accept="image/jpeg,image/png,image/webp" />
+    <span class="hint">JPG, PNG ou WebP, até 5 MB.</span>
+
+    <div class="image-preview" *ngIf="imagemPreview">
+      <img [src]="imagemPreview" [alt]="'Prévia de ' + produto.name" />
+      <button class="remove-image" type="button" (click)="removerImagem()">Remover imagem</button>
+    </div>
+
+    <label class="availability">
+      <input type="checkbox" [(ngModel)]="produto.available" name="available" />
+      Disponível no cardápio
+    </label>
+
+    <button class="save-button" type="submit" [disabled]="!produtoForm.form.valid || carregando">
+      {{ carregando ? 'Salvando...' : 'Salvar produto' }}
+    </button>
+  </form>
+</main>

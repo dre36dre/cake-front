@@ -1,17 +1,128 @@
-form {
+.admin-form-page {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  margin: 32px auto;
+  max-width: 680px;
+  padding: clamp(22px, 5vw, 40px);
+  width: min(100% - 32px, 680px);
+}
+
+.admin-form-page h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 5vw, 38px);
+  margin: 18px 0 8px;
+}
+
+.admin-form-page > p {
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+
+.back-link {
+  color: var(--primary-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+form {
+  display: grid;
+  gap: 10px;
 }
 
 label {
-  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 8px;
 }
 
-button {
-  margin-top: 15px;
-  padding: 8px;
-  background-color: #4CAF50;
-  color: white;
+input:not([type="checkbox"]),
+textarea {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  min-height: 44px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+input[type="file"] {
+  background: var(--surface);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.image-preview {
+  background: var(--surface);
+  border-radius: 12px;
+  max-width: 280px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.remove-image {
+  background: transparent;
+  border: 0;
+  color: #9c2335;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.availability {
+  align-items: center;
+  display: flex;
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.availability input {
+  accent-color: var(--primary);
+  height: 18px;
+  width: 18px;
+}
+
+.save-button {
+  background: var(--primary);
   border: none;
+  border-radius: 9px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 48px;
+}
+
+.save-button:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.save-button:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.form-message {
+  border-radius: 9px;
+  padding: 12px;
+}
+
+.form-message.error {
+  background: #fff0f1;
+  color: #9c2335;
+}
+
+.form-message.success {
+  background: #effaf2;
+  color: #24643a;
 }

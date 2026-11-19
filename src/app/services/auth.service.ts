@@ -1,28 +1,45 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { AuthResponse } from '../models/auth-response';
+import { SupabaseService } from './supabase.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
+  constructor(private supabase: SupabaseService) {}
 
-  private apiUrl = 'http://localhost:8080/api/auth';
+  get configured(): boolean {
+    return this.supabase.configured;
+  }
 
-  constructor(private http: HttpClient) {}
+  async login(email: string, password: string): Promise<boolean> {
+    const { data, error } = await this.supabase.getClient().auth.signInWithPassword({ email, password });
+    if (error) throw error;
 
-login(email: string, password: string): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.apiUrl}/login`, {
-    email,
-    password
-  }).pipe(
-    catchError((error) => {
-      console.error('Erro no login', error);
-      throw error;
-    })
-  );
+    if (!await this.isAuthorizedAdmin(data.user.id)) {
+      await this.supabase.getClient().auth.signOut();
+      return false;
+    }
+
+    return true;
+  }
+
+  async isAdmin(): Promise<boolean> {
+    const { data, error } = await this.supabase.getClient().auth.getUser();
+    if (error) throw error;
+    return data.user ? this.isAuthorizedAdmin(data.user.id) : false;
+  }
+
+  async logout(): Promise<void> {
+    const { error } = await this.supabase.getClient().auth.signOut();
+    if (error) throw error;
+  }
+
+  private async isAuthorizedAdmin(userId: string): Promise<boolean> {
+    const { data, error } = await this.supabase.getClient()
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data !== null;
+  }
 }
-}
-

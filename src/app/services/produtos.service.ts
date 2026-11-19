@@ -1,34 +1,103 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { defer, from, map, Observable } from 'rxjs';
 import { Produto } from '../models/produto';
+import { SupabaseService } from './supabase.service';
+import { Database } from '../models/database';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  private apiUrl = 'http://localhost:8080/cakes'; // seu endpoint no back-end
-
-  constructor(private http: HttpClient) {}
+  constructor(private supabase: SupabaseService) {}
 
   getAll(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl);
+    return defer(() =>
+      from(this.supabase.getClient().from('products').select('*').order('created_at', { ascending: false }))
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return (data ?? []).map(productFromRow);
+      })
+    );
   }
 
   create(produto: Produto): Observable<Produto> {
-    return this.http.post<Produto>(this.apiUrl, produto);
+    return defer(() =>
+      from(this.supabase.getClient().from('products').insert(productToRow(produto)).select().single())
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return productFromRow(data);
+      })
+    );
   }
 
   listar(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl);
+    return this.getAll().pipe(map(produtos => produtos.filter(produto => produto.available)));
+  }
+
+  getById(id: number): Observable<Produto | null> {
+    return defer(() =>
+      from(this.supabase.getClient().from('products').select('*').eq('id', id).maybeSingle())
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data ? productFromRow(data) : null;
+      })
+    );
   }
 
   salvar(produto: Produto): Observable<Produto> {
     if (produto.id) {
-      return this.http.put<Produto>(`${this.apiUrl}/${produto.id}`, produto);
+      return defer(() =>
+        from(
+          this.supabase.getClient()
+            .from('products')
+            .update(productToRow(produto))
+            .eq('id', produto.id!)
+            .select()
+            .single()
+        )
+      ).pipe(
+        map(({ data, error }) => {
+          if (error) throw error;
+          return productFromRow(data);
+        })
+      );
     }
-    return this.http.post<Produto>(this.apiUrl, produto);
+    return this.create(produto);
   }
 
   excluir(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return defer(() =>
+      from(this.supabase.getClient().from('products').delete().eq('id', id))
+    ).pipe(
+      map(({ error }) => {
+        if (error) throw error;
+      })
+    );
   }
+
+  uploadImage(file: File, folder: 'products' | 'home'): Promise<string> {
+    return this.supabase.uploadImage(file, folder);
+  }
+}
+
+function productFromRow(row: Database['public']['Tables']['products']['Row']): Produto {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    available: row.available,
+    imageUrl: row.image_url
+  };
+}
+
+function productToRow(produto: Produto): Database['public']['Tables']['products']['Insert'] {
+  return {
+    name: produto.name.trim(),
+    description: produto.description.trim(),
+    price: Number(produto.price),
+    available: produto.available,
+    image_url: produto.imageUrl || null
+  };
 }

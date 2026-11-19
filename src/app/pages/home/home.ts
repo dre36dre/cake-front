@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Produto } from '../../models/produto';
+import { HomeImage } from '../../models/home-image';
 import { ProdutoService } from '../../services/produtos.service';
+import { HomeImagesService } from '../../services/home-images.service';
 
 @Component({
   selector: 'app-home',
@@ -19,9 +21,13 @@ export class HomePage implements OnInit {
     { titulo: 'Bolos e sobremesas', icone: '🧁', estilo: 'bolos' }
   ];
   produtos: Produto[] = [];
+  imagensHome: HomeImage[] = [];
   erro = '';
 
-  constructor(private produtoService: ProdutoService) {}
+  constructor(
+    private produtoService: ProdutoService,
+    private imagensService: HomeImagesService
+  ) {}
 
   ngOnInit(): void {
     this.produtoService.listar().subscribe({
@@ -31,6 +37,13 @@ export class HomePage implements OnInit {
       error: (error) => {
         console.error('Erro ao carregar produtos da vitrine:', error);
         this.erro = 'Não foi possível carregar os produtos agora.';
+      }
+    });
+    this.imagensService.listar().subscribe({
+      next: imagens => this.imagensHome = imagens,
+      error: error => {
+        console.error('Erro ao carregar imagens da Home:', error);
+        this.erro = 'Não foi possível carregar todas as imagens da vitrine.';
       }
     });
   }

@@ -1,16 +1,25 @@
 .login-container {
-  width: 300px;
-  margin: 100px auto;
-  padding: 30px;
+  border: 1px solid var(--border);
+  width: min(100% - 32px, 430px);
+  margin: 72px auto;
+  padding: clamp(24px, 5vw, 38px);
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
 }
 
 .login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+}
+
+.login-container > p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 22px;
 }
 
 .form-group {
@@ -20,36 +29,51 @@
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: #555;
-  font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .form-group input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
+  min-height: 44px;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--primary);
 }
 
 button[type="submit"] {
   width: 100%;
-  padding: 12px;
-  background: #007bff;
+  padding: 13px;
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 15px;
   cursor: pointer;
-  margin-top: 10px;
+  font-weight: 700;
+  margin-top: 6px;
+  min-height: 46px;
 }
 
-button[type="submit"]:hover {
-  background: #0056b3;
+button[type="submit"]:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.login-error {
+  background: #fff0f1;
+  border-radius: 8px;
+  color: #9c2335 !important;
+  padding: 11px 12px;
 }

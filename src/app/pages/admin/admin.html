@@ -1,15 +1,25 @@
 <div class="admin-page">
-  <h1>{{ titulo }}</h1>
-  <p>Bem-vinda, dona da loja! Aqui você pode visualizar rapidamente os indicadores.</p>
+  <header class="admin-header">
+    <div>
+      <p class="admin-eyebrow">LETICIA LUIZ DOCES ARTESANAIS</p>
+      <h1>{{ titulo }}</h1>
+      <p>Gerencie o cardápio e as imagens que aparecem na vitrine.</p>
+    </div>
+    <button type="button" class="logout-button" (click)="sair()">Sair</button>
+  </header>
 
-  <div class="cards">
-    <div class="card">
-      <h3>Pedidos pendentes</h3>
-      <p>{{ pedidosPendentes }}</p>
-    </div>
-    <div class="card">
-      <h3>Faturamento hoje</h3>
-      <p>R$ {{ faturamentoHoje | number:'1.2-2' }}</p>
-    </div>
-  </div>
+  <p class="admin-error" *ngIf="erro" role="alert">{{ erro }}</p>
+
+  <nav class="admin-options" aria-label="Opções administrativas">
+    <a routerLink="/admin/produtos">
+      <span class="option-icon" aria-hidden="true">🍰</span>
+      <span><strong>Produtos</strong><small>Adicionar e editar produtos, preços e fotos.</small></span>
+      <span class="option-arrow" aria-hidden="true">→</span>
+    </a>
+    <a routerLink="/admin/imagens-home">
+      <span class="option-icon" aria-hidden="true">🖼️</span>
+      <span><strong>Imagens da Home</strong><small>Enviar e remover fotos da página inicial.</small></span>
+      <span class="option-arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
 </div>

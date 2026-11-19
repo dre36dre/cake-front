@@ -24,6 +24,16 @@
     <h2 id="showcase-title">Feito para adoçar o seu dia</h2>
   </div>
   <p class="load-error" *ngIf="erro">{{ erro }} Confira o cardápio pelo link abaixo.</p>
+  <div class="gallery-grid" *ngIf="imagensHome.length">
+    <article class="gallery-card" *ngFor="let imagem of imagensHome">
+      <a class="gallery-image" routerLink="/produtos" [attr.aria-label]="'Ver cardápio: ' + imagem.title">
+        <span class="image-placeholder" aria-hidden="true">🍰</span>
+        <img [src]="imagem.imageUrl" [alt]="imagem.title" loading="lazy" (error)="imagemFalhou($event)">
+      </a>
+      <p>{{ imagem.title }}</p>
+    </article>
+  </div>
+  <h3 class="gallery-subtitle" *ngIf="imagensHome.length && produtos.length">Produtos em destaque</h3>
   <div class="gallery-grid" *ngIf="produtos.length">
     <article class="gallery-card" *ngFor="let produto of produtos">
       <a class="gallery-image" routerLink="/produtos" [attr.aria-label]="'Ver cardápio: ' + produto.name">
@@ -33,7 +43,7 @@
       <p>{{ produto.name }}</p>
     </article>
   </div>
-  <div class="gallery-grid" *ngIf="!produtos.length">
+  <div class="gallery-grid" *ngIf="!imagensHome.length && !produtos.length">
     <article class="gallery-card" *ngFor="let categoria of categoriasFallback">
       <a class="gallery-image fallback-art" [ngClass]="categoria.estilo" routerLink="/produtos" [attr.aria-label]="'Ver ' + categoria.titulo">
         <span class="image-placeholder" aria-hidden="true">{{ categoria.icone }}</span>

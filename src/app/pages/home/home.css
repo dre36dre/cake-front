@@ -105,6 +105,12 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.gallery-subtitle {
+  color: var(--text-muted);
+  font-size: 16px;
+  margin: 28px 0 14px;
+}
+
 .gallery-card {
   background: var(--surface-raised);
   border: 1px solid var(--border);

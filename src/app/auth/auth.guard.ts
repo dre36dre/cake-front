@@ -1,15 +1,17 @@
+import { isPlatformBrowser } from '@angular/common';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  const token = localStorage.getItem('token');
-  const router = new Router();
+export const authGuard: CanActivateFn = () => {
+  const platformId = inject(PLATFORM_ID);
+  const router = inject(Router);
+  const authService = inject(AuthService);
 
-  if (token) {
-    // Se existe token, permite acesso
-    return true;
-  } else {
-    // Se não existe token, redireciona para login
-    router.navigate(['/login']);
-    return false;
-  }
+  if (!isPlatformBrowser(platformId)) return router.createUrlTree(['/login']);
+  if (!authService.configured) return router.createUrlTree(['/login']);
+
+  return authService.isAdmin().then(isAdmin =>
+    isAdmin ? true : router.createUrlTree(['/login'])
+  );
 };

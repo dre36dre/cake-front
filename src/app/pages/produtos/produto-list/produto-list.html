@@ -1,19 +1,36 @@
-<h2>Lista de Produtos</h2>
-<div class="produtos-grid">
-  <div *ngFor="let produto of produtos" class="produto-card">
-    <a [routerLink]="['/admin/produtos', produto.id]">
-      <div class="produto-imagem">
-        <img *ngIf="produto.imageUrl" [src]="produto.imageUrl" alt="{{produto.name}}">
-        <img *ngIf="!produto.imageUrl" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23ddd' width='150' height='150'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3ESem imagem%3C/text%3E%3C/svg%3E" alt="Sem imagem">
-      </div>
-      <div class="produto-info">
-        <h3>{{ produto.name }}</h3>
-        <p class="preco">R$ {{ produto.price }}</p>
-        <span *ngIf="produto.available" class="disponivel">Disponível</span>
-        <span *ngIf="!produto.available" class="indisponivel">Indisponível</span>
-      </div>
-    </a>
+<main class="admin-products">
+  <div class="admin-heading">
+    <div>
+      <a routerLink="/admin" class="back-link">← Painel administrativo</a>
+      <h1>Produtos</h1>
+      <p>Cadastre produtos e atualize preços e imagens do cardápio.</p>
+    </div>
+    <a routerLink="/admin/produtos/novo" class="btn-novo">+ Novo produto</a>
   </div>
-</div>
 
-<a routerLink="/admin/produtos/novo" class="btn-novo">+ Cadastrar novo produto</a>
+  <p class="admin-message error" *ngIf="erro" role="alert">{{ erro }}</p>
+  <p *ngIf="carregando">Carregando produtos...</p>
+  <p *ngIf="!carregando && !erro && !produtos.length">Ainda não há produtos cadastrados.</p>
+
+  <div class="produtos-grid" *ngIf="!carregando && produtos.length">
+    <article *ngFor="let produto of produtos" class="produto-card">
+      <a [routerLink]="['/admin/produtos', produto.id]" class="product-main">
+        <div class="produto-imagem">
+          <img *ngIf="produto.imageUrl" [src]="produto.imageUrl" [alt]="produto.name">
+          <span *ngIf="!produto.imageUrl" class="no-image">Sem imagem</span>
+        </div>
+        <div class="produto-info">
+          <h2>{{ produto.name }}</h2>
+          <p class="preco">{{ produto.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+          <span [class.disponivel]="produto.available" [class.indisponivel]="!produto.available">
+            {{ produto.available ? 'Disponível' : 'Indisponível' }}
+          </span>
+        </div>
+      </a>
+      <div class="product-actions">
+        <a [routerLink]="['/admin/produtos', produto.id]">Editar</a>
+        <button type="button" (click)="excluir(produto)">Excluir</button>
+      </div>
+    </article>
+  </div>
+</main>
