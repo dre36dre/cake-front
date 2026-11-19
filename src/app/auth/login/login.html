@@ -1,20 +1,24 @@
 <div class="login-container">
   <h2>Acesso administrativo</h2>
   <p>Entre para gerenciar produtos e imagens da loja.</p>
-  <p class="login-error" *ngIf="!supabaseConfigurado">
+  <p *ngIf="modoTesteLocal" class="demo-notice">
+    Modo local temporário: usuário <strong>{{ usuarioTeste }}</strong>, senha <strong>{{ senhaTeste }}</strong>.
+    Produtos e imagens ficam salvos somente neste navegador.
+  </p>
+  <p class="login-error" *ngIf="!supabaseConfigurado && !modoTesteLocal">
     O Supabase ainda não foi configurado. Consulte as instruções de configuração do projeto.
   </p>
   <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
     <div class="form-group">
-      <label for="email">E-mail</label>
-      <input id="email" type="email" [(ngModel)]="email" name="email" required autocomplete="username" placeholder="seu@email.com">
+      <label for="email">{{ modoTesteLocal ? 'Usuário' : 'E-mail' }}</label>
+      <input id="email" [type]="modoTesteLocal ? 'text' : 'email'" [(ngModel)]="email" name="email" required autocomplete="username" [placeholder]="modoTesteLocal ? 'admin' : 'seu@email.com'">
     </div>
     <div class="form-group">
       <label for="password">Senha</label>
       <input id="password" type="password" [(ngModel)]="password" name="password" required autocomplete="current-password" placeholder="Sua senha">
     </div>
     <p class="login-error" *ngIf="erro" role="alert">{{ erro }}</p>
-    <button type="submit" [disabled]="loginForm.invalid || carregando || !supabaseConfigurado">
+    <button type="submit" [disabled]="loginForm.invalid || carregando || (!supabaseConfigurado && !modoTesteLocal)">
       {{ carregando ? 'Entrando...' : 'Entrar' }}
     </button>
   </form>

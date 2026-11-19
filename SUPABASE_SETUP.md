@@ -19,3 +19,13 @@ O painel administrativo usa Supabase Auth, Database e Storage. As imagens aceita
 7. Cadastre produtos em `/admin/produtos` e as imagens extras da Home em `/admin/imagens-home`.
 
 O painel exige login e a autorização de escrita é verificada no banco pela tabela `admin_users`. Sem as credenciais do projeto, o site continua compilando, mas as operações de dados exibem erro de configuração.
+
+## Teste local sem Supabase
+
+Ao iniciar a aplicação em desenvolvimento (`npm start`), existe um modo temporário apenas em `localhost` ou `127.0.0.1`:
+
+- Usuário: `admin`
+- Senha: `teste123`
+- Produtos e imagens são gravados no IndexedDB deste navegador e permanecem após recarregar a página.
+
+Esse modo não sincroniza com o Vercel nem com outros dispositivos. As credenciais são substituídas por valores vazios nos builds de produção. Não use esse login como autenticação de produção.

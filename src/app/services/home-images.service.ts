@@ -2,12 +2,28 @@ import { Injectable } from '@angular/core';
 import { defer, from, map, Observable } from 'rxjs';
 import { HomeImage } from '../models/home-image';
 import { SupabaseService } from './supabase.service';
+import { isLocalDemoMode } from './local-demo-mode';
+import { LocalDemoDataService } from './local-demo-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class HomeImagesService {
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService,
+    private localData: LocalDemoDataService
+  ) {}
 
   listar(): Observable<HomeImage[]> {
+    if (!this.supabase.configured && isLocalDemoMode()) {
+      return defer(() => from(this.localData.listHomeImages())).pipe(
+        map(images => images.map(image => ({
+          id: image.id!,
+          title: image.title,
+          imageUrl: image.image_url,
+          position: image.position
+        })))
+      );
+    }
+
     return defer(() =>
       from(this.supabase.getClient().from('home_images').select('*').order('position').order('created_at'))
     ).pipe(
@@ -24,6 +40,22 @@ export class HomeImagesService {
   }
 
   criar(title: string, imageUrl: string): Observable<HomeImage> {
+    if (!this.supabase.configured && isLocalDemoMode()) {
+      return defer(() => from(this.localData.saveHomeImage({
+        title: title.trim(),
+        image_url: imageUrl,
+        position: 0,
+        created_at: new Date().toISOString()
+      }))).pipe(
+        map(image => ({
+          id: image.id!,
+          title: image.title,
+          imageUrl: image.image_url,
+          position: image.position
+        }))
+      );
+    }
+
     return defer(() =>
       from(
         this.supabase.getClient()
@@ -46,6 +78,10 @@ export class HomeImagesService {
   }
 
   excluir(id: number): Observable<void> {
+    if (!this.supabase.configured && isLocalDemoMode()) {
+      return defer(() => from(this.localData.deleteHomeImage(id)));
+    }
+
     return defer(() =>
       from(this.supabase.getClient().from('home_images').delete().eq('id', id))
     ).pipe(
@@ -56,6 +92,10 @@ export class HomeImagesService {
   }
 
   upload(file: File): Promise<string> {
+    if (!this.supabase.configured && isLocalDemoMode()) {
+      return this.localData.fileAsDataUrl(file);
+    }
+
     return this.supabase.uploadImage(file, 'home');
   }
 }

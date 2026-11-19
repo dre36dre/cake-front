@@ -8,8 +8,10 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  if (!isPlatformBrowser(platformId)) return router.createUrlTree(['/login']);
-  if (!authService.configured) return router.createUrlTree(['/login']);
+  if (!isPlatformBrowser(platformId)) return true;
+  if (!authService.configured && !authService.localDemoAvailable) {
+    return router.createUrlTree(['/login']);
+  }
 
   return authService.isAdmin().then(isAdmin =>
     isAdmin ? true : router.createUrlTree(['/login'])

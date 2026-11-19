@@ -77,3 +77,13 @@ button[type="submit"]:disabled {
   color: #9c2335 !important;
   padding: 11px 12px;
 }
+
+.demo-notice {
+  background: #fff5e8;
+  border-radius: 8px;
+  color: #704c1e;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+  padding: 12px;
+}

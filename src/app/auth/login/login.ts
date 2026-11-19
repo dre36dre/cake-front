@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { ADMIN_DEMO_PASSWORD, ADMIN_DEMO_USERNAME } from '../../config/admin-demo.config';
 
 @Component({
   selector: 'app-login',
@@ -23,13 +24,27 @@ export class Login {
     return this.authService.configured;
   }
 
+  get modoTesteLocal(): boolean {
+    return this.authService.localDemoAvailable;
+  }
+
+  get usuarioTeste(): string {
+    return ADMIN_DEMO_USERNAME;
+  }
+
+  get senhaTeste(): string {
+    return ADMIN_DEMO_PASSWORD;
+  }
+
   async onSubmit(): Promise<void> {
     this.erro = '';
     this.carregando = true;
     try {
       const admin = await this.authService.login(this.email, this.password);
       if (!admin) {
-        this.erro = 'Esta conta não tem permissão para acessar a administração.';
+        this.erro = this.modoTesteLocal
+          ? 'Usuário ou senha de teste incorretos.'
+          : 'Esta conta não tem permissão para acessar a administração.';
         return;
       }
       await this.router.navigate(['/admin']);

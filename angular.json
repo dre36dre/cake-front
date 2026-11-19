@@ -39,6 +39,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/config/admin-demo.config.ts",
+                  "with": "src/app/config/admin-demo.production.config.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
